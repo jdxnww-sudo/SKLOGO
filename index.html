@@ -3,61 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Podnebesye Hub</title>
+    <title>Podnebesye Fan Hub</title>
     <style>
         :root {
-            --bg-color: #080810;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --border-color: rgba(255, 255, 255, 0.08);
+            --bg-color: #05050b;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --border-color: rgba(255, 255, 255, 0.06);
             --accent-cyan: #00f2fe;
             --accent-blue: #4facfe;
             --text-main: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.5);
         }
 
         body {
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Roboto, sans-serif;
-            background: radial-gradient(circle at 50% 10%, #161630 0%, var(--bg-color) 60%);
+            background: radial-gradient(circle at 50% 15%, #121225 0%, var(--bg-color) 70%);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
+            flex-direction: row;
         }
 
-        /* Боковая панель навигации (Sidebar) */
+        /* Навигация для ПК (Sidebar) */
         .sidebar {
-            width: 260px;
-            background: rgba(0, 0, 0, 0.4);
+            width: 280px;
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             padding: 30px 20px;
             box-sizing: border-box;
+            flex-shrink: 0;
         }
 
         .logo-section {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 50px;
+            gap: 12px;
+            margin-bottom: 40px;
+            text-align: center;
         }
 
         .logo-section img {
-            width: 45px;
-            height: 45px;
+            width: 110px;
+            height: 110px;
             object-fit: contain;
-            filter: drop-shadow(0 0 10px var(--accent-cyan));
+            filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.4));
         }
 
         .logo-section .title {
             font-weight: 800;
-            font-size: 18px;
-            letter-spacing: 1px;
-            background: linear-gradient(45deg, var(--accent-cyan), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #fff;
+            margin-top: 5px;
         }
 
         .menu-btn {
@@ -66,12 +71,13 @@
             color: var(--text-muted);
             padding: 14px 18px;
             text-align: left;
-            font-size: 15px;
+            font-size: 14px;
             cursor: pointer;
             border-radius: 10px;
             transition: 0.3s;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 500;
+            letter-spacing: 0.5px;
         }
 
         .menu-btn:hover, .menu-btn.active {
@@ -81,7 +87,7 @@
             padding-left: 15px;
         }
 
-        /* Основной контент */
+        /* Главный контентный блок */
         .main-content {
             flex: 1;
             padding: 40px;
@@ -94,17 +100,28 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        header h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
         }
 
         .user-pill {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            background: rgba(0, 242, 254, 0.05);
+            border: 1px solid rgba(0, 242, 254, 0.2);
             padding: 8px 16px;
             border-radius: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            flex-shrink: 0;
         }
 
         .status-dot {
@@ -115,7 +132,6 @@
             box-shadow: 0 0 8px #00ff66;
         }
 
-        /* Контейнеры вкладок */
         .tab-content {
             display: none;
         }
@@ -124,7 +140,7 @@
             display: block;
         }
 
-        /* Виджеты / Карточки */
+        /* Сетка виджетов */
         .grid-widgets {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -135,98 +151,190 @@
         .widget {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 25px;
-            position: relative;
             transition: 0.3s;
         }
 
         .widget:hover {
-            border-color: rgba(0, 242, 254, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.2);
         }
 
         .widget h3 {
-            margin: 0 0 10px 0;
-            font-size: 16px;
+            margin: 0 0 12px 0;
+            font-size: 14px;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
         .widget .value {
-            font-size: 32px;
+            font-size: 34px;
             font-weight: 700;
+            margin-bottom: 5px;
         }
 
-        /* Кнопки действия */
         .btn {
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
             border: none;
             padding: 12px 24px;
             color: #000;
             font-weight: 600;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             transition: 0.3s;
             margin-top: 15px;
-            display: inline-block;
-            text-decoration: none;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
         }
 
-        /* Стили формы конкурса */
-        .form-group {
-            margin-bottom: 20px;
+        .btn:disabled {
+            background: #222;
+            color: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        input[type="text"], textarea {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 8px;
-            color: #fff;
-            box-sizing: border-box;
+        .story-text {
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.8);
             font-size: 15px;
         }
 
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-cyan);
-        }
-
-        /* Сетка магазина */
-        .shop-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .product-card .price {
+        .story-meta {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            font-size: 14px;
             color: var(--accent-cyan);
-            font-weight: bold;
-            margin-top: 10px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 13px; }
+        input[type="text"], textarea {
+            width: 100%; background: rgba(255, 255, 255, 0.01); border: 1px solid var(--border-color);
+            padding: 12px; border-radius: 8px; color: #fff; box-sizing: border-box; font-size: 15px;
+        }
+        input:focus, textarea:focus { outline: none; border-color: var(--accent-cyan); }
+
+        /* Мобильное нижнее меню (по умолчанию скрыто на ПК) */
+        .mobile-nav {
+            display: none;
+        }
+
+        /* 📱 МЕДИА-ЗАПРОСЫ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ (Экраны меньше 768px) */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                padding-bottom: 80px; /* Отступ снизу для мобильного меню */
+            }
+
+            /* Скрываем боковую панель ПК */
+            .sidebar {
+                display: none;
+            }
+
+            /* Включаем нижний таб-бар для мобилок */
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 70px;
+                background: rgba(10, 10, 18, 0.92);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-top: 1px solid var(--border-color);
+                z-index: 999;
+                justify-content: space-around;
+                align-items: center;
+                padding: 0 10px;
+            }
+
+            .mobile-nav-btn {
+                background: none;
+                border: none;
+                color: var(--text-muted);
+                font-size: 11px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: 0.2s;
+                flex: 1;
+            }
+
+            .mobile-nav-btn span.icon {
+                font-size: 20px;
+            }
+
+            .mobile-nav-btn.active {
+                color: var(--accent-cyan);
+                text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+            }
+
+            /* Настройка контента под мобилки */
+            .main-content {
+                padding: 20px;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+                margin-bottom: 25px;
+            }
+
+            header h2 {
+                font-size: 18px;
+            }
+
+            .widget .value {
+                font-size: 28px;
+            }
+            
+            /* Добавляем мини-хедер с логотипом на мобилках */
+            .mobile-header-logo {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 15px;
+                width: 100%;
+            }
+            .mobile-header-logo img {
+                width: 35px;
+                height: 35px;
+                object-fit: contain;
+            }
+            .mobile-header-logo span {
+                font-weight: 800;
+                letter-spacing: 1px;
+                font-size: 14px;
+                text-transform: uppercase;
+            }
+        }
+
+        /* Скрываем мобильный мини-логотип на ПК */
+        @media (min-width: 769px) {
+            .mobile-header-logo {
+                display: none;
+            }
+            .btn {
+                width: auto; /* На ПК кнопка не на весь экран */
+            }
         }
     </style>
 </head>
@@ -234,138 +342,208 @@
 
     <div class="sidebar">
         <div class="logo-section">
-            <img src="logo.png" alt="⚡" onerror="this.src='https://img.icons8.com/neon/96/cloud.png'">
+            <img src="image.png" alt="Podnebesye Logo">
             <div class="title">Поднебесье</div>
         </div>
-        <button class="menu-btn active" onclick="switchTab('dashboard')">Главная панель</button>
-        <button class="menu-btn" onclick="switchTab('contest')">Конкурс Лого-Арт</button>
-        <button class="menu-btn" onclick="switchTab('shop')">Маркетплейс</button>
+        <button class="menu-btn active" data-tab="dashboard" onclick="switchTab('dashboard')">Кабинет Участника</button>
+        <button class="menu-btn" data-tab="history" onclick="switchTab('history')">История & Логотип</button>
+        <button class="menu-btn" data-tab="contest" onclick="switchTab('contest')">Участвовать в Лого-Арт</button>
+    </div>
+
+    <div class="mobile-nav">
+        <button class="mobile-nav-btn active" data-tab="dashboard" onclick="switchTab('dashboard')">
+            <span class="icon">👤</span>
+            <span>Кабинет</span>
+        </button>
+        <button class="mobile-nav-btn" data-tab="history" onclick="switchTab('history')">
+            <span class="icon">📖</span>
+            <span>История</span>
+        </button>
+        <button class="mobile-nav-btn" data-tab="contest" onclick="switchTab('contest')">
+            <span class="icon">🎨</span>
+            <span>Лого-Арт</span>
+        </button>
     </div>
 
     <div class="main-content">
+        <div class="mobile-header-logo">
+            <img src="image.png" alt="⚡">
+            <span>Поднебесье</span>
+        </div>
+
         <header>
-            <h2>Экосистема управления</h2>
+            <h2 id="page-title">Панель Участника Комьюнити</h2>
             <div class="user-pill">
                 <div class="status-dot"></div>
-                <span>@username_test</span>
+                <span>АКТИВНЫЙ УЧАСТНИК</span>
             </div>
         </header>
 
         <div id="dashboard" class="tab-content active">
             <div class="grid-widgets">
                 <div class="widget">
-                    <h3>Баланс Stars</h3>
-                    <div class="value" id="star-count">500 ⭐️</div>
-                    <p style="font-size: 13px; color: var(--text-muted)">Внутренние токены Telegram</p>
-                    <button class="btn" onclick="earnStars()">Заработать +100 ⭐️</button>
+                    <h3>Мой Баланс Stars</h3>
+                    <div class="value" id="star-count">150 ⭐️</div>
+                    <p style="font-size: 13px; color: var(--text-muted)">Бонусы за преданность Семье</p>
+                    <button class="btn" id="bonus-btn" onclick="claimStars()">Собрать бонус +50 ⭐️</button>
+                    <p id="timer-hint" style="font-size: 12px; color: var(--accent-cyan); margin-top: 8px; display: none;"></p>
                 </div>
                 <div class="widget">
-                    <h3>Статус аккаунта</h3>
-                    <div class="value" style="color: var(--accent-blue)">FAMILY VIP</div>
-                    <p style="font-size: 13px; color: var(--text-muted)">Доступ ко всем ботам открыт</p>
+                    <h3>Конкурсный Статус</h3>
+                    <div class="value" style="color: var(--accent-blue)">ГОТОВИТ АРТ</div>
+                    <p style="font-size: 13px; color: var(--text-muted)">Дедлайн отправки работ: 25 июля</p>
                 </div>
                 <div class="widget">
-                    <h3>Окончание конкурса</h3>
-                    <div class="value" id="countdown" style="font-size: 24px; padding-top: 5px;">Загрузка...</div>
-                    <p style="font-size: 13px; color: var(--text-muted)">Приём работ до 25 июля</p>
+                    <h3>Время до финала</h3>
+                    <div class="value" id="countdown" style="font-size: 24px; padding-top: 4px;">Загрузка...</div>
+                    <p style="font-size: 13px; color: var(--text-muted)">Объявление результатов: 30 июля</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="history" class="tab-content">
+            <div class="widget" style="max-width: 800px;">
+                <h3>О Семье Поднебесье</h3>
+                <p class="story-text">
+                    Семья Поднебесье — это сплоченное творческое и технологическое комьюнити, объединяющее креативных людей, дизайнеров и энтузиастов. Мы создаем уникальные проекты, ценим преданность общему делу и развиваем внутреннюю цифровую экосистему. Конкурс «Лого-арт» — это шаг к созданию уникального визуального наследия руками участников.
+                </p>
+                
+                <h3 style="margin-top: 30px;">Символизм Логотипа</h3>
+                <p class="story-text">
+                    Официальный логотип олицетворяет силу, стремление ввысь и непоколебимость духа Семьи. Острые симметричные формы напоминают корону лидерства и футуристичные крылья, пробивающие облака на пути к Поднебесью.
+                </p>
+                
+                <div class="story-meta">
+                    📅 <strong>Официальная дата утверждения логотипа:</strong> 25 июня 2026 года
                 </div>
             </div>
         </div>
 
         <div id="contest" class="tab-content">
             <div class="widget" style="max-width: 600px;">
-                <h3>Отправка работы на «Лого-арт»</h3>
-                <p style="color: var(--text-muted); margin-bottom: 25px;">Заполните данные для симуляции отправки в @LogoArtSk_bot</p>
+                <h3>Подача заявки на конкурс</h3>
+                <p style="color: var(--text-muted); margin-bottom: 25px;">Форма генерации данных для отправки в официальный бот @LogoArtSk_bot</p>
                 
                 <div class="form-group">
-                    <label>Личный юзернейм (Telegram)</label>
-                    <input type="text" id="tg-user" value="@username_test">
+                    <label>Твой Telegram Юзернейм</label>
+                    <input type="text" id="tg-user" placeholder="@your_username">
                 </div>
                 <div class="form-group">
-                    <label>Имя на английском языке</label>
-                    <input type="text" id="eng-name" placeholder="E.g. Alex Fox">
+                    <label>Имя на английском языке (для диплома)</label>
+                    <input type="text" id="eng-name" placeholder="E.g. Michael Cross">
                 </div>
                 <div class="form-group">
-                    <label>Краткое описание процесса создания</label>
-                    <textarea id="process-desc" rows="3" placeholder="Опишите, как создавался ваш шедевр..."></textarea>
+                    <label>Краткое описание твоей концепции</label>
+                    <textarea id="process-desc" rows="4" placeholder="Опиши, как этот веб-интерфейс интегрирует и подчеркивает величие логотипа..."></textarea>
                 </div>
                 
-                <button class="btn" onclick="submitArt()">Отправить в бот</button>
-            </div>
-        </div>
-
-        <div id="shop" class="tab-content">
-            <h3 style="margin-bottom: 20px;">Фирменный мерч за Stars</h3>
-            <div class="shop-grid">
-                <div class="product-card">
-                    <div style="font-size: 40px;">👕</div>
-                    <h4>Кастомная футболка</h4>
-                    <div class="price">400 ⭐️</div>
-                    <button class="btn" style="padding: 6px 12px; font-size: 13px;" onclick="buyItem(400)">Купить</button>
-                </div>
-                <div class="product-card">
-                    <div style="font-size: 40px;">📱</div>
-                    <h4>Чехол Podnebesye</h4>
-                    <div class="price">200 ⭐️</div>
-                    <button class="btn" style="padding: 6px 12px; font-size: 13px;" onclick="buyItem(200)">Купить</button>
-                </div>
-                <div class="product-card">
-                    <div style="font-size: 40px;">☕️</div>
-                    <h4>Премиум кружка</h4>
-                    <div class="price">150 ⭐️</div>
-                    <button class="btn" style="padding: 6px 12px; font-size: 13px;" onclick="buyItem(150)">Купить</button>
-                </div>
+                <button class="btn" onclick="submitArt()">Сгенерировать заявку</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Функция переключения вкладок
+        // Универсальное переключение вкладок для ПК и мобилок
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
+            
+            // Сбрасываем активные классы на ПК и мобильных кнопках
+            document.querySelectorAll('.menu-btn, .mobile-nav-btn').forEach(btn => {
+                if(btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            const titles = {
+                dashboard: "Панель Участника Комьюнити",
+                history: "История Семьи & Visual Lore",
+                contest: "Творческий Конкурс «Лого-Арт»"
+            };
+            document.getElementById('page-title').innerText = titles[tabId];
         }
 
-        // Кнопка кликера звёзд
-        let stars = 500;
-        function earnStars() {
-            stars += 100;
+        // Логика получения Stars раз в 3 часа
+        let stars = 150;
+        let cooldownTime = 0; 
+
+        function claimStars() {
+            const now = new Date().getTime();
+            if (now < cooldownTime) return;
+
+            stars += 50;
             document.getElementById('star-count').innerText = stars + ' ⭐️';
-            alert('Вы выполнили квест сообщества! Начислено 100 звёзд.');
+            
+            cooldownTime = now + (3 * 60 * 60 * 1000);
+            localStorage.setItem('stars_cooldown', cooldownTime);
+            localStorage.setItem('stars_balance', stars);
+            
+            checkCooldown();
+            alert('Успешно! Вы получили 50 ⭐️. Следующий сбор доступен через 3 часа.');
         }
 
-        // Покупка мерча
-        function buyItem(price) {
-            if (stars >= price) {
-                stars -= price;
+        function checkCooldown() {
+            const savedCooldown = localStorage.getItem('stars_cooldown');
+            const savedStars = localStorage.getItem('stars_balance');
+            
+            if (savedStars) {
+                stars = parseInt(savedStars);
                 document.getElementById('star-count').innerText = stars + ' ⭐️';
-                alert('Успешная покупка! Мерч скоро будет отправлен.');
-            } else {
-                alert('Недостаточно Stars! Нажмите "Заработать" на Главной панели.');
+            }
+            
+            if (savedCooldown) {
+                cooldownTime = parseInt(savedCooldown);
+                const now = new Date().getTime();
+                
+                if (now < cooldownTime) {
+                    document.getElementById('bonus-btn').disabled = true;
+                    document.getElementById('timer-hint').style.display = 'block';
+                    updateCooldownTimer();
+                } else {
+                    document.getElementById('bonus-btn').disabled = false;
+                    document.getElementById('timer-hint').style.display = 'none';
+                }
             }
         }
 
-        // Отправка формы конкурса
-        function submitArt() {
-            const name = document.getElementById('eng-name').value;
-            if(!name) {
-                alert('Пожалуйста, заполните имя на английском.');
+        function updateCooldownTimer() {
+            const now = new Date().getTime();
+            const diff = cooldownTime - now;
+            
+            if (diff <= 0) {
+                document.getElementById('bonus-btn').disabled = false;
+                document.getElementById('timer-hint').style.display = 'none';
                 return;
             }
-            alert('Успешно! Ваша работа симулирована и отправлена модераторам конкурса.');
+            
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('timer-hint').innerText = `До следующего сбора: ${hours}ч ${minutes}м ${seconds}с`;
+            setTimeout(updateCooldownTimer, 1000);
         }
 
-        // Живой таймер до 25 июля 2026 года
+        function submitArt() {
+            const user = document.getElementById('tg-user').value;
+            const name = document.getElementById('eng-name').value;
+            if(!user || !name) {
+                alert('Пожалуйста, заполните ваш юзернейм и имя.');
+                return;
+            }
+            alert('Данные сгенерированы! Скопируйте описание концепта и отправьте вместе с этой ссылкой на сайт в бот @LogoArtSk_bot.');
+        }
+
+        // Таймер дедлайна
         function updateTimer() {
             const deadline = new Date("July 25, 2026 00:00:00").getTime();
             const now = new Date().getTime();
             const diff = deadline - now;
 
             if (diff <= 0) {
-                document.getElementById("countdown").innerText = "Приём окончен!";
+                document.getElementById("countdown").innerText = "Приём закрыт";
                 return;
             }
 
@@ -378,6 +556,7 @@
         
         setInterval(updateTimer, 60000);
         updateTimer();
+        checkCooldown();
     </script>
 </body>
 </html>
