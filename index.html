@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podnebesye Hub</title>
+    <style>
+        :root {
+            --bg-color: #080810;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-cyan: #00f2fe;
+            --accent-blue: #4facfe;
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: radial-gradient(circle at 50% 10%, #161630 0%, var(--bg-color) 60%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Боковая панель навигации (Sidebar) */
+        .sidebar {
+            width: 260px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            box-sizing: border-box;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 50px;
+        }
+
+        .logo-section img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px var(--accent-cyan));
+        }
+
+        .logo-section .title {
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 15px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: 0.3s;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .menu-btn:hover, .menu-btn.active {
+            color: var(--text-main);
+            background: var(--card-bg);
+            border-left: 3px solid var(--accent-cyan);
+            padding-left: 15px;
+        }
+
+        /* Основной контент */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .user-pill {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ff66;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00ff66;
+        }
+
+        /* Контейнеры вкладок */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Виджеты / Карточки */
+        .grid-widgets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .widget {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .widget:hover {
+            border-color: rgba(0, 242, 254, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .widget h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .widget .value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        /* Кнопки действия */
+        .btn {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            border: none;
+            padding: 12px 24px;
+            color: #000;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+        }
+
+        /* Стили формы конкурса */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        /* Сетка магазина */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .product-card .price {
+            color: var(--accent-cyan);
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo-section">
+            <img src="logo.png" alt="⚡" onerror="this.src='https://img.icons8.com/neon/96/cloud.png'">
+            <div class="title">Поднебесье</div>
+        </div>
+        <button class="menu-btn active" onclick="switchTab('dashboard')">Главная панель</button>
+        <button class="menu-btn" onclick="switchTab('contest')">Конкурс Лого-Арт</button>
+        <button class="menu-btn" onclick="switchTab('shop')">Маркетплейс</button>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h2>Экосистема управления</h2>
+            <div class="user-pill">
+                <div class="status-dot"></div>
+                <span>@username_test</span>
+            </div>
+        </header>
+
+        <div id="dashboard" class="tab-content active">
+            <div class="grid-widgets">
+                <div class="widget">
+                    <h3>Баланс Stars</h3>
+                    <div class="value" id="star-count">500 ⭐️</div>
+                    <p style="font-size: 13px; color: var(--text-muted)">Внутренние токены Telegram</p>
+                    <button class="btn" onclick="earnStars()">Заработать +100 ⭐️</button>
+                </div>
+                <div class="widget">
+                    <h3>Статус аккаунта</h3>
+                    <div class="value" style="color: var(--accent-blue)">FAMILY VIP</div>
+                    <p style="font-size: 13px; color: var(--text-muted)">Доступ ко всем ботам открыт</p>
+                </div>
+                <div class="widget">
+                    <h3>Окончание конкурса</h3>
+                    <div class="value" id="countdown" style="font-size: 24px; padding-top: 5px;">Загрузка...</div>
+                    <p style="font-size: 13px; color: var(--text-muted)">Приём работ до 25 июля</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="contest" class="tab-content">
+            <div class="widget" style="max-width: 600px;">
+                <h3>Отправка работы на «Лого-арт»</h3>
+                <p style="color: var(--text-muted); margin-bottom: 25px;">Заполните данные для симуляции отправки в @LogoArtSk_bot</p>
+                
+                <div class="form-group">
+                    <label>Личный юзернейм (Telegram)</label>
+                    <input type="text" id="tg-user" value="@username_test">
+                </div>
+                <div class="form-group">
+                    <label>Имя на английском языке</label>
+                    <input type="text" id="eng-name" placeholder="E.g. Alex Fox">
+                </div>
+                <div class="form-group">
+                    <label>Краткое описание процесса создания</label>
+                    <textarea id="process-desc" rows="3" placeholder="Опишите, как создавался ваш шедевр..."></textarea>
+                </div>
+                
+                <button class="btn" onclick="submitArt()">Отправить в бот</button>
+            </div>
+        </div>
+
+        <div id="shop" class="tab-content">
+            <h3 style="margin-bottom: 20px;">Фирменный мерч за Stars</h3>
+            <div class="shop-grid">
+                <div class="product-card">
+                    <div style="font-size: 40px;">👕</div>
+                    <h4>Кастомная футболка</h4>
+                    <div class="price">400 ⭐️</div>
+                    <button class="btn" style="padding: 6px 12px; font-size: 13px;" onclick="buyItem(400)">Купить</button>
+                </div>
+                <div class="product-card">
+                    <div style="font-size: 40px;">📱</div>
+                    <h4>Чехол Podnebesye</h4>
+                    <div class="price">200 ⭐️</div>
+                    <button class="btn" style="padding: 6px 12px; font-size: 13px;" onclick="buyItem(200)">Купить</button>
+                </div>
+                <div class="product-card">
+                    <div style="font-size: 40px;">☕️</div>
+                    <h4>Премиум кружка</h4>
+                    <div class="price">150 ⭐️</div>
+                    <button class="btn" style="padding: 6px 12px; font-size: 13px;" onclick="buyItem(150)">Купить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Функция переключения вкладок
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Кнопка кликера звёзд
+        let stars = 500;
+        function earnStars() {
+            stars += 100;
+            document.getElementById('star-count').innerText = stars + ' ⭐️';
+            alert('Вы выполнили квест сообщества! Начислено 100 звёзд.');
+        }
+
+        // Покупка мерча
+        function buyItem(price) {
+            if (stars >= price) {
+                stars -= price;
+                document.getElementById('star-count').innerText = stars + ' ⭐️';
+                alert('Успешная покупка! Мерч скоро будет отправлен.');
+            } else {
+                alert('Недостаточно Stars! Нажмите "Заработать" на Главной панели.');
+            }
+        }
+
+        // Отправка формы конкурса
+        function submitArt() {
+            const name = document.getElementById('eng-name').value;
+            if(!name) {
+                alert('Пожалуйста, заполните имя на английском.');
+                return;
+            }
+            alert('Успешно! Ваша работа симулирована и отправлена модераторам конкурса.');
+        }
+
+        // Живой таймер до 25 июля 2026 года
+        function updateTimer() {
+            const deadline = new Date("July 25, 2026 00:00:00").getTime();
+            const now = new Date().getTime();
+            const diff = deadline - now;
+
+            if (diff <= 0) {
+                document.getElementById("countdown").innerText = "Приём окончен!";
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            document.getElementById("countdown").innerText = `${days}д ${hours}ч ${minutes}м`;
+        }
+        
+        setInterval(updateTimer, 60000);
+        updateTimer();
+    </script>
+</body>
+</html>
