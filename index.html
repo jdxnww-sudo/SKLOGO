@@ -146,8 +146,8 @@
     <div id="auth-screen">
         <div class="auth-card">
             <h2 style="margin:0 0 5px 0;">Вход в Систему</h2>
-            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 25px;">Введите любой никнейм и пароль</p>
-            <input type="text" id="username-input" class="input-field" placeholder="Ваш никнейм (пробелы разрешены)...">
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 25px;">Введите ваш никнейм и пароль</p>
+            <input type="text" id="username-input" class="input-field" placeholder="Ваш никнейм (пробелы РАЗРЕШЕНЫ)...">
             <input type="password" id="password-input" class="input-field" placeholder="Пароль...">
             <button class="btn" style="width: 100%;" onclick="handleAuth()">Войти / Создать профиль</button>
         </div>
@@ -197,11 +197,14 @@
         <div id="games" class="tab-content">
             <div class="widget" style="text-align: center; padding: 20px;">
                 <h3 style="margin: 0 0 5px 0;">Игра: Полет Логотипа</h3>
-                <p style="color: var(--text-muted); font-size: 12px; margin: 0 0 10px 0;">Клик по игровому полю (или ПРОБЕЛ) для прыжка логотипа</p>
+                <p style="color: var(--text-muted); font-size: 12px; margin: 0 0 10px 0;">Клик по игровому полю (или ПРОБЕЛ) для прыжка логотипа. Скорость растет!</p>
                 <div class="game-box" onclick="triggerJump()">
                     <canvas id="dino-canvas" width="600" height="200"></canvas>
                 </div>
-                <button class="btn" style="padding: 8px 20px; font-size: 12px;" onclick="resetGame()">Рестарт</button>
+                <div style="display: flex; justify-content: center; gap: 20px; align-items: center;">
+                    <button class="btn" style="padding: 8px 20px; font-size: 12px;" onclick="resetGame()">Рестарт</button>
+                    <span id="game-speed-ui" style="font-size: 12px; font-weight: bold; color: var(--accent-main);">Скорость: 5.0</span>
+                </div>
             </div>
 
             <div class="widget">
@@ -266,9 +269,11 @@
         let ownedPerks = { jump: false, shield: false, skin: false };
         let wheelCooldown = 0;
 
-        // ЗАГРУЗКА И КЛИЕНТСКИЙ ВХОД (ПАСХАЛКА С СОХРАНЕНИЕМ ПРОБЕЛОВ)
+        // СИСТЕМА ВХОДА С ПРОБЕЛАМИ БЕЗ ОШИБОК
         function handleAuth() {
-            const user = document.getElementById('username-input').value.trim();
+            const rawUser = document.getElementById('username-input').value;
+            // Убираем пробелы только по краям строки, внутри пробелы сохраняются!
+            const user = rawUser.replace(/^\s+|\s+$/g, '');
             const pass = document.getElementById('password-input').value;
 
             if(!user || !pass) return alert("Заполните форму!");
@@ -331,6 +336,7 @@
             globalStars -= price; ownedPerks[perk] = true;
             document.getElementById('global-stars').innerText = globalStars + " ⭐️";
             saveUserData(); updateShopUI();
+            if(perk === 'shield' && dino) dino.hasShield = true;
         }
 
         function switchTab(t) {
@@ -343,7 +349,6 @@
 
         function setTheme(t) { document.body.className = 'theme-' + t; }
 
-        // ТАПАЛКА И ЭФФЕКТЫ КЛИКА
         function tapLogo(e) {
             globalStars += (ownedPerks.skin ? 5 : 1);
             document.getElementById('global-stars').innerText = globalStars + " ⭐️";
@@ -363,7 +368,7 @@
             }
         }
 
-        // КОЛЕСО ФОРТУНЫ С ОГРАНИЧЕНИЕМ (3 ЧАСА)
+        // КОЛЕСО ФОРТУНЫ
         let isSpinning = false;
         function spinWheel() {
             const now = new Date().getTime();
@@ -374,7 +379,7 @@
             const randomDeg = Math.floor(Math.random() * 360) + 1440;
             wheel.style.transform = `rotate(${randomDeg}deg)`;
             
-            wheelCooldown = now + (3 * 60 * 60 * 1000); // 3 часа кулдаун
+            wheelCooldown = now + (3 * 60 * 60 * 1000); 
             saveUserData();
 
             setTimeout(() => {
@@ -414,15 +419,35 @@
             setTimeout(updateWheelTimer, 1000);
         }
 
-        // ИГРА ЛОГОТИП-ДИНОЗАВРИК (HTML5 CANVAS)
+        // ОБНОВЛЕННАЯ ИГРА: УВЕЛИЧЕНИЕ СКОРОСТИ И МНОЖЕСТВО ПРЕПЯТСТВИЙ
         const canvas = document.getElementById('dino-canvas');
         const ctx = canvas.getContext('2d');
-        const logoImg = new Image(); logoImg.src = 'image.png'; // Загрузка твоего логотипа для игры
+        const logoImg = new Image(); logoImg.src = 'image.png';
 
         let dino, obstacles, gameLoopId, isPlaying;
+        let gameSpeed = 5;
+        let gameScore = 0;
+        let speedIncreaseInterval;
+
         function initGame() {
             dino = { x: 50, y: 130, width: 40, height: 40, vy: 0, isJumping: false, hasShield: ownedPerks.shield };
-            obstacles = []; isPlaying = true; if(!gameLoopId) updateGame();
+            obstacles = [];
+            gameSpeed = 5;
+            gameScore = 0;
+            isPlaying = true;
+            
+            document.getElementById('game-speed-ui').innerText = `Скорость: ${gameSpeed.toFixed(1)}`;
+
+            // Каждые 4 секунды скорость увеличивается на 0.6
+            clearInterval(speedIncreaseInterval);
+            speedIncreaseInterval = setInterval(() => {
+                if(isPlaying) {
+                    gameSpeed += 0.6;
+                    document.getElementById('game-speed-ui').innerText = `Скорость: ${gameSpeed.toFixed(1)}`;
+                }
+            }, 4000);
+
+            if(!gameLoopId) updateGame();
         }
 
         function updateGame() {
@@ -431,28 +456,70 @@
             dino.vy += 0.6; dino.y += dino.vy;
             if(dino.y > 130) { dino.y = 130; dino.vy = 0; dino.isJumping = false; }
 
-            // Отрисовка ЛОГОТИПА вместо квадрата
             ctx.save();
-            if (ownedPerks.skin) { ctx.filter = "sepia(1) saturate(10) hue-rotate(10deg)"; } // Эффект золота
+            if (ownedPerks.skin) { ctx.filter = "sepia(1) saturate(10) hue-rotate(10deg)"; } 
             ctx.drawImage(logoImg, dino.x, dino.y, dino.width, dino.height);
             ctx.restore();
 
-            if(dino.hasShield) { ctx.strokeStyle = "#9d4edd"; ctx.strokeRect(dino.x-2, dino.y-2, dino.width+4, dino.height+4); }
+            if(dino.hasShield) { 
+                ctx.strokeStyle = "#9d4edd"; 
+                ctx.lineWidth = 2;
+                ctx.strokeRect(dino.x-4, dino.y-4, dino.width+8, dino.height+8); 
+            }
 
-            if(Math.random() < 0.015 && (obstacles.length === 0 || obstacles[obstacles.length-1].x < 400)) {
-                obstacles.push({ x: 600, y: 140, width: 20, height: 30 });
+            // Шанс генерации препятствий зависит от скорости (чаще на высокой скорости)
+            let spawnChance = 0.01 + (gameSpeed * 0.001);
+            if(Math.random() < spawnChance && (obstacles.length === 0 || obstacles[obstacles.length-1].x < (550 - gameSpeed * 10))) {
+                // Разные размеры препятствий для разнообразия
+                let w = Math.floor(Math.random() * 15) + 15; // от 15 до 30
+                let h = Math.floor(Math.random() * 25) + 25; // от 25 до 50
+                obstacles.push({ x: 600, y: 170 - h, width: w, height: h });
             }
 
             for(let i = obstacles.length - 1; i >= 0; i--) {
-                obstacles[i].x -= 5; ctx.fillStyle = "#ff3b30"; ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacles[i].width, obstacles[i].height);
-                if (dino.x < obstacles[i].x + obstacles[i].width && dino.x + dino.width > obstacles[i].x && dino.y < obstacles[i].y + obstacles[i].height && dino.y + dino.height > obstacles[i].y) {
-                    if(dino.hasShield) { dino.hasShield = false; obstacles.splice(i, 1); alert("Щит разбит!"); continue; }
-                    isPlaying = false; alert("Игра окончена!");
+                obstacles[i].x -= gameSpeed; 
+                ctx.fillStyle = "#ff3b30"; 
+                ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacles[i].width, obstacles[i].height);
+                
+                // Проверка столкновения
+                if (dino.x < obstacles[i].x + obstacles[i].width && 
+                    dino.x + dino.width > obstacles[i].x && 
+                    dino.y < obstacles[i].y + obstacles[i].height && 
+                    dino.y + dino.height > obstacles[i].y) {
+                    
+                    if(dino.hasShield) { 
+                        dino.hasShield = false; 
+                        obstacles.splice(i, 1); 
+                        alert("Щит разбился! Бегите дальше!"); 
+                        continue; 
+                    }
+                    isPlaying = false; 
+                    clearInterval(speedIncreaseInterval);
+                    alert(`Игра окончена! Счет: ${gameScore}`);
                 }
-                if(obstacles[i] && obstacles[i].x < -20) { obstacles.splice(i, 1); globalStars += 5; document.getElementById('global-stars').innerText = globalStars + " ⭐️"; saveUserData(); }
+                
+                // Пролетел препятствие
+                if(obstacles[i] && obstacles[i].x < -30) { 
+                    obstacles.splice(i, 1); 
+                    gameScore += 10;
+                    globalStars += 5; 
+                    document.getElementById('global-stars').innerText = globalStars + " ⭐️"; 
+                    saveUserData(); 
+                }
             }
+
+            // Вывод счета на холст
+            ctx.fillStyle = varToString('--text-main');
+            ctx.font = "bold 13px sans-serif";
+            ctx.fillText(`Счет: ${gameScore}`, 15, 25);
+
             gameLoopId = requestAnimationFrame(updateGame);
         }
+
+        function varToString(varName) {
+            return getComputedStyle(document.body).getPropertyValue(varName).trim();
+        }
+
         function triggerJump() { if(!dino.isJumping) { dino.vy = ownedPerks.jump ? -13 : -10; dino.isJumping = true; } }
         function resetGame() { cancelAnimationFrame(gameLoopId); gameLoopId = null; initGame(); }
 
