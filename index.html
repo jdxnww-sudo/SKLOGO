@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Podnebesye Premium Ecosystem</title>
+    <title>SKYLINE LOGO WEB</title>
     <style>
         :root {
             --bg-main: #fdfbf7;
@@ -89,27 +89,39 @@
         .info-block { background-color: var(--bg-sidebar); border: 1px solid var(--border-color); padding: 30px; border-radius: 6px; margin-bottom: 30px; }
         .info-block h4 { font-family: "Times New Roman", Times, serif; font-size: 18px; margin-bottom: 20px; font-weight: 400; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
 
-        /* --- КЛИКЕР С ЛОГОТИПОМ --- */
+        /* --- КЛИКЕР С ОФИЦИАЛЬНЫМ ЛОГОТИПОМ --- */
         .clicker-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0; }
         .clicker-logo {
-            width: 160px; height: 160px; background: radial-gradient(circle, #fffdf9 0%, #f4eee3 100%);
+            width: 170px; height: 170px; background: radial-gradient(circle, #fffdf9 0%, #f7f2e8 100%);
             border: 2px solid var(--accent-gold); border-radius: 50%; display: flex; align-items: center;
             justify-content: center; cursor: pointer; user-select: none; transition: transform 0.05s ease;
-            box-shadow: 0 8px 20px rgba(197, 168, 128, 0.15);
+            box-shadow: 0 10px 25px rgba(197, 168, 128, 0.2);
         }
-        .clicker-logo:active { transform: scale(0.95); }
-        .clicker-logo-svg { width: 90px; height: 90px; fill: var(--text-main); }
+        .clicker-logo:active { transform: scale(0.94); }
+        .clicker-logo-svg { width: 100px; height: 100px; }
 
         /* --- ИГРЫ --- */
+        .games-flex-layout { display: flex; flex-direction: column; gap: 30px; }
         #puzzle-grid { display: grid; grid-template-columns: repeat(4, 55px); grid-template-rows: repeat(4, 55px); gap: 5px; margin: 20px 0; background: var(--border-color); padding: 5px; width: 245px; border-radius: 4px; }
         .puzzle-tile { width: 55px; height: 55px; background: var(--accent-gold); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; cursor: pointer; border-radius: 4px; user-select: none; }
         .puzzle-tile.empty { background: transparent; cursor: default; border: none; }
 
-        /* Мемори Кнопки */
-        .memory-grid { display: grid; grid-template-columns: repeat(4, 60px); gap: 10px; margin-top: 15px; }
-        .memory-card { width: 60px; height: 60px; background: var(--text-main); border: 1px solid var(--border-color); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: transparent; font-size: 24px; user-select: none; }
+        .memory-grid { display: grid; grid-template-columns: repeat(4, 55px); gap: 8px; margin-top: 15px; width: fit-content; }
+        .memory-card { width: 55px; height: 55px; background: var(--text-main); border: 1px solid var(--border-color); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: transparent; font-size: 20px; user-select: none; }
         .memory-card.flipped { background: #fff; color: var(--accent-gold); border-color: var(--accent-gold); }
         .memory-card.matched { background: var(--chat-bg); color: #8a7f73; border-color: var(--border-color); cursor: default; }
+
+        /* Колесо фортуны */
+        .wheel-box { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 15px; }
+        .wheel-visual { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--accent-gold); position: relative; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; background: #fff; transition: transform 2s cubic-bezier(0.1, 0.8, 0.1, 1); }
+        .wheel-pointer { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 15px solid var(--text-main); margin-bottom: -5px; z-index: 5; }
+
+        /* --- СОВЕТ СЕМЬИ (ОЛИМП) --- */
+        .olympus-quote { text-align: center; font-family: "Times New Roman", Times, serif; font-size: 16px; font-style: italic; color: var(--accent-gold); letter-spacing: 1px; line-height: 1.6; max-width: 650px; margin: 0 auto 35px auto; padding-bottom: 20px; border-bottom: 1px dashed var(--border-color); }
+        .council-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; }
+        .council-card { background: #ffffff; border: 1px solid var(--border-color); border-top: 3px solid var(--accent-gold); padding: 25px 20px; border-radius: 4px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .council-card h5 { font-family: "Times New Roman", Times, serif; font-size: 19px; font-weight: 400; margin-bottom: 6px; letter-spacing: 1px; }
+        .council-role { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--accent-gold); letter-spacing: 1.5px; }
 
         /* --- ДРУЗЬЯ И ЧАТЫ --- */
         .friends-split { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
@@ -139,21 +151,24 @@
         .inventory-btn.active { border-color: var(--accent-gold); background: var(--chat-bg); color: var(--accent-gold); }
 
         /* ПАТЕНТ СТИЛИЗАЦИЯ */
-        .patent-card { border: 2px solid var(--accent-gold); padding: 30px; text-align: center; border-radius: 4px; background: #fffdf9; position: relative; margin-top: 20px; box-shadow: inset 0 0 20px rgba(197, 168, 128, 0.05); }
+        .patent-card { border: 2px solid var(--accent-gold); padding: 30px; text-align: center; border-radius: 4px; background: #fffdf9; position: relative; box-shadow: inset 0 0 20px rgba(197, 168, 128, 0.05); }
         .patent-header { font-family: "Times New Roman", Times, serif; font-size: 20px; letter-spacing: 3px; color: var(--text-main); text-transform: uppercase; margin-bottom: 15px; font-weight: 400; }
         .patent-body { font-size: 14px; font-style: italic; color: var(--text-muted); line-height: 1.8; max-width: 500px; margin: 0 auto 20px auto; }
         .patent-footer { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-gold); }
 
-        /* Общие элементы ввода */
+        /* Ввод данных */
         .input-field { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; outline: none; margin-bottom: 15px; color: var(--text-main); }
         .btn-gold { background-color: var(--accent-gold); color: white; border: none; padding: 12px 24px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; cursor: pointer; width: 100%; }
         .btn-gold:hover { background-color: var(--accent-gold-hover); }
 
+        /* МОБИЛЬНАЯ АДАПТАЦИЯ */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar { width: 100%; position: relative; height: auto; padding: 20px; border-right: none; border-bottom: 1px solid var(--border-color); }
             .main-content { margin-left: 0; padding: 20px; width: 100%; }
             .grid-layout, .friends-split { grid-template-columns: 1fr; }
+            #puzzle-grid, .memory-grid { margin: 15px auto; }
+            .council-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -167,10 +182,10 @@
         <div class="auth-blur-layer" id="auth-blur-mask"></div>
 
         <div class="auth-box" id="login-box">
-            <h2>Podnebesye</h2>
+            <h2>SKYLINE</h2>
             <input type="text" id="auth-user" class="input-field" placeholder="Уникальный юзернейм">
             <input type="password" id="auth-pass" class="input-field" placeholder="Пароль">
-            <button class="btn-gold" id="btn-login-trigger" style="margin-bottom: 15px;">Войти в экосистему</button>
+            <button class="btn-gold" id="btn-login-trigger" style="margin-bottom: 15px;">Зайти в храм</button>
             <a href="#" style="color: var(--accent-gold); font-size: 12px; text-decoration: none;" id="link-to-reg">Создать аккаунт</a>
         </div>
         <div class="auth-box" id="register-box" style="display: none;">
@@ -183,16 +198,20 @@
         </div>
     </div>
 
+    <!-- СКРЫТЫЙ ИНПУТ ДЛЯ ЗАГРУЗКИ КАРТИНКИ ИЗ ГАЛЕРЕИ -->
+    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+
     <!-- НАВИГАЦИЯ СИДЕНБАРА -->
     <div class="sidebar">
         <div class="logo-area">
-            <h2>Podnebesye</h2>
+            <h2>SKYLINE</h2>
             <ul class="nav-menu">
                 <li class="nav-item active" id="tab-nav-hub">01 // Главный хаб</li>
                 <li class="nav-item" id="tab-nav-friends">02 // Друзья & Чаты</li>
                 <li class="nav-item" id="tab-nav-games">03 // Игровой зал</li>
-                <li class="nav-item" id="tab-nav-market">04 // Премиум Маркет</li>
-                <li class="nav-item" id="tab-nav-history">05 // История</li>
+                <li class="nav-item" id="tab-nav-council">04 // Совет семьи</li>
+                <li class="nav-item" id="tab-nav-market">05 // Премиум Маркет</li>
+                <li class="nav-item" id="tab-nav-history">06 // История</li>
             </ul>
         </div>
         <div class="sidebar-footer"><span>Skyline FM</span></div>
@@ -210,7 +229,7 @@
             <div class="grid-layout">
                 <div class="profile-card">
                     <div class="avatar-wrapper">
-                        <!-- Шляпы сверху -->
+                        <!-- Шляпы -->
                         <svg class="hat-overlay hat-top-hat" viewBox="0 0 100 50"><rect x="20" y="5" width="60" height="35" fill="#111"/><ellipse cx="50" cy="40" rx="45" ry="8" fill="#111"/></svg>
                         <svg class="hat-overlay hat-crown" viewBox="0 0 100 50"><polygon points="10,45 20,15 40,30 50,10 60,30 80,15 90,45" fill="#ffd700" stroke="#b3946b"/></svg>
                         <svg class="hat-overlay hat-santa" viewBox="0 0 100 50"><polygon points="20,40 50,5 80,40" fill="#d9534f"/><rect x="15" y="38" width="70" height="10" rx="5" fill="#fff"/><circle cx="50" cy="6" r="7" fill="#fff"/></svg>
@@ -223,23 +242,25 @@
                     <h3 id="profile-name-display" style="cursor: pointer;" title="Нажмите для смены никнейма">Гость</h3>
                     <div class="username-label" id="profile-user-display">@username</div>
                     <div class="title-display" id="profile-title-display">Участник</div>
-                    <button class="btn-gold" id="btn-change-avatar-trigger" style="font-size: 10px; padding: 6px 12px; margin-bottom: 8px;">Сменить аватарку</button>
+                    <button class="btn-gold" id="btn-change-avatar-trigger" style="font-size: 10px; padding: 6px 12px; margin-bottom: 8px;">Выбрать фото из галереи</button>
                     <button class="btn-gold" id="btn-buy-title-trigger" style="font-size: 10px; padding: 6px 12px; background:#2b251f;">Купить Титул Премиум</button>
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 30px;">
-                    <!-- КЛИКЕР С ЛОГОТИПОМ -->
+                    <!-- ЦЕНТРАЛЬНЫЙ КЛИКЕР С ЛОГОТИПОМ -->
                     <div class="info-block" style="text-align: center;">
                         <h4>Центральный Логотип-Кликер</h4>
                         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Кликайте на фамильный герб для генерации ресурсов экосистемы (+1 ⭐)</p>
                         <div class="clicker-container">
                             <div class="clicker-logo" id="core-logo-clicker">
-                                <!-- Элегантный минималистичный геометрический логотип (Герб) -->
+                                <!-- Официальный логотип с деревом из файла image_cc9c42.png -->
                                 <svg class="clicker-logo-svg" viewBox="0 0 100 100">
-                                    <polygon points="50,15 85,35 85,75 50,95 15,75 15,35" fill="none" stroke="currentColor" stroke-width="3"/>
-                                    <line x1="50" y1="15" x2="50" y2="95" stroke="currentColor" stroke-width="2"/>
-                                    <polyline points="30,45 50,32 70,45" fill="none" stroke="currentColor" stroke-width="2"/>
-                                    <polyline points="30,65 50,52 70,65" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <polygon points="50,5 90,28 90,72 50,95 10,72 10,28" fill="none" stroke="#2b251f" stroke-width="4" stroke-linejoin="round"/>
+                                    <line x1="50" y1="5" x2="50" y2="95" stroke="#2b251f" stroke-width="3"/>
+                                    <line x1="50" y1="40" x2="28" y2="25" stroke="#2b251f" stroke-width="3" stroke-linecap="round"/>
+                                    <line x1="50" y1="60" x2="28" y2="45" stroke="#2b251f" stroke-width="3" stroke-linecap="round"/>
+                                    <line x1="50" y1="40" x2="72" y2="25" stroke="#2b251f" stroke-width="3" stroke-linecap="round"/>
+                                    <line x1="50" y1="60" x2="72" y2="45" stroke="#2b251f" stroke-width="3" stroke-linecap="round"/>
                                 </svg>
                             </div>
                         </div>
@@ -272,7 +293,6 @@
                 <div class="info-block" style="display: flex; flex-direction: column;">
                     <h4 id="chat-with-title">Выберите друга для общения</h4>
                     
-                    <!-- Дуэль на скорость -->
                     <div class="duel-box" id="duel-game-zone">
                         <p id="duel-status-text">Бросить вызов на быструю реакцию (Ставка: 50 ⭐)</p>
                         <button class="btn-gold" id="duel-action-btn" style="width:auto; margin-top:10px; padding:8px 16px;"></button>
@@ -292,30 +312,70 @@
         <!-- ВКЛАДКА 03: ИГРОВОЙ ЗАЛ -->
         <div id="section-games" class="content-section">
             <div class="grid-layout">
-                <div class="info-block">
-                    <h4>Головоломка: Пятнашки</h4>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Расположите плитки по порядку. Награда: 100 ⭐</p>
-                    <div id="puzzle-grid"></div>
-                    <button class="btn-gold" id="btn-shuffle-puzzle" style="width: auto;">Перемешать</button>
+                <div class="games-flex-layout">
+                    <div class="info-block">
+                        <h4>Головоломка: Пятнашки</h4>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Соберите плитки по порядку. Награда: 100 ⭐</p>
+                        <div id="puzzle-grid"></div>
+                        <button class="btn-gold" id="btn-shuffle-puzzle" style="width: auto;">Перемешать</button>
+                    </div>
+
+                    <div class="info-block">
+                        <h4>Поиск пар гербов (Memory)</h4>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Найдите парные семейные логотипы. Награда: 50 ⭐</p>
+                        <div class="memory-grid" id="memory-game-board"></div>
+                        <button class="btn-gold" id="btn-restart-memory" style="width: auto; margin-top: 15px;">Сбросить доску</button>
+                    </div>
                 </div>
 
-                <div class="info-block">
-                    <h4>Поиск пар гербов (Memory)</h4>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Найдите парные логотипы за минимальное количество ходов. Награда: 50 ⭐</p>
-                    <div class="memory-grid" id="memory-game-board"></div>
-                    <button class="btn-gold" id="btn-restart-memory" style="width: auto; margin-top: 15px;">Сбросить игру</button>
+                <div class="games-flex-layout">
+                    <div class="info-block" style="text-align: center;">
+                        <h4>Колесо Фортуны Podnebesye</h4>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Испытайте свою удачу. Стоимость прокрута: 30 ⭐</p>
+                        <div class="wheel-box">
+                            <div class="wheel-pointer"></div>
+                            <div class="wheel-visual" id="fortune-wheel-element">💎</div>
+                            <button class="btn-gold" id="btn-spin-wheel" style="width: auto; padding: 10px 30px;">Вращать Колесо</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- ВКЛАДКА 04: ПРЕМИУМ МАРКЕТ И КАТАЛОГ ШЛЯП -->
+        <!-- ВКЛАДКА 04: СОВЕТ СЕМЬИ (ОЛИМП) -->
+        <div id="section-council" class="content-section">
+            <div class="info-block">
+                <div class="olympus-quote">
+                    "At the top of Olympus, the gods hold their councils and enjoy feasts, ruling destinies from there"
+                </div>
+                
+                <div class="council-grid">
+                    <div class="council-card">
+                        <h5>Влад</h5>
+                        <div class="council-role">Владелец</div>
+                    </div>
+                    <div class="council-card">
+                        <h5>Кейн</h5>
+                        <div class="council-role">Со-Владелец 1 чата</div>
+                    </div>
+                    <div class="council-card">
+                        <h5>Натаниэль</h5>
+                        <div class="council-role">Со-Владелец 2 чата</div>
+                    </div>
+                    <div class="council-card">
+                        <h5>Крис</h5>
+                        <div class="council-role">Со-Владелец 3 чата</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 05: ПРЕМИУМ МАРКЕТ -->
         <div id="section-market" class="content-section">
             <div class="info-block">
                 <h4>Ваш личный гардероб головных уборов</h4>
-                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Здесь вы можете переключать или снимать уже выкупленные элементы кастомизации:</p>
-                <div class="inventory-zone" id="hats-inventory-catalog">
-                    <!-- Каталог купленных вещей -->
-                </div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Переключайте или снимайте имеющиеся аксессуары:</p>
+                <div class="inventory-zone" id="hats-inventory-catalog"></div>
             </div>
 
             <div class="info-block">
@@ -324,30 +384,27 @@
             </div>
             
             <div class="info-block">
-                <h4 style="margin-bottom:25px;">Премиальные Элитные Титулы (Свыше 500 000 ⭐)</h4>
+                <h4 style="margin-bottom:25px;">Премиальные Элитные Титулы (Доступные предложения)</h4>
                 <div class="market-grid" id="market-titles-container"></div>
             </div>
         </div>
 
-        <!-- ВКЛАДКА 05: ИСТОРИЯ И ПАТЕНТ -->
+        <!-- ВКЛАДКА 06: ИСТОРИЯ -->
         <div id="section-history" class="content-section">
             <div class="info-block">
-                <h4>История изменений экосистемы</h4>
-                <p style="margin-bottom: 25px;">v2.3.0 — Внедрён модуль централизованного сохранения кастомных аватарок, выделена самостоятельная игровая зона с играми на базе логотипа и интегрирована система управления инвентарём головных уборов.</p>
-                
-                <!-- Эксклюзивная карточка патента дизайна -->
                 <div class="patent-card">
-                    <div class="patent-header">Official Family Logo</div>
+                    <div class="patent-header">Official family logo</div>
                     <div class="patent-body">
-                        «Настоящим утверждается, что данный фамильный логотип и символика полностью запатентованы. Визуальное решение содержит уникальный высококлассный дизайн, разработанный и детализированный элитной студией Poison*. Любое несанкционированное копирование, тиражирование или использование медиа-материалов вне внутренней структуры семьи "Поднебесье" строго воспрещено и преследуется по внутреннему регламенту синдиката».
+                        Логотип запатентован и содержит уникальный дизайн, созданный студией Poison*.<br>
+                        Любое использование вне семьи 'Поднебесье' запрещено.
                     </div>
-                    <div class="patent-footer">Зарегистрировано: 01.05.2026 // Ревизия保護</div>
+                    <div class="patent-footer">01.05.2026 // Конфиденциально</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ЛОГИКА FIREBASE -->
+    <!-- ЛОГИКА СИСТЕМЫ -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -370,12 +427,13 @@
         let unsubscribeChat = null;
         let unsubscribeDuel = null;
 
+        // Коррекция цен под диапазон от 2 000 до 10 000
         const eliteTitles = [
-            { id: "oligarch", name: "⚜️ Олигарх", cost: 500000 },
-            { id: "monarch", name: "👑 Монарх Экосистемы", cost: 1000000 },
-            { id: "shadow", name: "👁️ Теневой Доминант", cost: 2000000 },
-            { id: "immortal", name: "🌌 Бессмертный", cost: 3500000 },
-            { id: "creator_hand", name: "⚡ Правая Рука Создателя", cost: 5000000 }
+            { id: "oligarch", name: "⚜️ Олигарх", cost: 2000 },
+            { id: "monarch", name: "👑 Монарх Экосистемы", cost: 4000 },
+            { id: "shadow", name: "👁️ Теневой Доминант", cost: 6000 },
+            { id: "immortal", name: "🌌 Бессмертный", cost: 8000 },
+            { id: "creator_hand", name: "⚡ Правая Рука Создателя", cost: 10000 }
         ];
 
         const shopHats = [
@@ -409,15 +467,14 @@
                 const nickname = document.getElementById('reg-name').value.trim();
                 const password = document.getElementById('reg-pass').value;
 
-                if(!username || !nickname || !password) return alert("Заполните все доступные поля!");
-                if(username.includes(' ')) return alert("Юзернейм не должен содержать пробелы!");
-                if(password.length < 6) return alert("Пароль должен состоять минимум из 6 символов!");
+                if(!username || !nickname || !password) return alert("Заполните поля!");
+                if(username.includes(' ')) return alert("Пробелы запрещены!");
+                if(password.length < 6) return alert("Пароль от 6 символов!");
                 
                 const checkRef = doc(db, "users", username);
                 const checkSnap = await getDoc(checkRef);
-                if(checkSnap.exists()) return alert("Этот уникальный юзернейм занят!");
+                if(checkSnap.exists()) return alert("Юзернейм занят!");
 
-                // Ранг: Участник, Баланс: 100, пустой инвентарь шляп (ownedHats)
                 userData = { 
                     username, nickname, password, 
                     stars: 100, title: "Участник", 
@@ -426,18 +483,18 @@
                     friends: [] 
                 };
                 await setDoc(checkRef, userData);
-                alert("Регистрация завершена!");
+                alert("Успешно зарегистрировано!");
                 enterEcosystem(username);
             } else {
                 const username = document.getElementById('auth-user').value.trim().toLowerCase();
                 const password = document.getElementById('auth-pass').value;
 
-                if(!username || !password) return alert("Введите имя пользователя и пароль!");
+                if(!username || !password) return alert("Заполните данные!");
 
                 const checkRef = doc(db, "users", username);
                 const userSnap = await getDoc(checkRef);
                 if(!userSnap.exists() || userSnap.data().password !== password) {
-                    return alert("Неверные данные авторизации!");
+                    return alert("Неверный логин или пароль!");
                 }
                 userData = userSnap.data();
                 enterEcosystem(username);
@@ -479,12 +536,24 @@
             }
         }
 
-        window.changeAvatarUrl = async function() {
-            const url = prompt("Вставьте прямую ссылку на изображение для вашей аватарки:", userData.avatarUrl || "");
-            if(url && url.trim() !== "") {
-                await updateDoc(userDocRef, { avatarUrl: url.trim() });
-            }
+        window.triggerAvatarUpload = function() {
+            document.getElementById('avatar-file-input').click();
         };
+
+        async function handleAvatarFile(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                const base64String = reader.result;
+                if(userDocRef) {
+                    await updateDoc(userDocRef, { avatarUrl: base64String });
+                    alert("Аватарка успешно обновлена из галереи!");
+                }
+            };
+            reader.readAsDataURL(file);
+        }
 
         window.changeNickname = async function() {
             const newNick = prompt("Укажите новый никнейм:", userData.nickname);
@@ -506,9 +575,7 @@
             if(targetSec) targetSec.classList.add('active');
         };
 
-        // ==========================================
-        // ИСПРАВЛЕННЫЙ МОДУЛЬ ДУЭЛЕЙ И ЧАТА
-        // ==========================================
+        // ЧАТЫ И ДУЭЛИ
         async function openFriendChat(friendUsername) {
             activeChatFriend = friendUsername;
             document.getElementById('chat-with-title').textContent = `Чат с @${friendUsername}`;
@@ -551,12 +618,12 @@
                             btn.dataset.mode = "cancel";
                         } else {
                             txt.textContent = `@${d.challenger} бросил вам вызов!`;
-                            btn.textContent = "Принять дуэль и играть!";
+                            btn.textContent = "Принять дуэль!";
                             btn.dataset.mode = "accept";
                         }
                     } else if(d.status === 'active') {
-                        txt.textContent = "🔥 КНОПКА ПОЯВИЛАСЬ! НАЖМИ БЫСТРЕЕ! 🔥";
-                        btn.textContent = "💥 КЛИК! 💥";
+                        txt.textContent = "🔥 ЖМИ ПЕРВЫМ! 🔥";
+                        btn.textContent = "💥 НАЖАТЬ! 💥";
                         btn.style.background = "#d9534f";
                         btn.dataset.mode = "click";
                     }
@@ -572,12 +639,12 @@
             const dRef = doc(db, "duels", chatId);
 
             if(mode === "init") {
-                if(userData.stars < 50) return alert("Недостаточно звезд!");
+                if(userData.stars < 50) return alert("Мало звезд!");
                 await setDoc(dRef, { challenger: userData.username, status: "waiting", timestamp: new Date().getTime() });
             } else if(mode === "cancel") {
                 await setDoc(dRef, { status: "ended" });
             } else if(mode === "accept") {
-                if(userData.stars < 50) return alert("Недостаточно звезд!");
+                if(userData.stars < 50) return alert("Мало звезд!");
                 await updateDoc(dRef, { status: "active" });
             } else if(mode === "click") {
                 const snap = await getDoc(dRef);
@@ -590,7 +657,7 @@
                     if(oppSnap.exists()) {
                         await updateDoc(oppRef, { stars: oppSnap.data().stars - 50 });
                     }
-                    alert("Победа в дуэли! Вы среагировали первее! +50 ⭐");
+                    alert("Вы выиграли 50 ⭐ в дуэли!");
                 }
             }
         };
@@ -610,7 +677,6 @@
             input.value = "";
         };
 
-        // ДРУЗЬЯ СИНХРОНИЗАЦИЯ С АВАТАРОМ
         function initFriendsListeners() {
             const reqQuery = query(collection(db, "friend_requests"), where("to", "==", userData.username), where("status", "==", "pending"));
             onSnapshot(reqQuery, (snap) => {
@@ -647,7 +713,7 @@
 
         window.sendFriendRequest = async function() {
             const targetUsername = document.getElementById('friend-search-input').value.trim().toLowerCase();
-            if(!targetUsername || targetUsername === userData.username) return alert("Укажите ник друга");
+            if(!targetUsername || targetUsername === userData.username) return alert("Ошибка ввода");
 
             const targetSnap = await getDoc(doc(db, "users", targetUsername));
             if(!targetSnap.exists()) return alert("Пользователь не найден!");
@@ -673,9 +739,7 @@
             }
         }
 
-        // ==========================================
-        // МАРКЕТ И КАТАЛОГ КУПЛЕННЫХ ВЕЩЕЙ
-        // ==========================================
+        // МАРКЕТ И ИНВЕНТАРЬ
         function buildMarketUI() {
             const hatsContainer = document.getElementById('market-hats-container');
             hatsContainer.innerHTML = "";
@@ -703,7 +767,7 @@
             
             if(type === 'hat') {
                 const owned = userData.ownedHats || [];
-                if(owned.includes(id)) return alert("Вы уже выкупили этот головной убор, активируйте его в Гардеробе!");
+                if(owned.includes(id)) return alert("Шляпа уже куплена, наденьте её в гардеробе!");
                 
                 await updateDoc(userDocRef, { 
                     stars: userData.stars - cost, 
@@ -713,7 +777,7 @@
                 alert(`Куплено: ${name}. Шляпа экипирована!`);
             } else if(type === 'title') {
                 await updateDoc(userDocRef, { stars: userData.stars - cost, title: name });
-                alert(`Вам присвоен премиум-титул: ${name}`);
+                alert(`Присвоен титул: ${name}`);
             }
         }
 
@@ -722,10 +786,9 @@
             if(!catalog) return;
             catalog.innerHTML = "";
 
-            // Кнопка Снять все головные уборы
             const offBtn = document.createElement('button');
             offBtn.className = `inventory-btn ${!userData.activeHat ? 'active' : ''}`;
-            offBtn.textContent = "❌ Без шляпы";
+            offBtn.textContent = "❌ Снять всё";
             offBtn.onclick = async () => { await updateDoc(userDocRef, { activeHat: "" }); };
             catalog.appendChild(offBtn);
 
@@ -737,21 +800,17 @@
                 const btn = document.createElement('button');
                 btn.className = `inventory-btn ${userData.activeHat === hatId ? 'active' : ''}`;
                 btn.textContent = config.name;
-                btn.onclick = async () => {
-                    await updateDoc(userDocRef, { activeHat: hatId });
-                };
+                btn.onclick = async () => { await updateDoc(userDocRef, { activeHat: hatId }); };
                 catalog.appendChild(btn);
             });
         }
 
-        // ==========================================
-        // ИГРЫ СЕМЬИ С ЛОГОТИПОМ
-        // ==========================================
+        // ИГРЫ
         let puzzleState = [];
         window.initPuzzle = function() {
             let arr = Array.from({length: 15}, (_, i) => i + 1); arr.push(0);
             let emptyIdx = 15;
-            for(let i=0; i<60; i++) {
+            for(let i=0; i<40; i++) {
                 let validMoves = [];
                 let r = Math.floor(emptyIdx / 4), c = emptyIdx % 4;
                 if(r > 0) validMoves.push(emptyIdx - 4); if(r < 3) validMoves.push(emptyIdx + 4);
@@ -795,56 +854,30 @@
             }
         }
 
-        // ИГРА MEMORY С ЛОГОТИПАМИ
         let memoryIcons = ['⚜️', '👑', '👁️', '⚡', '🦅', '🏰', '🛡️', '📦'];
-        let memoryDeck = [];
-        let chosenCards = [];
-        let lockBoard = false;
+        let memoryDeck = []; let chosenCards = []; let lockBoard = false;
 
         window.initMemoryGame = function() {
             memoryDeck = [...memoryIcons, ...memoryIcons].sort(() => 0.5 - Math.random());
             const board = document.getElementById('memory-game-board');
-            if(!board) return;
-            board.innerHTML = "";
-            chosenCards = [];
-            lockBoard = false;
-
+            if(!board) return; board.innerHTML = ""; chosenCards = []; lockBoard = false;
             memoryDeck.forEach((icon, index) => {
-                const card = document.createElement('div');
-                card.className = "memory-card";
-                card.dataset.icon = icon;
-                card.dataset.index = index;
-                card.textContent = "?";
-                card.onclick = handleMemoryClick;
-                board.appendChild(card);
+                const card = document.createElement('div'); card.className = "memory-card";
+                card.dataset.icon = icon; card.dataset.index = index; card.textContent = "?";
+                card.onclick = handleMemoryClick; board.appendChild(card);
             });
         };
 
         function handleMemoryClick(e) {
-            if(lockBoard) return;
-            const card = e.currentTarget;
+            if(lockBoard) return; const card = e.currentTarget;
             if(card.classList.contains('flipped') || card.classList.contains('matched')) return;
-
-            card.classList.add('flipped');
-            card.textContent = card.dataset.icon;
-            chosenCards.push(card);
-
+            card.classList.add('flipped'); card.textContent = card.dataset.icon; chosenCards.push(card);
             if(chosenCards.length === 2) {
-                lockBoard = true;
-                const [c1, c2] = chosenCards;
+                lockBoard = true; const [c1, c2] = chosenCards;
                 if(c1.dataset.icon === c2.dataset.icon) {
-                    c1.classList.add('matched');
-                    c2.classList.add('matched');
-                    chosenCards = [];
-                    lockBoard = false;
-                    checkMemoryWin();
+                    c1.classList.add('matched'); c2.classList.add('matched'); chosenCards = []; lockBoard = false; checkMemoryWin();
                 } else {
-                    setTimeout(() => {
-                        c1.classList.remove('flipped'); c1.textContent = "?";
-                        c2.classList.remove('flipped'); c2.textContent = "?";
-                        chosenCards = [];
-                        lockBoard = false;
-                    }, 800);
+                    setTimeout(() => { c1.classList.remove('flipped'); c1.textContent = "?"; c2.classList.remove('flipped'); c2.textContent = "?"; chosenCards = []; lockBoard = false; }, 800);
                 }
             }
         }
@@ -852,13 +885,34 @@
         async function checkMemoryWin() {
             const unmatched = document.querySelectorAll('.memory-card:not(.matched)');
             if(unmatched.length === 0) {
-                alert("Комбинация пар раскрыта! Награда: +50 ⭐");
-                await updateDoc(userDocRef, { stars: userData.stars + 50 });
-                window.initMemoryGame();
+                alert("Вы собрали все логотипы! +50 ⭐");
+                await updateDoc(userDocRef, { stars: userData.stars + 50 }); window.initMemoryGame();
             }
         }
 
-        // DOM СОБЫТИЯ
+        let isWheelSpinning = false;
+        window.spinFortuneWheel = async function() {
+            if(isWheelSpinning || !userDocRef) return;
+            if(userData.stars < 30) return alert("Недостаточно звёзд для игры (Прокрут стоит 30 ⭐)!");
+
+            isWheelSpinning = true;
+            await updateDoc(userDocRef, { stars: userData.stars - 30 });
+
+            const wheel = document.getElementById('fortune-wheel-element');
+            const randomDegrees = Math.floor(Math.random() * 360) + 1440;
+            wheel.style.transform = `rotate(${randomDegrees}deg)`;
+
+            setTimeout(async () => {
+                isWheelSpinning = false;
+                const prizes = [0, 10, 50, 100, 200, 0, 15, 30];
+                const finalPrize = prizes[Math.floor(Math.random() * prizes.length)];
+                
+                await updateDoc(userDocRef, { stars: userData.stars + finalPrize });
+                alert(`Колесо остановилось! Вы выиграли: + ${finalPrize} ⭐`);
+            }, 2000);
+        };
+
+        // DOM НАПРАВЛЕНИЯ
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('btn-login-trigger').onclick = () => processAuth('login');
             document.getElementById('btn-reg-trigger').onclick = () => processAuth('register');
@@ -869,13 +923,18 @@
             document.getElementById('tab-nav-friends').onclick = (e) => { window.switchTab('friends'); e.currentTarget.classList.add('active'); };
             document.getElementById('tab-nav-games').onclick = (e) => { window.switchTab('games'); e.currentTarget.classList.add('active'); };
             document.getElementById('tab-nav-market').onclick = (e) => { window.switchTab('market'); e.currentTarget.classList.add('active'); };
+            document.getElementById('tab-nav-council').onclick = (e) => { window.switchTab('council'); e.currentTarget.classList.add('active'); };
             document.getElementById('tab-nav-history').onclick = (e) => { window.switchTab('history'); e.currentTarget.classList.add('active'); };
 
             document.getElementById('profile-name-display').onclick = () => window.changeNickname();
-            document.getElementById('btn-change-avatar-trigger').onclick = () => window.changeAvatarUrl();
+            document.getElementById('btn-change-avatar-trigger').onclick = () => window.triggerAvatarUpload();
+            document.getElementById('avatar-file-input').onchange = (e) => handleAvatarFile(e);
+            
             document.getElementById('core-logo-clicker').onclick = () => window.coreClickerAction();
             document.getElementById('btn-shuffle-puzzle').onclick = () => window.initPuzzle();
             document.getElementById('btn-restart-memory').onclick = () => window.initMemoryGame();
+            document.getElementById('btn-spin-wheel').onclick = () => window.spinFortuneWheel();
+            
             document.getElementById('btn-send-request-friend').onclick = () => window.sendFriendRequest();
             document.getElementById('btn-send-msg-priv').onclick = () => window.sendPrivateMessage();
             document.getElementById('duel-action-btn').onclick = () => window.handleDuelAction();
