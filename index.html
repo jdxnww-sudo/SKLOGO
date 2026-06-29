@@ -81,7 +81,7 @@
         /* --- ИГРЫ: ПАЗЛ (ПЯТНАШКИ) --- */
         #puzzle-grid { display: grid; grid-template-columns: repeat(4, 60px); grid-template-rows: repeat(4, 60px); gap: 5px; margin: 20px 0; background: var(--border-color); padding: 5px; width: 265px; border-radius: 4px; }
         .puzzle-tile { width: 60px; height: 60px; background: var(--accent-gold); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; cursor: pointer; border-radius: 4px; user-select: none; }
-        .puzzle-tile.empty { background: transparent; cursor: default; }
+        .puzzle-tile.empty { background: transparent; cursor: default; border: none; }
 
         /* --- ДРУЗЬЯ И ЧАТЫ --- */
         .friends-split { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
@@ -105,13 +105,13 @@
         .market-item { background: #fff; border: 1px solid var(--border-color); padding: 20px; text-align: center; border-radius: 6px; }
 
         /* Общие элементы ввода */
-        .input-field { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; outline: none; margin-bottom: 15px; }
+        .input-field { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; outline: none; margin-bottom: 15px; color: var(--text-main); }
         .btn-gold { background-color: var(--accent-gold); color: white; border: none; padding: 12px 24px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; cursor: pointer; width: 100%; }
         .btn-gold:hover { background-color: var(--accent-gold-hover); }
 
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            .sidebar { width: 100%; position: relative; height: auto; padding: 20px; }
+            .sidebar { width: 100%; position: relative; height: auto; padding: 20px; border-right: none; border-bottom: 1px solid var(--border-color); }
             .main-content { margin-left: 0; padding: 20px; width: 100%; }
             .grid-layout, .friends-split { grid-template-columns: 1fr; }
         }
@@ -119,7 +119,6 @@
 </head>
 <body>
 
-    <!-- СИСТЕМА ОКОН АВТОРИЗАЦИИ -->
     <div id="auth-overlay">
         <div class="auth-box" id="login-box">
             <h2>Podnebesye</h2>
@@ -138,34 +137,30 @@
         </div>
     </div>
 
-    <!-- НАВИГАЦИЯ -->
     <div class="sidebar">
         <div class="logo-area">
             <h2>Podnebesye</h2>
             <ul class="nav-menu">
-                <li class="nav-menu-i nav-item active" onclick="switchTab('hub')">01 // Главный хаб</li>
-                <li class="nav-menu-i nav-item" onclick="switchTab('friends')">02 // Друзья & Чаты</li>
-                <li class="nav-menu-i nav-item" onclick="switchTab('games')">03 // Игры & Маркет</li>
-                <li class="nav-menu-i nav-item" onclick="switchTab('council')">04 // Совет семьи</li>
-                <li class="nav-menu-i nav-item" onclick="switchTab('history')">05 // История</li>
+                <li class="nav-item active" onclick="switchTab('hub')">01 // Главный хаб</li>
+                <li class="nav-item" onclick="switchTab('friends')">02 // Друзья & Чаты</li>
+                <li class="nav-item" onclick="switchTab('games')">03 // Игры & Маркет</li>
+                <li class="nav-item" onclick="switchTab('council')">04 // Совет семьи</li>
+                <li class="nav-item" onclick="switchTab('history')">05 // История</li>
             </ul>
         </div>
         <div class="sidebar-footer"><span>Skyline FM</span></div>
     </div>
 
-    <!-- КОНТЕНТ -->
     <div class="main-content">
         <div class="header-section">
             <h1 id="page-title">Ecosystem</h1>
             <div class="stars-badge" id="top-stars-badge">0 ⭐</div>
         </div>
 
-        <!-- ВКЛАДКА 01: ГЛАВНЫЙ ХАБ -->
         <div id="section-hub" class="content-section active">
             <div class="grid-layout">
                 <div class="profile-card">
                     <div class="avatar-wrapper">
-                        <!-- SVG-элементы Шляп -->
                         <svg class="hat-overlay hat-top-hat" viewBox="0 0 100 50"><rect x="20" y="5" width="60" height="35" fill="#111"/><ellipse cx="50" cy="40" rx="45" ry="8" fill="#111"/></svg>
                         <svg class="hat-overlay hat-crown" viewBox="0 0 100 50"><polygon points="10,45 20,15 40,30 50,10 60,30 80,15 90,45" fill="#ffd700" stroke="#b3946b"/></svg>
                         <svg class="hat-overlay hat-santa" viewBox="0 0 100 50"><polygon points="20,40 50,5 80,40" fill="#d9534f"/><rect x="15" y="38" width="70" height="10" rx="5" fill="#fff"/><circle cx="50" cy="6" r="7" fill="#fff"/></svg>
@@ -189,10 +184,9 @@
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 30px;">
-                    <!-- МИНИ ИГРА ПАЗЛ ПЯТНАШКИ -->
                     <div class="info-block">
                         <h4>Головоломка: Пазл Пятнашки</h4>
-                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">Расположите плитки от 1 до 15. Награда за победу: 100 ⭐</p>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">Расположите плитки по порядку от 1 до 15. Награда за победу: 100 ⭐</p>
                         <div id="puzzle-grid"></div>
                         <button class="btn-gold" onclick="initPuzzle()" style="width: auto;">Перемешать пазл</button>
                     </div>
@@ -200,7 +194,6 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА 02: ДРУЗЬЯ И ЛИЧНЫЕ ЧАТЫ -->
         <div id="section-friends" class="content-section">
             <div class="friends-split">
                 <div>
@@ -224,7 +217,6 @@
                 <div class="info-block" style="display: flex; flex-direction: column;">
                     <h4 id="chat-with-title">Выберите друга для общения</h4>
                     
-                    <!-- Соревнования дуэль внутри чата -->
                     <div class="duel-box" id="duel-game-zone">
                         <p id="duel-status-text">Бросить вызов на быструю реакцию (Ставка: 50 ⭐)</p>
                         <button class="btn-gold" id="duel-action-btn" onclick="handleDuelAction()" style="width:auto; margin-top:10px; padding:8px 16px;"></button>
@@ -241,7 +233,6 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА 03: ИГРЫ И МАРКЕТ -->
         <div id="section-games" class="content-section">
             <div class="info-block">
                 <h4>Магазин кастомизации (Шляпы)</h4>
@@ -266,7 +257,6 @@
             </div>
         </div>
 
-        <!-- ДРУГИЕ ВКЛАДКИ -->
         <div id="section-council" class="content-section">
             <div class="info-block"><h4>Совет семьи Podnebesye</h4><p>Модуль голосования закрытого консилиума.</p></div>
         </div>
@@ -275,7 +265,6 @@
         </div>
     </div>
 
-    <!-- ЛОГИКА СИСТЕМЫ И БАЗЫ ДАННЫХ -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -299,12 +288,13 @@
         let unsubscribeChat = null;
         let unsubscribeDuel = null;
 
-        // ПУЛ ГЛОБАЛЬНЫХ МЕТОДОВ ДЛЯ HTML КНОПОК
+        // Переключение окон Логин / Регистрация
         window.toggleAuthForm = function(showLogin) {
             document.getElementById('login-box').style.display = showLogin ? 'block' : 'none';
             document.getElementById('register-box').style.display = showLogin ? 'none' : 'block';
         };
 
+        // Обработка авторизации
         window.processAuth = async function(type) {
             if (type === 'register') {
                 const username = document.getElementById('reg-user').value.trim().toLowerCase();
@@ -312,9 +302,11 @@
                 const password = document.getElementById('reg-pass').value;
 
                 if(!username || !nickname || !password) return alert("Заполните все поля!");
+                if(username.includes(' ')) return alert("Юзернейм не должен содержать пробелы!");
                 
                 const checkRef = doc(db, "users", username);
-                if((await getDoc(checkRef)).exists()) return alert("Этот юзернейм уже занят!");
+                const checkSnap = await getDoc(checkRef);
+                if(checkSnap.exists()) return alert("Этот юзернейм уже занят!");
 
                 userData = { username, nickname, password, stars: 1000, title: "Инвестор", activeHat: "", friends: [] };
                 await setDoc(checkRef, userData);
@@ -323,6 +315,8 @@
             } else {
                 const username = document.getElementById('auth-user').value.trim().toLowerCase();
                 const password = document.getElementById('auth-pass').value;
+
+                if(!username || !password) return alert("Введите юзернейм и пароль!");
 
                 const checkRef = doc(db, "users", username);
                 const userSnap = await getDoc(checkRef);
@@ -338,7 +332,7 @@
             userDocRef = doc(db, "users", username);
             document.getElementById('auth-overlay').style.display = 'none';
             
-            // Живой слушатель обновлений параметров нашего профиля
+            // Живой слушатель нашего профиля
             onSnapshot(userDocRef, (snap) => {
                 if(snap.exists()) {
                     userData = snap.data();
@@ -354,7 +348,7 @@
             document.getElementById('profile-name-display').textContent = userData.nickname;
             document.getElementById('profile-user-display').textContent = `@${userData.username}`;
             document.getElementById('top-stars-badge').textContent = `${userData.stars} ⭐`;
-            document.getElementById('profile-title-select').value = userData.title;
+            document.getElementById('profile-title-select').value = userData.title || "Инвестор";
 
             // Отображение надетой шляпы
             document.querySelectorAll('.hat-overlay').forEach(el => el.style.display = 'none');
@@ -372,14 +366,20 @@
         };
 
         window.updateTitle = async function(newTitle) {
-            await updateDoc(userDocRef, { title: newTitle });
+            if(userDocRef) {
+                await updateDoc(userDocRef, { title: newTitle });
+            }
         };
 
         window.switchTab = function(tabId) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            document.getElementById(`section-${tabId}`).classList.add('active');
+            
+            if(event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
+            const targetSec = document.getElementById(`section-${tabId}`);
+            if(targetSec) targetSec.classList.add('active');
         };
 
         // ==========================================
@@ -387,7 +387,7 @@
         // ==========================================
         window.sendFriendRequest = async function() {
             const targetUsername = document.getElementById('friend-search-input').value.trim().toLowerCase();
-            if(!targetUsername || targetUsername === userData.username) return alert("Неверный юзернейм");
+            if(!targetUsername || targetUsername === userData.username) return alert("Неверный или собственный юзернейм");
 
             const targetSnap = await getDoc(doc(db, "users", targetUsername));
             if(!targetSnap.exists()) return alert("Пользователь не найден!");
@@ -410,8 +410,8 @@
                 snap.forEach(docSnap => {
                     const reqData = docSnap.data();
                     const div = document.createElement('div');
-                    div.style = "display:flex; justify-content:space-between; align-items:center; background:#fff; padding:6px; border:1px solid #eee;";
-                    div.innerHTML = `<span>@${reqData.from}</span> <button class="btn-gold" style="width:auto; padding:4px 8px; font-size:11px;" id="accept-btn-${docSnap.id}">Принять</button>`;
+                    div.style = "display:flex; justify-content:space-between; align-items:center; background:#fff; padding:6px; border:1px solid #eee; border-radius:4px;";
+                    div.innerHTML = `<span>@${reqData.from}</span> <button class="btn-gold" style="width:auto; padding:6px 12px; font-size:11px;" id="accept-btn-${docSnap.id}">Принять</button>`;
                     container.appendChild(div);
                     document.getElementById(`accept-btn-${docSnap.id}`).onclick = () => acceptFriend(docSnap.id, reqData.from);
                 });
@@ -435,11 +435,21 @@
 
         async function acceptFriend(reqId, fromUser) {
             await updateDoc(doc(db, "friend_requests", reqId), { status: "accepted" });
-            await updateDoc(userDocRef, { friends: [...(userData.friends || []), fromUser] });
+            
+            // Добавляем себе в список друзей
+            const currentFriends = userData.friends || [];
+            if(!currentFriends.includes(fromUser)) {
+                await updateDoc(userDocRef, { friends: [...currentFriends, fromUser] });
+            }
+
+            // Добавляем оппоненту в список друзей
             const companionRef = doc(db, "users", fromUser);
             const compSnap = await getDoc(companionRef);
             if(compSnap.exists()) {
-                await updateDoc(companionRef, { friends: [...(compSnap.data().friends || []), userData.username] });
+                const compFriends = compSnap.data().friends || [];
+                if(!compFriends.includes(userData.username)) {
+                    await updateDoc(companionRef, { friends: [...compFriends, userData.username] });
+                }
             }
         }
 
@@ -475,6 +485,8 @@
             unsubscribeDuel = onSnapshot(doc(db, "duels", chatId), (snap) => {
                 const btn = document.getElementById('duel-action-btn');
                 const txt = document.getElementById('duel-status-text');
+                btn.style.background = "var(--accent-gold)";
+                
                 if(!snap.exists() || snap.data().status === 'ended') {
                     txt.textContent = "Бросить вызов на быструю реакцию (Ставка: 50 ⭐)";
                     btn.textContent = "Начать дуэль";
@@ -532,15 +544,14 @@
                 if(userData.stars < 50) return alert("Недостаточно звезд!");
                 await updateDoc(dRef, { status: "active" });
             } else if(mode === "click") {
-                btn.style.background = "var(--accent-gold)";
                 const snap = await getDoc(dRef);
                 if(snap.exists() && snap.data().status === 'active') {
                     await setDoc(dRef, { status: "ended" });
-                    const winner = userData.username;
                     const loser = activeChatFriend;
                     
-                    // Расчет баланса звезд
+                    // Расчет баланса звезд победителю
                     await updateDoc(userDocRef, { stars: userData.stars + 50 });
+                    // Снятие у проигравшего
                     const oppRef = doc(db, "users", loser);
                     const oppSnap = await getDoc(oppRef);
                     if(oppSnap.exists()) {
@@ -564,18 +575,16 @@
         };
 
         // ==========================================
-        // ИСПРАВЛЕННЫЙ И ГАРАНТИРОВАННО РАЗРЕШИМЫЙ ПАЗЛ
+        // ИСПРАВЛЕННЫЙ И ПОЛНОСТЬЮ КЛИКАБЕЛЬНЫЙ ПАЗЛ
         // ==========================================
         let puzzleState = [];
         window.initPuzzle = function() {
-            // Формируем изначально правильный массив плит
             let arr = Array.from({length: 15}, (_, i) => i + 1);
             arr.push(0); // 0 - пустая плитка
 
-            // Делаем случайные валидные ходы для перемешивания из решенного состояния,
-            // что гарантирует 100% математическую разрешимость пазла.
+            // Валидное перемешивание из решенного состояния гарантирует 100% разрешимость
             let emptyIdx = 15;
-            for(let i=0; i<120; i++) {
+            for(let i=0; i<100; i++) {
                 let validMoves = [];
                 let r = Math.floor(emptyIdx / 4), c = emptyIdx % 4;
                 if(r > 0) validMoves.push(emptyIdx - 4);
@@ -595,8 +604,52 @@
 
         function drawPuzzle() {
             const grid = document.getElementById('puzzle-grid');
+            if(!grid) return;
             grid.innerHTML = "";
+            
             puzzleState.forEach((val, idx) => {
                 const tile = document.createElement('div');
                 tile.className = `puzzle-tile ${val === 0 ? 'empty' : ''}`;
-                tileNormally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
+                tile.textContent = val === 0 ? "" : val;
+                if(val !== 0) {
+                    tile.onclick = () => movePuzzleTile(idx);
+                }
+                grid.appendChild(tile);
+            });
+        }
+
+        function movePuzzleTile(idx) {
+            let emptyIdx = puzzleState.indexOf(0);
+            let r = Math.floor(idx / 4), c = idx % 4;
+            let er = Math.floor(emptyIdx / 4), ec = emptyIdx % 4;
+
+            // Проверяем, находится ли пустая плитка в соседней ячейке
+            if (Math.abs(r - er) + Math.abs(c - ec) === 1) {
+                puzzleState[emptyIdx] = puzzleState[idx];
+                puzzleState[idx] = 0;
+                drawPuzzle();
+                checkPuzzleWin();
+            }
+        }
+
+        async function checkPuzzleWin() {
+            let isWin = true;
+            for(let i=0; i<15; i++) {
+                if(puzzleState[i] !== i + 1) isWin = false;
+            }
+            if(isWin && puzzleState[15] === 0) {
+                alert("🎉 Поздравляем! Пазл собран! Награда: +100 ⭐");
+                if(userDocRef) {
+                    await updateDoc(userDocRef, { stars: userData.stars + 100 });
+                }
+                initPuzzle();
+            }
+        }
+
+        // Привязываем события после полной загрузки DOM
+        document.addEventListener("DOMContentLoaded", () => {
+            // Кнопки и инпуты активны
+        });
+    </script>
+</body>
+</html>
