@@ -113,7 +113,8 @@
 
         /* Колесо фортуны */
         .wheel-box { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 15px; }
-        .wheel-visual { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--accent-gold); position: relative; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; background: #fff; transition: transform 2s cubic-bezier(0.1, 0.8, 0.1, 1); }
+        .wheel-visual { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--accent-gold); position: relative; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; background: #fff; transition: transform 2s cubic-bezier(0.1, 0.8, 0.1, 1); overflow: hidden; }
+        .wheel-visual img { width: 100px; height: 100px; object-fit: contain; }
         .wheel-pointer { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 15px solid var(--text-main); margin-bottom: -5px; z-index: 5; }
 
         /* --- СОВЕТ СЕМЬИ (ОЛИМП) --- */
@@ -224,8 +225,9 @@
         </div>
     </div>
 
-    <!-- СКРЫТЫЙ ИНПУТ ДЛЯ ЗАГРУЗКИ КАРТИНКИ ИЗ ГАЛЕРЕИ -->
+    <!-- СКРЫТЫЕ ИНПУТЫ ДЛЯ ГАЛЕРЕИ -->
     <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+    <input type="file" id="post-media-input" accept="image/*,video/*" style="display: none;">
 
     <!-- НАВИГАЦИЯ СИДЕНБАРА -->
     <div class="sidebar">
@@ -354,7 +356,9 @@
                         <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Испытайте свою удачу. Стоимость прокрута: 30 ⭐</p>
                         <div class="wheel-box">
                             <div class="wheel-pointer"></div>
-                            <div class="wheel-visual" id="fortune-wheel-element">💎</div>
+                            <div class="wheel-visual" id="fortune-wheel-element">
+                                <img src="image.png" alt="Logo">
+                            </div>
                             <button class="btn-gold" id="btn-spin-wheel" style="width: auto; padding: 10px 30px;">Вращать Колесо</button>
                         </div>
                     </div>
@@ -432,16 +436,8 @@
             <div class="info-block">
                 <h4>Создать новую публикацию</h4>
                 <textarea id="post-text-input" class="input-field" placeholder="Что у вас нового? Напишите текст..." style="height: 80px; resize: none; margin-top: 10px;"></textarea>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                    <div>
-                        <span style="font-size: 12px; color: var(--text-muted);">Ссылка на Фото:</span>
-                        <input type="text" id="post-photo-input" class="input-field" placeholder="https://example.com/image.jpg" style="margin-top: 5px; margin-bottom: 0;">
-                    </div>
-                    <div>
-                        <span style="font-size: 12px; color: var(--text-muted);">Ссылка на Видео:</span>
-                        <input type="text" id="post-video-input" class="input-field" placeholder="https://example.com/video.mp4" style="margin-top: 5px; margin-bottom: 0;">
-                    </div>
-                </div>
+                <button class="btn-gold" id="btn-open-media-gallery" style="background:#2b251f; margin-bottom: 15px;">Выбрать медиа (Фото/Видео)</button>
+                <div id="media-preview-box" style="margin-bottom: 10px; display:none; font-size: 12px; color: var(--accent-gold);">Медиа выбрано.</div>
                 <button class="btn-gold" id="btn-publish-post">Добавить пост</button>
             </div>
             <div id="global-feed-container"></div>
@@ -508,6 +504,7 @@
         let activeChatFriend = null;
         let unsubscribeChat = null;
         let unsubscribeDuel = null;
+        let selectedPostMediaUrl = "";
 
         const eliteTitles = [
             { id: "oligarch", name: "⚜️ Олигарх", cost: 2000 },
@@ -633,11 +630,27 @@
                 const base64String = reader.result;
                 if(userDocRef) {
                     await updateDoc(userDocRef, { avatarUrl: base64String });
-                    alert("Аватарка успешно обновлена из галереи!");
+                    alert("Аватарка успешно обновлена!");
                 }
             };
             reader.readAsDataURL(file);
         }
+
+        // РАБОТА С ГАЛЕРЕЕЙ ПОСТОВ
+        window.triggerPostMedia = function() {
+            document.getElementById('post-media-input').click();
+        };
+
+        document.getElementById('post-media-input').onchange = (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                selectedPostMediaUrl = reader.result;
+                document.getElementById('media-preview-box').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        };
 
         window.changeNickname = async function() {
             const newNick = prompt("Укажите новый никнейм:", userData.nickname);
@@ -789,7 +802,14 @@
                     const fAv = (fSnap.exists() && fSnap.data().avatarUrl) ? fSnap.data().avatarUrl : "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg";
                     
                     div.innerHTML = `<img class="friend-avatar-mini" src="${fAv}"> <strong>@${f}</strong>`;
-                    div.onclick = () => openFriendChat(f);
+                    // Клик по другу открывает его профиль через inspectProfile
+                    div.onclick = (e) => {
+                        if(e.target.tagName === 'IMG') {
+                            window.inspectProfile(f);
+                        } else {
+                            openFriendChat(f);
+                        }
+                    };
                     container.appendChild(div);
                 });
             });
@@ -1002,26 +1022,22 @@
         // --- ЛОГИКА ФЕЙСБУК-ЛЕНТЫ ПОСТОВ ---
         window.publishNewPost = async function() {
             const text = document.getElementById('post-text-input').value.trim();
-            const photo = document.getElementById('post-photo-input').value.trim();
-            const video = document.getElementById('post-video-input').value.trim();
-
-            if(!text && !photo && !video) return alert("Заполните хотя бы одно поле для создания публикации!");
+            if(!text && !selectedPostMediaUrl) return alert("Напишите текст или добавьте медиа!");
 
             await addDoc(collection(db, "posts"), {
                 authorUsername: userData.username,
                 authorNickname: userData.nickname,
                 authorAvatar: userData.avatarUrl || "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg",
                 text: text,
-                photo: photo,
-                video: video,
+                media: selectedPostMediaUrl,
                 likes: [],
                 comments: [],
                 timestamp: new Date().getTime()
             });
 
             document.getElementById('post-text-input').value = "";
-            document.getElementById('post-photo-input').value = "";
-            document.getElementById('post-video-input').value = "";
+            selectedPostMediaUrl = "";
+            document.getElementById('media-preview-box').style.display = 'none';
             alert("Пост успешно опубликован!");
         };
 
@@ -1044,8 +1060,10 @@
             card.className = "post-card";
 
             let mediaHtml = "";
-            if(post.photo) mediaHtml += `<img src="${post.photo}" class="post-media" onerror="this.style.display='none'">`;
-            if(post.video) mediaHtml += `<video src="${post.video}" class="post-media" controls onerror="this.style.display='none'"></video>`;
+            if(post.media) {
+                if(post.media.includes('video')) mediaHtml = `<video src="${post.media}" class="post-media" controls></video>`;
+                else mediaHtml = `<img src="${post.media}" class="post-media">`;
+            }
 
             const likesCount = post.likes ? post.likes.length : 0;
             const isLiked = post.likes && post.likes.includes(userData.username);
@@ -1150,10 +1168,6 @@
 
             const postsContainer = document.getElementById('modal-friend-posts');
             postsContainer.innerHTML = "";
-            const userPostsQ = query(collection(db, "posts"), where("authorUsername", "==", targetUser), orderBy("timestamp", "desc"));
-            
-            const pSnap = await getDoc(userPostsQ);
-            const postsSnap = query(collection(db, "posts"), where("authorUsername", "==", targetUser));
             
             onSnapshot(query(collection(db, "posts"), where("authorUsername", "==", targetUser), orderBy("timestamp", "desc")), (s) => {
                 postsContainer.innerHTML = "";
@@ -1191,6 +1205,7 @@
             document.getElementById('profile-name-display').onclick = () => window.changeNickname();
             document.getElementById('btn-change-avatar-trigger').onclick = () => window.triggerAvatarUpload();
             document.getElementById('avatar-file-input').onchange = (e) => handleAvatarFile(e);
+            document.getElementById('btn-open-media-gallery').onclick = () => window.triggerPostMedia();
             
             document.getElementById('core-logo-clicker').onclick = () => window.coreClickerAction();
             document.getElementById('btn-shuffle-puzzle').onclick = () => window.initPuzzle();
