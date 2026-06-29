@@ -16,353 +16,170 @@
             --chat-bg: #fffcf9;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
+        /* --- АВТОРИЗАЦИЯ ОВЕРЛЕЙ --- */
+        #auth-overlay {
+            position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(43,37,31,0.97);
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
         }
+        .auth-box {
+            background: #fff; padding: 40px; border-radius: 8px; width: 100%; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;
+        }
+        .auth-box h2 { font-family: "Times New Roman", Times, serif; margin-bottom: 25px; letter-spacing: 1px; }
 
         /* --- СИДЕНБАР --- */
         .sidebar {
-            width: 260px;
-            background-color: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 30px 20px;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100;
+            width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color);
+            display: flex; flex-direction: column; justify-content: space-between; padding: 30px 20px;
+            position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
         }
-
         .logo-area h2 {
-            font-family: "Times New Roman", Times, serif;
-            font-size: 24px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
+            font-family: "Times New Roman", Times, serif; font-size: 24px; letter-spacing: 2px;
+            text-transform: uppercase; margin-bottom: 40px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;
         }
-
-        .nav-menu {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
+        .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 10px; }
         .nav-item {
-            padding: 12px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 13px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.2s ease;
+            padding: 12px 15px; border-radius: 4px; cursor: pointer; color: var(--text-muted);
+            font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s;
         }
-
         .nav-item:hover, .nav-item.active {
-            color: var(--text-main);
-            background-color: var(--bg-main);
-            border-left: 3px solid var(--accent-gold);
-            padding-left: 12px;
-        }
-
-        .sidebar-footer {
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            color: var(--text-main); background-color: var(--bg-main); border-left: 3px solid var(--accent-gold); padding-left: 12px;
         }
 
         /* --- ОСНОВНОЙ КОНТЕНТ --- */
-        .main-content {
-            margin-left: 260px;
-            flex: 1;
-            padding: 40px;
-            max-width: 1200px;
-        }
+        .main-content { margin-left: 260px; flex: 1; padding: 40px; max-width: 1200px; width: calc(100% - 260px); }
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
+        .header-section h1 { font-family: "Times New Roman", Times, serif; font-size: 32px; font-weight: 400; }
+        .stars-badge { background: #fff; border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 14px; }
 
-        .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 20px;
-        }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .grid-layout { display: grid; grid-template-columns: 320px 1fr; gap: 30px; }
 
-        .header-section h1 {
-            font-family: "Times New Roman", Times, serif;
-            font-size: 32px;
-            font-weight: 400;
-        }
-
-        /* --- СЧЕТЧИК СТАР СВЕРХУ --- */
-        .stars-badge {
-            background: #fff;
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--text-main);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-
-        /* --- СЕКЦИИ И ВКЛАДКИ --- */
-        .content-section {
-            display: none;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 320px 1 flex;
-            gap: 30px;
-        }
-
-        @media (max-width: 900px) {
-            .grid-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* --- КАРТОЧКА ПРОФИЛЯ --- */
-        .profile-card {
-            background-color: var(--bg-sidebar);
-            border: 1px solid var(--border-color);
-            padding: 30px 20px;
-            border-radius: 6px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.01);
-            height: fit-content;
-        }
-
-        .avatar-container {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin: 0 auto 20px auto;
-            overflow: hidden;
-            border: 2px solid var(--accent-gold);
-            background: #eee;
-        }
-
-        .avatar-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-card h3 {
-            font-size: 20px;
-            margin-bottom: 5px;
-            font-family: "Times New Roman", Times, serif;
-            transition: color 0.2s;
-        }
+        /* --- ПРОФИЛЬ И ШЛЯПЫ --- */
+        .profile-card { background-color: var(--bg-sidebar); border: 1px solid var(--border-color); padding: 30px 20px; border-radius: 6px; text-align: center; position: relative; height: fit-content; }
+        .avatar-wrapper { position: relative; width: 120px; height: 120px; margin: 0 auto 20px auto; }
+        .avatar-container { width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 2px solid var(--accent-gold); background: #eee; }
+        .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
         
-        .profile-card h3:hover {
-            color: var(--accent-gold);
-        }
+        /* Стили накладываемых шляп */
+        .hat-overlay { position: absolute; left: 50%; transform: translateX(-50%); z-index: 10; pointer-events: none; display: none; }
+        .hat-top-hat { top: -28px; width: 70px; height: auto; }
+        .hat-crown { top: -25px; width: 65px; height: auto; }
+        .hat-santa { top: -30px; width: 75px; height: auto; }
+        .hat-cap { top: -15px; width: 70px; height: auto; }
 
-        .profile-card .uid {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            letter-spacing: 0.5px;
-        }
+        .profile-card h3 { font-size: 20px; margin-bottom: 5px; font-family: "Times New Roman", Times, serif; }
+        .profile-card .username-label { font-size: 12px; color: var(--text-muted); margin-bottom: 15px; }
 
-        .title-select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            border-radius: 4px;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            outline: none;
-        }
+        .info-block { background-color: var(--bg-sidebar); border: 1px solid var(--border-color); padding: 30px; border-radius: 6px; margin-bottom: 30px; }
+        .info-block h4 { font-family: "Times New Roman", Times, serif; font-size: 18px; margin-bottom: 20px; font-weight: 400; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
 
-        /* --- ИНФОРМАЦИОННЫЕ БЛОКИ --- */
-        .info-block {
-            background-color: var(--bg-sidebar);
-            border: 1px solid var(--border-color);
-            padding: 30px;
-            border-radius: 6px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.01);
-        }
+        /* --- ИГРЫ: ПАЗЛ (ПЯТНАШКИ) --- */
+        #puzzle-grid { display: grid; grid-template-columns: repeat(4, 60px); grid-template-rows: repeat(4, 60px); gap: 5px; margin: 20px 0; background: var(--border-color); padding: 5px; width: 265px; border-radius: 4px; }
+        .puzzle-tile { width: 60px; height: 60px; background: var(--accent-gold); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; cursor: pointer; border-radius: 4px; user-select: none; }
+        .puzzle-tile.empty { background: transparent; cursor: default; }
 
-        .info-block h4 {
-            font-family: "Times New Roman", Times, serif;
-            font-size: 18px;
-            margin-bottom: 20px;
-            font-weight: 400;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
+        /* --- ДРУЗЬЯ И ЧАТЫ --- */
+        .friends-split { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+        .friends-list { display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; }
+        .friend-item { padding: 12px; background: #fff; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .friend-item:hover, .friend-item.active { background: var(--chat-bg); border-color: var(--accent-gold); }
+        
+        .chat-container { display: flex; flex-direction: column; height: 400px; border: 1px solid var(--border-color); background-color: var(--chat-bg); border-radius: 4px; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+        .chat-msg { background: #fff; padding: 8px 12px; border-radius: 4px; border: 1px solid #f2ede4; max-width: 85%; align-self: flex-start; }
+        .chat-msg.my-msg { align-self: flex-end; background: #f5eedf; }
+        .chat-input-row { display: flex; border-top: 1px solid var(--border-color); background: #fff; }
+        .chat-input-row input { flex: 1; border: none; padding: 15px; font-size: 13px; outline: none; }
+        .chat-input-row button { background: transparent; border: none; border-left: 1px solid var(--border-color); padding: 0 25px; color: var(--accent-gold); font-weight: 600; cursor: pointer; }
 
-        /* --- ИГРОВОЙ ОНЛАЙН ЧАТ --- */
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 350px;
-            border: 1px solid var(--border-color);
-            background-color: var(--chat-bg);
-            border-radius: 4px;
-            overflow: hidden;
-        }
+        /* --- ДУЭЛЬ КНОПКА --- */
+        .duel-box { background: #fffde8; border: 1px dashed var(--accent-gold); padding: 15px; text-align: center; border-radius: 4px; margin-bottom: 15px; display: none; }
 
-        .chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 13px;
-        }
+        /* МАРКЕТ СЕТКА */
+        .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        .market-item { background: #fff; border: 1px solid var(--border-color); padding: 20px; text-align: center; border-radius: 6px; }
 
-        .chat-msg {
-            background: #fff;
-            padding: 8px 12px;
-            border-radius: 4px;
-            border: 1px solid #f2ede4;
-            max-width: 90%;
-            align-self: flex-start;
-            word-break: break-word;
-        }
+        /* Общие элементы ввода */
+        .input-field { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; outline: none; margin-bottom: 15px; }
+        .btn-gold { background-color: var(--accent-gold); color: white; border: none; padding: 12px 24px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; cursor: pointer; width: 100%; }
+        .btn-gold:hover { background-color: var(--accent-gold-hover); }
 
-        .chat-input-row {
-            display: flex;
-            border-top: 1px solid var(--border-color);
-            background: #fff;
-        }
-
-        .chat-input-row input {
-            flex: 1;
-            border: none;
-            padding: 15px;
-            font-size: 13px;
-            outline: none;
-            background: transparent;
-        }
-
-        .chat-input-row button {
-            background: transparent;
-            border: none;
-            border-left: 1px solid var(--border-color);
-            padding: 0 25px;
-            color: var(--accent-gold);
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .chat-input-row button:hover {
-            background-color: var(--bg-main);
-            color: var(--accent-gold-hover);
-        }
-
-        /* Кнопки и формы ввода общего вида */
-        .btn-gold {
-            background-color: var(--accent-gold);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-gold:hover {
-            background-color: var(--accent-gold-hover);
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background-color: #fff;
-            font-size: 14px;
-            outline: none;
-            margin-bottom: 15px;
-        }
-
-        /* --- АДАПТИВНОСТЬ ДЛЯ МОБИЛОК --- */
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            .sidebar { width: 100%; position: relative; bottom: auto; height: auto; padding: 20px; border-right: none; border-bottom: 1px solid var(--border-color); }
-            .logo-area h2 { margin-bottom: 20px; }
-            .main-content { margin-left: 0; padding: 20px; }
-            .header-section { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .sidebar { width: 100%; position: relative; height: auto; padding: 20px; }
+            .main-content { margin-left: 0; padding: 20px; width: 100%; }
+            .grid-layout, .friends-split { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
+    <!-- СИСТЕМА ОКОН АВТОРИЗАЦИИ -->
+    <div id="auth-overlay">
+        <div class="auth-box" id="login-box">
+            <h2>Podnebesye</h2>
+            <input type="text" id="auth-user" class="input-field" placeholder="Уникальный юзернейм">
+            <input type="password" id="auth-pass" class="input-field" placeholder="Пароль">
+            <button class="btn-gold" onclick="processAuth('login')" style="margin-bottom: 10px;">Войти</button>
+            <a href="#" style="color: var(--accent-gold); font-size: 12px;" onclick="toggleAuthForm(false)">Создать аккаунт</a>
+        </div>
+        <div class="auth-box" id="register-box" style="display: none;">
+            <h2>Регистрация</h2>
+            <input type="text" id="reg-user" class="input-field" placeholder="Придумайте юзернейм (нельзя изменить)">
+            <input type="text" id="reg-name" class="input-field" placeholder="Ваше имя / Никнейм">
+            <input type="password" id="reg-pass" class="input-field" placeholder="Пароль">
+            <button class="btn-gold" onclick="processAuth('register')" style="margin-bottom: 10px;">Зарегистрироваться</button>
+            <a href="#" style="color: var(--accent-gold); font-size: 12px;" onclick="toggleAuthForm(true)">Уже есть аккаунт</a>
+        </div>
+    </div>
+
+    <!-- НАВИГАЦИЯ -->
     <div class="sidebar">
         <div class="logo-area">
             <h2>Podnebesye</h2>
             <ul class="nav-menu">
-                <li class="nav-item active" onclick="switchTab('hub')">01 // Главный хаб</li>
-                <li class="nav-item" onclick="switchTab('games')">02 // Игры & Маркет</li>
-                <li class="nav-item" onclick="switchTab('council')">03 // Совет семьи</li>
-                <li class="nav-item" onclick="switchTab('history')">04 // История</li>
-                <li class="nav-item" onclick="switchTab('profile')">05 // Мой профиль</li>
+                <li class="nav-menu-i nav-item active" onclick="switchTab('hub')">01 // Главный хаб</li>
+                <li class="nav-menu-i nav-item" onclick="switchTab('friends')">02 // Друзья & Чаты</li>
+                <li class="nav-menu-i nav-item" onclick="switchTab('games')">03 // Игры & Маркет</li>
+                <li class="nav-menu-i nav-item" onclick="switchTab('council')">04 // Совет семьи</li>
+                <li class="nav-menu-i nav-item" onclick="switchTab('history')">05 // История</li>
             </ul>
         </div>
-        <div class="sidebar-footer">
-            <span>Skyline FM</span>
-        </div>
+        <div class="sidebar-footer"><span>Skyline FM</span></div>
     </div>
 
+    <!-- КОНТЕНТ -->
     <div class="main-content">
         <div class="header-section">
             <h1 id="page-title">Ecosystem</h1>
-            <div class="stars-badge" id="top-stars-badge">4855 ⭐</div>
+            <div class="stars-badge" id="top-stars-badge">0 ⭐</div>
         </div>
 
+        <!-- ВКЛАДКА 01: ГЛАВНЫЙ ХАБ -->
         <div id="section-hub" class="content-section active">
             <div class="grid-layout">
                 <div class="profile-card">
-                    <div class="avatar-container">
-                        <img src="https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg" alt="Avatar">
+                    <div class="avatar-wrapper">
+                        <!-- SVG-элементы Шляп -->
+                        <svg class="hat-overlay hat-top-hat" viewBox="0 0 100 50"><rect x="20" y="5" width="60" height="35" fill="#111"/><ellipse cx="50" cy="40" rx="45" ry="8" fill="#111"/></svg>
+                        <svg class="hat-overlay hat-crown" viewBox="0 0 100 50"><polygon points="10,45 20,15 40,30 50,10 60,30 80,15 90,45" fill="#ffd700" stroke="#b3946b"/></svg>
+                        <svg class="hat-overlay hat-santa" viewBox="0 0 100 50"><polygon points="20,40 50,5 80,40" fill="#d9534f"/><rect x="15" y="38" width="70" height="10" rx="5" fill="#fff"/><circle cx="50" cy="6" r="7" fill="#fff"/></svg>
+                        <svg class="hat-overlay hat-cap" viewBox="0 0 100 50"><path d="M20,40 Q50,10 80,40 Z" fill="#337ab7"/><path d="M75,35 L95,42 L75,45 Z" fill="#23527c"/></svg>
+                        
+                        <div class="avatar-container">
+                            <img src="https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg" alt="Avatar">
+                        </div>
                     </div>
-                    <h3 id="profile-name-display" style="cursor: pointer;" title="Нажмите, чтобы изменить никнейм">ЖенаСоздателя</h3>
-                    <div class="uid" id="profile-id-display">#POD-9594</div>
+                    <h3 id="profile-name-display" style="cursor: pointer;" onclick="changeNickname()">Гость</h3>
+                    <div class="username-label" id="profile-user-display">@username</div>
                     
                     <div style="text-align: left; margin-top: 15px;">
-                        <label style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px;">Кастомизация титула</label>
-                        <select class="title-select" id="profile-title-select" onchange="handleTitleChange(this)">
+                        <select class="title-select" id="profile-title-select" onchange="updateTitle(this.value)">
                             <option value="Инвестор">Инвестор</option>
                             <option value="Разработчик">Разработчик</option>
                             <option value="Администратор">Администратор</option>
@@ -372,70 +189,96 @@
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 30px;">
+                    <!-- МИНИ ИГРА ПАЗЛ ПЯТНАШКИ -->
                     <div class="info-block">
-                        <h4>Добавить оппонента для соревнований</h4>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" class="input-field" placeholder="Имя игрока или ID..." style="margin-bottom: 0;">
-                            <button class="btn-gold" style="white-space: nowrap;">Добавить</button>
-                        </div>
+                        <h4>Головоломка: Пазл Пятнашки</h4>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">Расположите плитки от 1 до 15. Награда за победу: 100 ⭐</p>
+                        <div id="puzzle-grid"></div>
+                        <button class="btn-gold" onclick="initPuzzle()" style="width: auto;">Перемешать пазл</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 02: ДРУЗЬЯ И ЛИЧНЫЕ ЧАТЫ -->
+        <div id="section-friends" class="content-section">
+            <div class="friends-split">
+                <div>
+                    <div class="info-block" style="padding: 20px; margin-bottom: 20px;">
+                        <h4>Добавить по @username</h4>
+                        <input type="text" id="friend-search-input" class="input-field" placeholder="Введите юзернейм..." style="margin-bottom: 10px;">
+                        <button class="btn-gold" onclick="sendFriendRequest()">Отправить запрос</button>
                     </div>
 
-                    <div class="info-block">
-                        <h4>Список лидеров & Рекорды</h4>
-                        <div id="leaderboard-box">
-                            </div>
+                    <div class="info-block" style="padding: 20px; margin-bottom: 20px;" id="incoming-requests-block">
+                        <h4>Запросы в друзья</h4>
+                        <div id="requests-list" style="font-size: 13px; display:flex; flex-direction:column; gap:8px;"></div>
                     </div>
 
-                    <div class="info-block">
-                        <h4>Игровой текстовый чат</h4>
-                        <div class="chat-container">
-                            <div class="chat-messages" id="chat-messages-box">
-                                </div>
-                            <div class="chat-input-row">
-                                <input type="text" id="chat-input" placeholder="Сообщение..." onkeydown="if(event.key === 'Enter') sendChatMessage()">
-                                <button onclick="sendChatMessage()">Отправить</button>
-                            </div>
+                    <div class="info-block" style="padding: 20px;">
+                        <h4>Мои друзья</h4>
+                        <div id="active-friends-list" class="friends-list"></div>
+                    </div>
+                </div>
+
+                <div class="info-block" style="display: flex; flex-direction: column;">
+                    <h4 id="chat-with-title">Выберите друга для общения</h4>
+                    
+                    <!-- Соревнования дуэль внутри чата -->
+                    <div class="duel-box" id="duel-game-zone">
+                        <p id="duel-status-text">Бросить вызов на быструю реакцию (Ставка: 50 ⭐)</p>
+                        <button class="btn-gold" id="duel-action-btn" onclick="handleDuelAction()" style="width:auto; margin-top:10px; padding:8px 16px;"></button>
+                    </div>
+
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-messages-box"></div>
+                        <div class="chat-input-row">
+                            <input type="text" id="chat-input" placeholder="Сообщение..." onkeydown="if(event.key === 'Enter') sendPrivateMessage()">
+                            <button onclick="sendPrivateMessage()">Отправить</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- ВКЛАДКА 03: ИГРЫ И МАРКЕТ -->
         <div id="section-games" class="content-section">
             <div class="info-block">
-                <h4>Игры и маркет экосистемы</h4>
-                <p style="color: var(--text-muted); font-size: 14px;">Раздел находится в разработке. Скоро здесь появятся новые мини-игры и покупка уникальных стилей за звезды.</p>
+                <h4>Магазин кастомизации (Шляпы)</h4>
+                <div class="market-grid">
+                    <div class="market-item">
+                        <h5>🎩 Цилиндр</h5><p style="margin: 10px 0; font-weight: bold;">200 ⭐</p>
+                        <button class="btn-gold" onclick="buyHat('top-hat', 200)">Купить</button>
+                    </div>
+                    <div class="market-item">
+                        <h5>👑 Корона</h5><p style="margin: 10px 0; font-weight: bold;">500 ⭐</p>
+                        <button class="btn-gold" onclick="buyHat('crown', 500)">Купить</button>
+                    </div>
+                    <div class="market-item">
+                        <h5>🎅 Шапка Санты</h5><p style="margin: 10px 0; font-weight: bold;">150 ⭐</p>
+                        <button class="btn-gold" onclick="buyHat('santa', 150)">Купить</button>
+                    </div>
+                    <div class="market-item">
+                        <h5>🧢 Кепка</h5><p style="margin: 10px 0; font-weight: bold;">100 ⭐</p>
+                        <button class="btn-gold" onclick="buyHat('cap', 100)">Купить</button>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- ДРУГИЕ ВКЛАДКИ -->
         <div id="section-council" class="content-section">
-            <div class="info-block">
-                <h4>Совет семьи Podnebesye</h4>
-                <p style="color: var(--text-muted); font-size: 14px;">Система голосования и управления административными решениями сообщества.</p>
-            </div>
+            <div class="info-block"><h4>Совет семьи Podnebesye</h4><p>Модуль голосования закрытого консилиума.</p></div>
         </div>
-
         <div id="section-history" class="content-section">
-            <div class="info-block">
-                <h4>История логов изменений</h4>
-                <p style="color: var(--text-muted); font-size: 14px;">v1.2.0 — Интеграция базы данных Cloud Firestore. Добавлен глобальный живой онлайн-чат и система локального управления профилем.</p>
-            </div>
-        </div>
-
-        <div id="section-profile" class="content-section">
-            <div class="info-block">
-                <h4>Настройки аккаунта</h4>
-                <p style="color: var(--text-muted); font-size: 14px;">Вы можете изменить свой никнейм прямо на вкладке "Главный хаб", просто нажав на своё имя в карточке.</p>
-            </div>
+            <div class="info-block"><h4>История изменений экосистемы</h4><p>v2.0.0 — Интегрирована полноценная авторизация аккаунтов, база друзей, синхронизация личных чатов, соревновательные дуэли и магазин визуальных шляп сверху аватарки.</p></div>
         </div>
     </div>
 
+    <!-- ЛОГИКА СИСТЕМЫ И БАЗЫ ДАННЫХ -->
     <script type="module">
-        // ==========================================
-        // 1. ПОДКЛЮЧЕНИЕ FIREBASE И НАСТРОЙКА БАЗЫ
-        // ==========================================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBidafkcn8FUZcZ9LuUxbiXv9r8o7YnX0",
@@ -443,166 +286,317 @@
             projectId: "sklogo-5fbd1",
             storageBucket: "sklogo-5fbd1.firebasestorage.app",
             messagingSenderId: "640296445219",
-            appId: "1:640296445219:web:f0c39270b7f925e207d896",
-            measurementId: "G-4DYJJDCKDG"
+            appId: "1:640296445219:web:f0c39270b7f925e207d896"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ==========================================
-        // 2. СОСТОЯНИЕ ПРИЛОЖЕНИЯ (ДАННЫЕ ЮЗЕРА)
-        // ==========================================
-        let currentUser = localStorage.getItem('chat_nickname') || "ЖенаСоздателя";
-        let currentId = localStorage.getItem('chat_user_id') || "#POD-" + Math.floor(1000 + Math.random() * 9000);
-        let userStars = parseInt(localStorage.getItem('user_stars')) || 4855;
-        let currentTitle = localStorage.getItem('user_title') || "Инвестор";
+        // Глобальное состояние сессии
+        let userDocRef = null;
+        let userData = {};
+        let activeChatFriend = null;
+        let unsubscribeChat = null;
+        let unsubscribeDuel = null;
 
-        if (!localStorage.getItem('chat_user_id')) {
-            localStorage.setItem('chat_user_id', currentId);
+        // ПУЛ ГЛОБАЛЬНЫХ МЕТОДОВ ДЛЯ HTML КНОПОК
+        window.toggleAuthForm = function(showLogin) {
+            document.getElementById('login-box').style.display = showLogin ? 'block' : 'none';
+            document.getElementById('register-box').style.display = showLogin ? 'none' : 'block';
+        };
+
+        window.processAuth = async function(type) {
+            if (type === 'register') {
+                const username = document.getElementById('reg-user').value.trim().toLowerCase();
+                const nickname = document.getElementById('reg-name').value.trim();
+                const password = document.getElementById('reg-pass').value;
+
+                if(!username || !nickname || !password) return alert("Заполните все поля!");
+                
+                const checkRef = doc(db, "users", username);
+                if((await getDoc(checkRef)).exists()) return alert("Этот юзернейм уже занят!");
+
+                userData = { username, nickname, password, stars: 1000, title: "Инвестор", activeHat: "", friends: [] };
+                await setDoc(checkRef, userData);
+                alert("Успешная регистрация!");
+                enterEcosystem(username);
+            } else {
+                const username = document.getElementById('auth-user').value.trim().toLowerCase();
+                const password = document.getElementById('auth-pass').value;
+
+                const checkRef = doc(db, "users", username);
+                const userSnap = await getDoc(checkRef);
+                if(!userSnap.exists() || userSnap.data().password !== password) {
+                    return alert("Неверный юзернейм или пароль!");
+                }
+                userData = userSnap.data();
+                enterEcosystem(username);
+            }
+        };
+
+        function enterEcosystem(username) {
+            userDocRef = doc(db, "users", username);
+            document.getElementById('auth-overlay').style.display = 'none';
+            
+            // Живой слушатель обновлений параметров нашего профиля
+            onSnapshot(userDocRef, (snap) => {
+                if(snap.exists()) {
+                    userData = snap.data();
+                    syncProfileUI();
+                }
+            });
+
+            initFriendsListeners();
+            initPuzzle();
         }
 
-        // Данные для таблицы лидеров игры
-        let leaderboard = [
-            { name: "Игрок #POD-9594", record: 50 }
-        ];
+        function syncProfileUI() {
+            document.getElementById('profile-name-display').textContent = userData.nickname;
+            document.getElementById('profile-user-display').textContent = `@${userData.username}`;
+            document.getElementById('top-stars-badge').textContent = `${userData.stars} ⭐`;
+            document.getElementById('profile-title-select').value = userData.title;
 
-        // ==========================================
-        // 3. ФУНКЦИИ ДЛЯ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК
-        // ==========================================
+            // Отображение надетой шляпы
+            document.querySelectorAll('.hat-overlay').forEach(el => el.style.display = 'none');
+            if(userData.activeHat) {
+                const targetHat = document.querySelector(`.hat-${userData.activeHat}`);
+                if(targetHat) targetHat.style.display = 'block';
+            }
+        }
+
+        window.changeNickname = async function() {
+            const newNick = prompt("Введите новый никнейм:", userData.nickname);
+            if(newNick && newNick.trim() !== "") {
+                await updateDoc(userDocRef, { nickname: newNick.trim() });
+            }
+        };
+
+        window.updateTitle = async function(newTitle) {
+            await updateDoc(userDocRef, { title: newTitle });
+        };
+
         window.switchTab = function(tabId) {
-            // Убираем класс active у всех вкладок навигации
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            // Скрываем все секции контента
-            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
-
-            // Находим нажатый элемент
-            const clickedItem = event.currentTarget;
-            if (clickedItem) clickedItem.classList.add('active');
-
-            // Показываем нужную секцию
-            const targetSection = document.getElementById(`section-${tabId}`);
-            if (targetSection) targetSection.classList.add('active');
-
-            // Меняем заголовок страницы верхнего уровня
-            const titles = { hub: "Ecosystem", games: "Games & Market", council: "Council", history: "History Log", profile: "Profile Settings" };
-            document.getElementById('page-title').textContent = titles[tabId] || "Ecosystem";
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.getElementById(`section-${tabId}`).classList.add('active');
         };
 
         // ==========================================
-        // 4. ФУНКЦИИ ОБНОВЛЕНИЯ ИНТЕРФЕЙСА (ОТРИСОВКА)
+        // ЛОГИКА ДРУЗЕЙ И ВЗАИМОДЕЙСТВИЯ
         // ==========================================
-        window.renderApp = function() {
-            const profileName = document.getElementById('profile-name-display');
-            const profileId = document.getElementById('profile-id-display');
-            const topStarsBadge = document.getElementById('top-stars-badge');
-            const titleSelect = document.getElementById('profile-title-select');
+        window.sendFriendRequest = async function() {
+            const targetUsername = document.getElementById('friend-search-input').value.trim().toLowerCase();
+            if(!targetUsername || targetUsername === userData.username) return alert("Неверный юзернейм");
 
-            if (profileName) profileName.textContent = currentUser;
-            if (profileId) profileId.textContent = currentId;
-            if (topStarsBadge) topStarsBadge.textContent = `${userStars} ⭐`;
-            if (titleSelect) titleSelect.value = currentTitle;
+            const targetSnap = await getDoc(doc(db, "users", targetUsername));
+            if(!targetSnap.exists()) return alert("Пользователь не найден!");
 
-            renderGameSection();
+            await addDoc(collection(db, "friend_requests"), {
+                from: userData.username,
+                to: targetUsername,
+                status: "pending"
+            });
+            alert("Запрос отправлен!");
+            document.getElementById('friend-search-input').value = "";
         };
 
-        function renderGameSection() {
-            const leaderboardBox = document.getElementById('leaderboard-box');
-            if (leaderboardBox) {
-                leaderboardBox.innerHTML = "";
-                leaderboard.forEach(item => {
+        function initFriendsListeners() {
+            // Слушаем входящие запросы
+            const reqQuery = query(collection(db, "friend_requests"), where("to", "==", userData.username), where("status", "==", "pending"));
+            onSnapshot(reqQuery, (snap) => {
+                const container = document.getElementById('requests-list');
+                container.innerHTML = "";
+                snap.forEach(docSnap => {
+                    const reqData = docSnap.data();
                     const div = document.createElement('div');
-                    div.className = 'leader-item';
-                    div.style.display = 'flex';
-                    div.style.justifyContent = 'space-between';
-                    div.style.padding = '8px 0';
-                    div.style.borderBottom = '1px solid var(--border-color)';
-                    div.style.fontSize = '14px';
-                    div.innerHTML = `<span><strong>${item.name}</strong></span> <span>🏆 РЕКОРД: ${item.record}</span>`;
-                    leaderboardBox.appendChild(div);
+                    div.style = "display:flex; justify-content:space-between; align-items:center; background:#fff; padding:6px; border:1px solid #eee;";
+                    div.innerHTML = `<span>@${reqData.from}</span> <button class="btn-gold" style="width:auto; padding:4px 8px; font-size:11px;" id="accept-btn-${docSnap.id}">Принять</button>`;
+                    container.appendChild(div);
+                    document.getElementById(`accept-btn-${docSnap.id}`).onclick = () => acceptFriend(docSnap.id, reqData.from);
                 });
+            });
+
+            // Слушаем список друзей
+            onSnapshot(userDocRef, (snap) => {
+                if(!snap.exists()) return;
+                const flist = snap.data().friends || [];
+                const container = document.getElementById('active-friends-list');
+                container.innerHTML = "";
+                flist.forEach(f => {
+                    const div = document.createElement('div');
+                    div.className = `friend-item ${activeChatFriend === f ? 'active' : ''}`;
+                    div.innerHTML = `<strong>@${f}</strong><span>💬</span>`;
+                    div.onclick = () => openFriendChat(f);
+                    container.appendChild(div);
+                });
+            });
+        }
+
+        async function acceptFriend(reqId, fromUser) {
+            await updateDoc(doc(db, "friend_requests", reqId), { status: "accepted" });
+            await updateDoc(userDocRef, { friends: [...(userData.friends || []), fromUser] });
+            const companionRef = doc(db, "users", fromUser);
+            const compSnap = await getDoc(companionRef);
+            if(compSnap.exists()) {
+                await updateDoc(companionRef, { friends: [...(compSnap.data().friends || []), userData.username] });
             }
         }
 
         // ==========================================
-        // 5. ОНЛАЙН ТЕКСТОВЫЙ ЧАТ (FIREBASE)
+        // СИНХРОНИЗАЦИЯ ЛИЧНОГО ЧАТА И ДУЭЛЕЙ
         // ==========================================
-        window.sendChatMessage = async function() {
+        function openFriendChat(friendUsername) {
+            activeChatFriend = friendUsername;
+            document.getElementById('chat-with-title').textContent = `Чат с @${friendUsername}`;
+            document.getElementById('duel-game-zone').style.display = 'block';
+
+            if(unsubscribeChat) unsubscribeChat();
+            if(unsubscribeDuel) unsubscribeDuel();
+
+            const chatId = [userData.username, friendUsername].sort().join("_");
+            
+            // Загрузка сообщений
+            const chatQ = query(collection(db, `chats/${chatId}/messages`), orderBy("timestamp", "asc"));
+            unsubscribeChat = onSnapshot(chatQ, (snap) => {
+                const box = document.getElementById('chat-messages-box');
+                box.innerHTML = "";
+                snap.forEach(mDoc => {
+                    const m = mDoc.data();
+                    const div = document.createElement('div');
+                    div.className = `chat-msg ${m.sender === userData.username ? 'my-msg' : ''}`;
+                    div.innerHTML = `<strong>${m.sender}:</strong> ${m.msg}`;
+                    box.appendChild(div);
+                });
+                box.scrollTop = box.scrollHeight;
+            });
+
+            // Слушатель дуэлей
+            unsubscribeDuel = onSnapshot(doc(db, "duels", chatId), (snap) => {
+                const btn = document.getElementById('duel-action-btn');
+                const txt = document.getElementById('duel-status-text');
+                if(!snap.exists() || snap.data().status === 'ended') {
+                    txt.textContent = "Бросить вызов на быструю реакцию (Ставка: 50 ⭐)";
+                    btn.textContent = "Начать дуэль";
+                    btn.dataset.mode = "init";
+                } else {
+                    const d = snap.data();
+                    if(d.status === 'waiting') {
+                        if(d.challenger === userData.username) {
+                            txt.textContent = "Ожидание оппонента...";
+                            btn.textContent = "Отменить вызов";
+                            btn.dataset.mode = "cancel";
+                        } else {
+                            txt.textContent = `@${d.challenger} бросил вам вызов!`;
+                            btn.textContent = "Принять дуэль и играть!";
+                            btn.dataset.mode = "accept";
+                        }
+                    } else if(d.status === 'active') {
+                        txt.textContent = "🔥 КНОПКА ПОЯВИЛАСЬ! НАЖМИ ПЕРВЫМ! 🔥";
+                        btn.textContent = "💥 НАЖАТЬ! 💥";
+                        btn.style.background = "#d9534f";
+                        btn.dataset.mode = "click";
+                    }
+                }
+            });
+        }
+
+        window.sendPrivateMessage = async function() {
+            if(!activeChatFriend) return;
             const input = document.getElementById('chat-input');
-            const text = input ? input.value.trim() : "";
-            if (!text) return;
+            const text = input.value.trim();
+            if(!text) return;
 
-            try {
-                // Отправляем объект сообщения напрямую в Firestore Cloud
-                await addDoc(collection(db, "messages"), {
-                    sender: currentUser,
-                    msg: text,
-                    timestamp: new Date().getTime()
-                });
-                if (input) input.value = "";
-            } catch (error) {
-                console.error("Ошибка отправки в Firestore:", error);
-            }
-        };
-
-        function renderChat(messagesArray) {
-            const box = document.getElementById('chat-messages-box');
-            if (!box) return;
-            box.innerHTML = "";
-            
-            messagesArray.forEach(m => {
-                const div = document.createElement('div');
-                div.className = 'chat-msg';
-                div.innerHTML = `<strong>${m.sender}:</strong> ${m.msg}`;
-                box.appendChild(div);
+            const chatId = [userData.username, activeChatFriend].sort().join("_");
+            await addDoc(collection(db, `chats/${chatId}/messages`), {
+                sender: userData.username,
+                msg: text,
+                timestamp: new Date().getTime()
             });
-            box.scrollTop = box.scrollHeight; // автоскролл чата вниз
-        }
+            input.value = "";
+        };
 
-        // Подключаем слушатель Firestore, который обновляет чат у всех в реальном времени
-        const chatQuery = query(collection(db, "messages"), orderBy("timestamp", "asc"));
-        onSnapshot(chatQuery, (snapshot) => {
-            const liveMessages = [];
-            snapshot.forEach((doc) => {
-                liveMessages.push(doc.data());
+        // ДУЭЛЬ В ЧАТЕ: ИГРА НА РЕАКЦИЮ
+        window.handleDuelAction = async function() {
+            const btn = document.getElementById('duel-action-btn');
+            const mode = btn.dataset.mode;
+            const chatId = [userData.username, activeChatFriend].sort().join("_");
+            const dRef = doc(db, "duels", chatId);
+
+            if(mode === "init") {
+                if(userData.stars < 50) return alert("Недостаточно звезд!");
+                await setDoc(dRef, { challenger: userData.username, status: "waiting", timestamp: new Date().getTime() });
+            } else if(mode === "cancel") {
+                await setDoc(dRef, { status: "ended" });
+            } else if(mode === "accept") {
+                if(userData.stars < 50) return alert("Недостаточно звезд!");
+                await updateDoc(dRef, { status: "active" });
+            } else if(mode === "click") {
+                btn.style.background = "var(--accent-gold)";
+                const snap = await getDoc(dRef);
+                if(snap.exists() && snap.data().status === 'active') {
+                    await setDoc(dRef, { status: "ended" });
+                    const winner = userData.username;
+                    const loser = activeChatFriend;
+                    
+                    // Расчет баланса звезд
+                    await updateDoc(userDocRef, { stars: userData.stars + 50 });
+                    const oppRef = doc(db, "users", loser);
+                    const oppSnap = await getDoc(oppRef);
+                    if(oppSnap.exists()) {
+                        await updateDoc(oppRef, { stars: oppSnap.data().stars - 50 });
+                    }
+                    alert("🎉 Вы победили в дуэли на скорость! +50 ⭐");
+                }
+            }
+        };
+
+        // ==========================================
+        // МАГАЗИН КАСТОМИЗАЦИИ ШЛЯП
+        // ==========================================
+        window.buyHat = async function(hatId, cost) {
+            if(userData.stars < cost) return alert("Недостаточно звёзд!");
+            await updateDoc(userDocRef, {
+                stars: userData.stars - cost,
+                activeHat: hatId
             });
-            renderChat(liveMessages);
-        }, (error) => {
-            console.error("Ошибка при получении чата:", error);
-        });
-
-        // ==========================================
-        // 6. ЛОГИКА СМЕНЫ НИКНЕЙМА И ТИТУЛА
-        // ==========================================
-        window.changeNickname = function() {
-            const newName = prompt("Введите ваш новый никнейм:", currentUser);
-            if (newName && newName.trim() !== "") {
-                currentUser = newName.trim();
-                localStorage.setItem('chat_nickname', currentUser);
-                window.renderApp(); // Перерисовываем интерфейс с новым именем
-                alert("Никнейм успешно обновлен!");
-            }
-        };
-
-        window.handleTitleChange = function(selectElement) {
-            if (selectElement) {
-                currentTitle = selectElement.value;
-                localStorage.setItem('user_title', currentTitle);
-            }
+            alert("Шляпа успешно куплена и надета!");
         };
 
         // ==========================================
-        // 7. ЗАПУСК ПРИ ПОЛНОЙ ЗАГРУЗКЕ СТРАНИЦЫ
+        // ИСПРАВЛЕННЫЙ И ГАРАНТИРОВАННО РАЗРЕШИМЫЙ ПАЗЛ
         // ==========================================
-        document.addEventListener("DOMContentLoaded", () => {
-            const nameElement = document.getElementById('profile-name-display');
-            if (nameElement) {
-                nameElement.addEventListener('click', window.changeNickname);
+        let puzzleState = [];
+        window.initPuzzle = function() {
+            // Формируем изначально правильный массив плит
+            let arr = Array.from({length: 15}, (_, i) => i + 1);
+            arr.push(0); // 0 - пустая плитка
+
+            // Делаем случайные валидные ходы для перемешивания из решенного состояния,
+            // что гарантирует 100% математическую разрешимость пазла.
+            let emptyIdx = 15;
+            for(let i=0; i<120; i++) {
+                let validMoves = [];
+                let r = Math.floor(emptyIdx / 4), c = emptyIdx % 4;
+                if(r > 0) validMoves.push(emptyIdx - 4);
+                if(r < 3) validMoves.push(emptyIdx + 4);
+                if(c > 0) validMoves.push(emptyIdx - 1);
+                if(c < 3) validMoves.push(emptyIdx + 1);
+
+                let nextMove = validMoves[Math.floor(Math.random() * validMoves.length)];
+                arr[emptyIdx] = arr[nextMove];
+                arr[nextMove] = 0;
+                emptyIdx = nextMove;
             }
-            
-            // Запуск рендера
-            window.renderApp();
-        });
-    </script>
-</body>
-</html>
+
+            puzzleState = arr;
+            drawPuzzle();
+        };
+
+        function drawPuzzle() {
+            const grid = document.getElementById('puzzle-grid');
+            grid.innerHTML = "";
+            puzzleState.forEach((val, idx) => {
+                const tile = document.createElement('div');
+                tile.className = `puzzle-tile ${val === 0 ? 'empty' : ''}`;
+                tileNormally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
