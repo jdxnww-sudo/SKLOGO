@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SKYLINE LOGO</title>
+    <title>Podnebesye Premium Ecosystem</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,692 +14,618 @@
             --accent-gold: #c5a880;
             --accent-dark: #2c251e;
             --border-color: #e8e4dc;
+            --chat-bg: #fffcf9;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; min-height: 100vh; }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
+        /* Авторизация из скриншота */
+        #auth-screen { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: var(--bg-color); position: relative; z-index: 10; }
+        .auth-card { background: #ffffff; padding: 50px 40px; box-shadow: 0 4px 30px rgba(0,0,0,0.03); width: 100%; max-width: 420px; text-align: center; border-radius: 4px; }
+        .auth-card h1 { font-family: 'Playfair Display', serif; font-size: 32px; letter-spacing: 3px; margin-bottom: 35px; color: var(--text-main); font-weight: 400; text-transform: uppercase; }
+        
+        .input-field { width: 100%; background: #eef4ff; border: 1px solid #d3e2fc; padding: 14px; color: var(--text-main); font-size: 14px; margin-bottom: 18px; outline: none; border-radius: 4px; }
+        .primary-btn { width: 100%; background: var(--accent-gold); color: white; border: none; padding: 15px; font-size: 13px; font-weight: 600; letter-spacing: 1px; cursor: pointer; text-transform: uppercase; border-radius: 4px; transition: background 0.2s; }
+        .primary-btn:hover { background: var(--accent-dark); }
+        .auth-link { display: inline-block; margin-top: 20px; color: var(--accent-gold); text-decoration: none; font-size: 13px; cursor: pointer; }
 
-        /* Фоновое видео для авторизации */
-        .video-bg-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            overflow: hidden;
-            display: none;
-        }
-        .video-bg {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        /* Интерфейс экосистемы */
+        #app-interface { display: none; min-height: 100vh; }
+        
+        /* Сайдбар PODNEBESYE */
+        .sidebar { position: fixed; width: 260px; height: 100vh; background: var(--bg-color); border-right: 1px solid var(--border-color); padding: 40px 20px; display: flex; flex-direction: column; justify-content: space-between; }
+        .sidebar-top h2 { font-family: 'Playfair Display', serif; font-size: 24px; letter-spacing: 2px; margin-bottom: 40px; padding-left: 10px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        
+        .menu-item { padding: 14px 10px; color: var(--text-muted); text-decoration: none; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; cursor: pointer; transition: color 0.2s; }
+        .menu-item:hover, .menu-item.active { color: var(--accent-gold); }
+        .sidebar-footer { font-size: 11px; color: var(--accent-gold); font-weight: 600; letter-spacing: 1px; padding-left: 10px; text-transform: uppercase; }
 
-        /* Стили экрана авторизации */
-        #auth-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            position: relative;
-            z-index: 10;
-        }
+        /* Главный контент */
+        .main-content { margin-left: 260px; padding: 40px; max-width: 1200px; width: calc(100% - 260px); }
+        .view-section { display: none; }
+        .view-section.active { display: block; }
 
-        .auth-card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 2px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 5px; font-weight: 400; }
+        .section-subtitle { color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; }
 
-        .auth-card h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 28px;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            color: var(--accent-dark);
-        }
+        /* Универсальные блоки-карточки */
+        .content-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 25px; margin-bottom: 20px; }
+        .box-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; margin-bottom: 15px; color: var(--text-main); }
 
-        .input-field {
-            width: 100%;
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            padding: 14px;
-            color: var(--text-main);
-            font-size: 14px;
-            margin-bottom: 15px;
-            outline: none;
-            transition: all 0.3s;
-        }
+        /* Кликер (Герб) */
+        .clicker-wrapper { text-align: center; padding: 40px 0; }
+        .clicker-header-title { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 20px; }
+        .clicker-counter-text { color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
+        .click-circle { width: 180px; height: 180px; border-radius: 50%; border: 1px solid var(--accent-gold); margin: 0 auto; display: flex; justify-content: center; align-items: center; cursor: pointer; background: #fffcf7; transition: transform 0.05s; }
+        .click-circle:active { transform: scale(0.96); }
+        .click-circle img { width: 55%; height: 55%; object-fit: contain; }
 
-        .input-field:focus {
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 5px rgba(197, 168, 128, 0.3);
-        }
+        /* Сетка Профиля из Скриншотов */
+        .profile-layout { display: grid; grid-template-columns: 280px 1fr; gap: 30px; align-items: start; }
+        .profile-left-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 30px 20px; text-align: center; position: relative; }
+        .profile-avatar-wrapper { width: 120px; height: 120px; margin: 0 auto 15px; position: relative; }
+        .profile-avatar-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent-gold); }
+        .crown-icon { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px; display: none; }
+        
+        .avatar-link-btn { background: none; border: none; color: var(--accent-gold); font-size: 11px; text-decoration: underline; cursor: pointer; margin-bottom: 15px; }
+        .profile-user-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+        .profile-user-id { color: var(--text-muted); font-size: 11px; letter-spacing: 1px; display: block; margin-top: 4px; }
+        
+        /* Кнопки как на скриншотах */
+        .action-block-btn { width: 100%; background: #c5a880; color: white; border: none; padding: 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; cursor: pointer; margin-bottom: 10px; letter-spacing: 1px; }
+        .action-block-btn.dark-btn { background: #2c251e; }
 
-        .primary-btn {
-            width: 100%;
-            background: var(--accent-gold);
-            color: white;
-            border: none;
-            padding: 14px;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: background 0.3s;
-        }
+        /* Кастомизация титула выпадающий список */
+        .select-title-box { margin-top: 15px; text-align: left; }
+        .select-title-box label { font-size: 10px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; display: block; margin-bottom: 5px; }
+        .custom-select { width: 100%; padding: 10px; border: 1px solid var(--border-color); background: #fff; outline: none; font-size: 13px; font-family: inherit; }
 
-        .primary-btn:hover {
-            background: var(--accent-dark);
-        }
+        /* Плашки статистики в ряд как на 8 скриншоте */
+        .stats-strip { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 25px; }
+        .stat-badge { background: #fff; border: 1px solid var(--border-color); padding: 12px; font-size: 12px; color: var(--text-main); }
 
-        /* Главный интерфейс приложения */
-        #app-interface {
-            display: none;
-            min-height: 100vh;
-        }
+        /* Игровой чат и компоненты */
+        .flex-row-input { display: flex; gap: 10px; }
+        .flex-row-input input { flex: 1; border: 1px solid var(--border-color); padding: 10px; outline: none; font-size: 13px; }
+        .flex-row-input button { background: #fff; border: 1px solid var(--border-color); padding: 10px 20px; font-size: 11px; font-weight: 600; cursor: pointer; text-transform: uppercase; }
+        .flex-row-input button:hover { background: var(--bg-color); }
 
-        /* Боковая панель */
-        .sidebar {
-            position: fixed;
-            width: 260px;
-            height: 100vh;
-            background: var(--card-bg);
-            border-right: 1px solid var(--border-color);
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-        }
+        .leaderboard-row { background: #fff; border: 1px solid var(--border-color); padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+        
+        .chat-display { border: 1px solid var(--border-color); height: 200px; overflow-y: auto; padding: 15px; background: #fff; margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px; }
+        .chat-line { font-size: 12px; line-height: 1.4; }
+        .chat-line .author-tag { font-weight: 600; color: var(--accent-dark); }
 
-        .sidebar h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 22px;
-            letter-spacing: 1px;
-            margin-bottom: 40px;
-            padding-left: 10px;
-        }
+        /* Лента постов в стиле Facebook */
+        .posts-feed-flow { max-width: 650px; }
+        .post-card { background: #fff; border: 1px solid var(--border-color); padding: 20px; margin-bottom: 20px; }
+        .post-card-header { display: flex; align-items: center; margin-bottom: 15px; }
+        .post-card-avatar { width: 38px; height: 38px; border-radius: 50%; margin-right: 12px; object-fit: cover; }
+        .post-card-author { font-weight: 600; font-size: 13px; }
+        .post-card-body { font-size: 13px; line-height: 1.5; margin-bottom: 15px; }
+        .post-card-media { width: 100%; max-height: 350px; object-fit: cover; border: 1px solid var(--border-color); margin-bottom: 15px; }
+        .post-card-actions { border-top: 1px solid #f5f2eb; padding-top: 10px; }
+        .like-btn { background: none; border: none; color: var(--text-muted); font-size: 12px; font-weight: 600; cursor: pointer; }
+        .like-btn:hover { color: var(--accent-gold); }
 
-        .menu-item {
-            padding: 12px 15px;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .menu-item:hover, .menu-item.active {
-            color: var(--text-main);
-            background: var(--bg-color);
-            border-left: 3px solid var(--accent-gold);
-        }
-
-        /* Контентная область */
-        .main-content {
-            margin-left: 260px;
-            padding: 40px;
-            max-width: 1200px;
-            width: calc(100% - 260px);
-        }
-
-        .view-section {
-            display: none;
-        }
-
-        .view-section.active {
-            display: block;
-        }
-
-        /* Стили кликера */
-        .clicker-container {
-            text-align: center;
-            padding: 40px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            margin-bottom: 30px;
-        }
-
-        .clicker-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .clicker-subtitle {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        .click-circle {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            background: var(--bg-color);
-            transition: transform 0.1s;
-        }
-
-        .click-circle:active {
-            transform: scale(0.95);
-        }
-
-        .click-circle img {
-            width: 60%;
-            height: 60%;
-            object-fit: contain;
-        }
-
-        /* Карточка профиля */
-        .profile-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 30px;
-            max-width: 450px;
-            text-align: center;
-            position: relative;
-            margin-bottom: 30px;
-        }
-
-        .avatar-container {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 20px;
-        }
-
-        .avatar-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--accent-gold);
-        }
-
-        .crown-icon {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 24px;
-            color: #ffd700;
-        }
-
-        .profile-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 22px;
-            margin-bottom: 5px;
-        }
-
-        .profile-username {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .profile-rank {
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: var(--accent-gold);
-            text-transform: uppercase;
-            margin-bottom: 20px;
-        }
-
-        .secondary-btn {
-            background: var(--accent-gold);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            cursor: pointer;
-            margin: 5px;
-            width: 100%;
-        }
-
-        .dark-btn {
-            background: var(--accent-dark);
-        }
-
-        /* Лента постов и Facebook-схематика */
-        .posts-feed {
-            max-width: 600px;
-        }
-
-        .create-post-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .post-input {
-            width: 100%;
-            height: 80px;
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            resize: none;
-            font-family: inherit;
-            margin-bottom: 10px;
-            outline: none;
-        }
-
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .post-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            cursor: pointer;
-        }
-
-        .post-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 12px;
-            object-fit: cover;
-        }
-
-        .post-author-name {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .post-time {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .post-content {
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-
-        .post-media {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-color);
-        }
-
-        .post-footer {
-            border-top: 1px solid var(--border-color);
-            padding-top: 10px;
-            display: flex;
-            gap: 20px;
-        }
-
-        .interaction-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .interaction-btn:hover {
-            color: var(--accent-gold);
-        }
-
-        /* Блок Истории / Видео внизу */
-        .history-video-box {
-            margin-top: 40px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            text-align: center;
-        }
-
-        .history-video-box video {
-            width: 100%;
-            max-width: 500px;
-            border: 1px solid var(--border-color);
-        }
-
-        /* Статистика друга */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-            text-align: left;
-            font-size: 13px;
-        }
-        .stat-item {
-            background: var(--bg-color);
-            padding: 8px;
-            border: 1px solid var(--border-color);
-        }
+        /* Блок видео истории */
+        .history-showcase { text-align: center; background: #fff; border: 1px solid var(--border-color); padding: 20px; }
+        .history-showcase video, .history-showcase img { width: 100%; max-width: 540px; height: auto; border: 1px solid var(--border-color); margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="video-bg-container" id="bg-video-wrapper">
-        <video autoplay loop muted playsinline class="video-bg">
-            <source src="background-video.mp4" type="video/mp4">
-        </video>
-    </div>
-
     <div id="auth-screen">
         <div class="auth-card">
-            <h1>SKYLINE LOGO</h1>
-            <input type="text" id="username-input" class="input-field" placeholder="Никнейм...">
-            <input type="password" id="password-input" class="input-field" placeholder="Пароль...">
-            <button class="primary-btn" onclick="login()">Войти в экосистему</button>
+            <h1>PODNEBESYE</h1>
+            <input type="text" id="auth-user" class="input-field" placeholder="Логин">
+            <input type="password" id="auth-pass" class="input-field" placeholder="Пароль">
+            <button class="primary-btn" id="btn-login">войти в экосистему</button>
+            <span class="auth-link" id="link-toggle-reg">Создать аккаунт</span>
         </div>
     </div>
 
     <div id="app-interface">
+        
         <div class="sidebar">
-            <h2>LOGO WEB</h2>
-            <div class="menu-item active" onclick="switchView('clicker-view', this)">01 // Главный хаб</div>
-            <div class="menu-item" onclick="switchView('feed-view', this)">02 // Лента постов</div>
-            <div class="menu-item" onclick="switchView('profile-view', this)">05 // Мой профиль</div>
+            <div class="sidebar-top">
+                <h2>PODNEBESYE</h2>
+                <div class="menu-item active" id="m-hub">01 // Главный хаб</div>
+                <div class="menu-item" id="m-market">02 // Игры & Маркет</div>
+                <div class="menu-item" id="m-feed">03 // Лента постов</div>
+                <div class="menu-item" id="m-history">04 // История</div>
+                <div class="menu-item" id="m-prof">05 // Мой профиль</div>
+            </div>
+            <div class="sidebar-footer">
+                📻 SKYLINE FM
+            </div>
         </div>
 
         <div class="main-content">
             
-            <div id="clicker-view" class="view-section active">
-                <div class="clicker-container">
-                    <div class="clicker-title">Центральный Логотип-Кликер</div>
-                    <div class="clicker-subtitle">Кликайте на фамильный герб для генерации ресурсов экосистемы (<span id="stars-counter">0</span> ⭐)</div>
-                    
-                    <div class="click-circle" onclick="earnStar()">
-                        <img src="image.png" alt="Logo Element" onerror="this.src='https://cdn-icons-png.flaticon.com/512/616/616657.png'">
+            <div id="view-hub" class="view-section active">
+                <h3 class="section-title">Ecosystem</h3>
+                <div class="section-subtitle">Главный Хаб Экосистемы</div>
+                
+                <div class="content-box clicker-wrapper">
+                    <div class="clicker-header-title">Центральный Логотип-Кликер</div>
+                    <div class="clicker-counter-text">Кликайте на фамильный герб для генерации ресурсов экосистемы (+1 ⭐)</div>
+                    <div class="click-circle" id="core-clicker">
+                        <img src="image.png" alt="Family Crest" onerror="this.src='https://cdn-icons-png.flaticon.com/512/616/616657.png'">
                     </div>
                 </div>
             </div>
 
-            <div id="feed-view" class="view-section">
-                <div class="posts-feed">
-                    <div class="create-post-box">
-                        <textarea id="post-text" class="post-input" placeholder="Что у вас нового?"></textarea>
-                        <div class="post-actions">
-                            <input type="file" id="post-file" accept="image/*,video/*">
-                            <button class="primary-btn" style="width: auto; padding: 10px 20px;" onclick="createPost()">Опубликовать</button>
+            <div id="view-market" class="view-section">
+                <h3 class="section-title">Игры & Маркет</h3>
+                <div class="section-subtitle">Соревнования и Премиум возможности</div>
+
+                <div class="content-box">
+                    <div class="box-title">Добавить оппонента для соревнований</div>
+                    <div class="flex-row-input">
+                        <input type="text" id="target-opponent-id" placeholder="Имя игрока или ID...">
+                        <button id="btn-add-opponent">ДОБАВИТЬ</button>
+                    </div>
+                </div>
+
+                <div class="content-box" id="duel-status-bar" style="display:none; background: #fffdf2; border: 1px dashed var(--accent-gold);">
+                    <div style="font-size: 13px; padding: 5px; text-align: center;">
+                        <span id="duel-status-msg">Быстрый вызов активен! Ставка: 50 ⭐</span>
+                        <button class="action-block-btn" id="btn-duel-action" style="width:auto; display:inline-block; margin-left:15px; padding:5px 15px;"></button>
+                    </div>
+                </div>
+
+                <div class="content-box">
+                    <div class="box-title">Список лидеров & Рекорды</div>
+                    <div id="leaderboard-anchor">
+                        <div class="leaderboard-row"><span>Игрок #POD-9594</span> <span>🏆 РЕКОРД: 50</span></div>
+                    </div>
+                </div>
+
+                <div class="content-box">
+                    <div class="box-title">Игровой текстовый чат ЛС</div>
+                    <div class="chat-display" id="private-chat-lines"></div>
+                    <div class="flex-row-input">
+                        <input type="text" id="private-chat-input" placeholder="Сообщение...">
+                        <button id="btn-send-private-msg">ОТПРАВИТЬ</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-feed" class="view-section">
+                <h3 class="section-title">Ecosystem</h3>
+                <div class="section-subtitle">Публикации Экосистемы</div>
+
+                <div class="content-box posts-feed-flow">
+                    <div class="box-title">Создать новую публикацию</div>
+                    <textarea id="post-text-input" style="width:100%; height:70px; padding:10px; border:1px solid var(--border-color); resize:none; outline:none; font-family:inherit; margin-bottom:10px;" placeholder="Что у вас нового?"></textarea>
+                    <div class="flex-row-input">
+                        <input type="text" id="post-media-input" placeholder="Ссылка на медиафайл (изображение/видео)...">
+                        <button id="btn-submit-post">Опубликовать</button>
+                    </div>
+                </div>
+
+                <div class="posts-feed-flow" id="global-posts-stream"></div>
+            </div>
+
+            <div id="view-history" class="view-section">
+                <h3 class="section-title">Ecosystem</h3>
+                <div class="section-subtitle">Раздел истории SKYLINE</div>
+                
+                <div class="history-showcase">
+                    <div class="box-title">История экосистемы</div>
+                    <video autoplay loop muted playsinline id="history-video-player">
+                        <source src="background-video.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div id="view-profile" class="view-section">
+                <h3 class="section-title">Ecosystem</h3>
+                <div class="section-subtitle" id="profile-top-meta">ПРОФИЛЬ: ЗАГРУЗКА...</div>
+
+                <div class="profile-layout">
+                    <div class="profile-left-card">
+                        <div class="profile-avatar-wrapper">
+                            <img src="crown.png" class="crown-icon" id="user-crown-gfx">
+                            <img src="https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg" id="user-avatar-gfx">
+                        </div>
+                        <button class="avatar-link-btn" id="btn-trigger-avatar-prompt">Загрузить аватарку</button>
+                        
+                        <div class="profile-user-title">
+                            <span id="profile-display-name">-</span>
+                            <span class="profile-user-id" id="profile-display-username">@</span>
+                        </div>
+
+                        <div id="owner-actions-zone">
+                            <button class="action-block-btn" id="btn-select-photo-local">ВЫБРАТЬ ФОТО ИЗ ГАЛЕРЕИ</button>
+                            <button class="action-block-btn dark-btn" id="btn-buy-premium-market-nav">КУПИТЬ ТИТУЛ ПРЕМИУМ</button>
+                        </div>
+
+                        <div class="select-title-box">
+                            <label>КАСТОМИЗАЦИЯ ТИТУЛА</label>
+                            <select class="custom-select" id="dropdown-title-selector">
+                                <option value="Участник">Участник</option>
+                                <option value="Инвестор">Инвестор</option>
+                                <option value="Премиум">Премиум ⚡</option>
+                                <option value="Администратор">Администратор</option>
+                            </select>
                         </div>
                     </div>
-                    <div id="feed-container"></div>
-                </div>
-            </div>
 
-            <div id="profile-view" class="view-section">
-                <div class="profile-card">
-                    <div class="avatar-container">
-                        <div class="crown-icon">👑</div>
-                        <img id="prof-avatar" class="avatar-img" src="https://via.placeholder.com/150" alt="Avatar">
-                    </div>
-                    <h3 id="prof-name" class="profile-name">Oscar</h3>
-                    <div id="prof-username" class="profile-username">@spiderman</div>
-                    
-                    <div id="prof-rank" class="profile-rank">Участник</div>
+                    <div>
+                        <div class="stats-strip">
+                            <div class="stat-badge">Баланс: <span id="lbl-balance">0</span> ⭐</div>
+                            <div class="stat-badge">Дуэли: <span id="lbl-duels">0 побед</span></div>
+                            <div class="stat-badge">Всего игр: <span id="lbl-games">0 всего</span></div>
+                            <div class="stat-badge">Достижения: <span id="lbl-achievements">Топ-1 кликер</span></div>
+                        </div>
 
-                    <div id="owner-actions">
-                        <button class="secondary-btn" onclick="alert('Выбор фото из галереи')">Выбрать фото из галереи</button>
-                        <button class="secondary-btn dark-btn" onclick="buyPremium()">Купить титул Премиум</button>
-                    </div>
-
-                    <div id="friend-actions" style="display: none;">
-                        <button class="secondary-btn" id="friend-request-btn" onclick="toggleFriendship()">Добавить в друзья</button>
-                    </div>
-
-                    <div class="stats-grid">
-                        <div class="stat-item">Баланс: <span id="stat-balance">0</span> ⭐</div>
-                        <div class="stat-item">Дуэли: <span id="stat-duels">12 побед</span></div>
-                        <div class="stat-item">Всего игр: <span id="stat-games">48 побед</span></div>
-                        <div class="stat-item">Достижения: <span id="stat-ach">Топ-1 кликер</span></div>
+                        <div class="content-box">
+                            <div class="box-title">Публикации пользователя</div>
+                            <div id="user-personal-posts-stream"></div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="posts-feed">
-                    <h4 style="margin-bottom: 15px; font-family: 'Playfair Display', serif;">Публикации пользователя</h4>
-                    <div id="user-posts-container"></div>
-                </div>
-            </div>
-
-            <div class="history-video-box">
-                <h4 style="margin-bottom: 10px; font-family: 'Playfair Display', serif;">История экосистемы</h4>
-                <video autoplay loop muted playsinline>
-                    <source src="background-video.mp4" type="video/mp4">
-                </video>
             </div>
 
         </div>
     </div>
 
-    <script>
-        // Имитация базы данных в LocalStorage
-        let currentUser = null;
-        const defaultUsers = {
-            "spiderman": { name: "Oscar", username: "spiderman", rank: "Участник", balance: 4855, wins_duels: 14, wins_total: 52, is_premium: false },
-            "friend_user": { name: "ЖенаСоздателя", username: "friend_user", rank: "Инвестор", balance: 1200, wins_duels: 32, wins_total: 94, is_premium: true }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBidafkcn8FUZcZ9LuUxbiXv9r8o7YnX0",
+            authDomain: "sklogo-5fbd1.firebaseapp.com",
+            projectId: "sklogo-5fbd1",
+            storageBucket: "sklogo-5fbd1.firebasestorage.app",
+            messagingSenderId: "640296445219",
+            appId: "1:640296445219:web:f0c39270b7f925e207d896"
         };
 
-        if(!localStorage.getItem('users')) {
-            localStorage.setItem('users', JSON.stringify(defaultUsers));
-        }
-        if(!localStorage.getItem('posts')) {
-            localStorage.setItem('posts', JSON.stringify([]));
-        }
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        // Авторизация
-        window.onload = function() {
-            document.getElementById('bg-video-wrapper').style.display = 'block';
-        }
+        let activeUserUid = null;
+        let activeUserData = null;
+        let currentChatOpponent = null;
+        let unsubscribeChat = null;
+        let unsubscribeDuel = null;
+        let currentAuthMode = 'login';
 
-        function login() {
-            let uInput = document.getElementById('username-input').value.trim().toLowerCase();
-            if(!uInput) uInput = "spiderman"; // Дефолт для теста
-
-            let users = JSON.parse(localStorage.getItem('users'));
-            if(!users[uInput]) {
-                // Если заходит новый человек — автоматический ранг "Участник" (Пункт 5)
-                users[uInput] = { name: uInput, username: uInput, rank: "Участник", balance: 0, wins_duels: 0, wins_total: 0, is_premium: false };
-                localStorage.setItem('users', JSON.stringify(users));
-            }
-
-            currentUser = users[uInput];
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('bg-video-wrapper').style.display = 'none'; // Убираем со всего экрана
-            document.getElementById('app-interface').style.display = 'flex';
-            
-            updateDashboard();
-            renderFeed();
-        }
-
-        function updateDashboard() {
-            document.getElementById('stars-counter').innerText = currentUser.balance;
-        }
-
-        // Кликер
-        function earnStar() {
-            currentUser.balance += 1;
-            let users = JSON.parse(localStorage.getItem('users'));
-            users[currentUser.username].balance = currentUser.balance;
-            localStorage.setItem('users', JSON.stringify(users));
-            updateDashboard();
-        }
-
-        // Навигация
-        function switchView(viewId, element) {
-            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-            
-            document.getElementById(viewId).classList.add('active');
-            if(element) element.classList.add('active');
-
-            if(viewId === 'profile-view') {
-                showProfile(currentUser.username);
-            }
-        }
-
-        // Показ профиля (своего или чужого)
-        function showProfile(username) {
-            let users = JSON.parse(localStorage.getItem('users'));
-            let user = users[username];
-
-            document.getElementById('prof-name').innerText = user.name;
-            document.getElementById('prof-username').innerText = '@' + user.username;
-            document.getElementById('prof-rank').innerText = user.rank;
-            document.getElementById('stat-balance').innerText = user.balance;
-            document.getElementById('stat-duels').innerText = user.wins_duels + " побед";
-            document.getElementById('stat-games').innerText = user.wins_total + " всего";
-
-            if(username === currentUser.username) {
-                document.getElementById('owner-actions').style.display = 'block';
-                document.getElementById('friend-actions').style.display = 'none';
-            } else {
-                document.getElementById('owner-actions').style.display = 'none';
-                document.getElementById('friend-actions').style.display = 'block';
-                
-                // Проверка статуса дружбы
-                let isFriend = localStorage.getItem(`friend_${currentUser.username}_${username}`);
-                document.getElementById('friend-request-btn').innerText = isFriend ? "У вас в друзьях" : "Отправить запрос в друзья";
-            }
-
-            renderUserPosts(username);
-        }
-
-        function buyPremium() {
-            currentUser.rank = "Премиум ✨";
-            let users = JSON.parse(localStorage.getItem('users'));
-            users[currentUser.username].rank = "Премиум ✨";
-            localStorage.setItem('users', JSON.stringify(users));
-            showProfile(currentUser.username);
-        }
-
-        function toggleFriendship() {
-            let activeProfileText = document.getElementById('prof-username').innerText.replace('@', '');
-            localStorage.setItem(`friend_${currentUser.username}_${activeProfileText}`, 'true');
-            document.getElementById('friend-request-btn').innerText = "У вас в друзьях";
-        }
-
-        // Логика Постов (Facebook Схематика)
-        function createPost() {
-            let text = document.getElementById('post-text').value;
-            let fileInput = document.getElementById('post-file');
-            
-            if(!text && !fileInput.files[0]) return;
-
-            let posts = JSON.parse(localStorage.getItem('posts'));
-            
-            let newPost = {
-                id: Date.now(),
-                username: currentUser.username,
-                authorName: currentUser.name,
-                text: text,
-                media: fileInput.files[0] ? URL.createObjectURL(fileInput.files[0]) : null,
-                mediaType: fileInput.files[0] ? fileInput.files[0].type.split('/')[0] : null,
-                time: "Только что",
-                likes: 0
+        document.addEventListener("DOMContentLoaded", () => {
+            // Обработчики входа/регистрации
+            document.getElementById('btn-login').onclick = executeAuthAction;
+            document.getElementById('link-toggle-reg').onclick = () => {
+                if(currentAuthMode === 'login') {
+                    currentAuthMode = 'register';
+                    document.getElementById('btn-login').innerText = "Создать аккаунт";
+                    document.getElementById('link-toggle-reg').innerText = "Уже есть аккаунт? Войти";
+                } else {
+                    currentAuthMode = 'login';
+                    document.getElementById('btn-login').innerText = "войти в экосистему";
+                    document.getElementById('link-toggle-reg').innerText = "Создать аккаунт";
+                }
             };
 
-            posts.unshift(newPost);
-            localStorage.setItem('posts', JSON.stringify(posts));
-            
-            document.getElementById('post-text').value = '';
-            document.getElementById('post-file').value = '';
-            
-            renderFeed();
-        }
+            // Навигация по сайдбару
+            document.getElementById('m-hub').onclick = (e) => switchSection('hub', e.target);
+            document.getElementById('m-market').onclick = (e) => switchSection('market', e.target);
+            document.getElementById('m-feed').onclick = (e) => switchSection('feed', e.target);
+            document.getElementById('m-history').onclick = (e) => switchSection('history', e.target);
+            document.getElementById('m-prof').onclick = (e) => { switchSection('profile', e.target); openUserProfile(activeUserUid); };
 
-        function renderFeed() {
-            let posts = JSON.parse(localStorage.getItem('posts'));
-            let container = document.getElementById('feed-container');
-            container.innerHTML = '';
-            posts.forEach(post => {
-                container.appendChild(buildPostCard(post));
+            // Кнопки действий
+            document.getElementById('core-clicker').onclick = processCoreClick;
+            document.getElementById('btn-submit-post').onclick = publishFeedPost;
+            document.getElementById('btn-add-opponent').onclick = connectChatOpponent;
+            document.getElementById('btn-send-private-msg').onclick = sendPrivateChatMessage;
+            document.getElementById('btn-trigger-avatar-prompt').onclick = updateAvatarPrompt;
+            document.getElementById('btn-select-photo-local').onclick = updateAvatarPrompt;
+            document.getElementById('btn-buy-premium-market-nav').onclick = () => switchSection('market', document.getElementById('m-market'));
+            
+            document.getElementById('dropdown-title-selector').onchange = (e) => saveCustomTitle(e.target.value);
+            document.getElementById('btn-duel-action').onclick = triggerDuelLogic;
+
+            listenGlobalPostsFlow();
+        });
+
+        async function executeAuthAction() {
+            const user = document.getElementById('auth-user').value.trim().toLowerCase();
+            const pass = document.getElementById('auth-pass').value;
+
+            if(!user || !pass) return alert("Введите логин и пароль!");
+
+            const userRef = doc(db, "users", user);
+            const snap = await getDoc(userRef);
+
+            if(currentAuthMode === 'register') {
+                if(snap.exists()) return alert("Этот логин занят!");
+                const newProfile = {
+                    username: user, password: pass, nickname: user,
+                    stars: 4855, title: "Участник", wins_duels: 14, wins_total: 52,
+                    avatarUrl: "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg"
+                };
+                await setDoc(userRef, newProfile);
+                alert("Аккаунт создан!");
+            } else {
+                if(!snap.exists() || snap.data().password !== pass) return alert("Неверный логин или пароль!");
+            }
+
+            activeUserUid = user;
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('app-interface').style.display = 'flex';
+
+            onSnapshot(doc(db, "users", activeUserUid), (docSnap) => {
+                if(docSnap.exists()) {
+                    activeUserData = docSnap.data();
+                    document.getElementById('lbl-balance').innerText = activeUserData.stars;
+                    document.getElementById('lbl-duels').innerText = `${activeUserData.wins_duels || 0} побед`;
+                    document.getElementById('lbl-games').innerText = `${activeUserData.wins_total || 0} всего`;
+                }
             });
         }
 
-        function renderUserPosts(username) {
-            let posts = JSON.parse(localStorage.getItem('posts'));
-            let container = document.getElementById('user-posts-container');
-            container.innerHTML = '';
-            let userPosts = posts.filter(p => p.username === username);
-            userPosts.forEach(post => {
-                container.appendChild(buildPostCard(post));
+        function switchSection(key, tabEl) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.getElementById(`view-${key}`).classList.add('active');
+            if(tabEl) tabEl.classList.add('active');
+        }
+
+        async function processCoreClick() {
+            if(!activeUserUid || !activeUserData) return;
+            await updateDoc(doc(db, "users", activeUserUid), {
+                stars: activeUserData.stars + 1,
+                wins_total: (activeUserData.wins_total || 0) + 1
             });
         }
 
-        function buildPostCard(post) {
-            let card = document.createElement('div');
+        async function saveCustomTitle(newTitle) {
+            if(!activeUserUid) return;
+            await updateDoc(doc(db, "users", activeUserUid), { title: newTitle });
+            if(activeUserUid) openUserProfile(activeUserUid);
+        }
+
+        async function updateAvatarPrompt() {
+            const url = prompt("Введите прямую ссылку на новую аватарку:", activeUserData.avatarUrl);
+            if(url) {
+                await updateDoc(doc(db, "users", activeUserUid), { avatarUrl: url });
+                openUserProfile(activeUserUid);
+            }
+        }
+
+        // Работа с лентой (Facebook стиль)
+        async function publishFeedPost() {
+            const text = document.getElementById('post-text-input').value.trim();
+            const media = document.getElementById('post-media-input').value.trim();
+            if(!text && !media) return;
+
+            await addDoc(collection(db, "global_posts"), {
+                authorUid: activeUserUid,
+                authorName: activeUserData.nickname || activeUserUid,
+                avatar: activeUserData.avatarUrl,
+                content: text,
+                mediaUrl: media,
+                timestamp: Date.now(),
+                likesCount: 0,
+                likedBy: []
+            });
+
+            document.getElementById('post-text-input').value = "";
+            document.getElementById('post-media-input').value = "";
+        }
+
+        function listenGlobalPostsFlow() {
+            const q = query(collection(db, "global_posts"), orderBy("timestamp", "desc"));
+            onSnapshot(q, (snap) => {
+                const container = document.getElementById('global-posts-stream');
+                container.innerHTML = "";
+                snap.forEach(docSnap => {
+                    container.appendChild(buildHtmlPostCard(docSnap.id, docSnap.data()));
+                });
+            });
+        }
+
+        function buildHtmlPostCard(postId, data) {
+            const card = document.createElement('div');
             card.className = 'post-card';
-            
-            let mediaHtml = '';
-            if(post.media) {
-                if(post.mediaType === 'image') {
-                    mediaHtml = `<img src="${post.media}" class="post-media">`;
-                } else if(post.mediaType === 'video') {
-                    mediaHtml = `<video src="${post.media}" controls class="post-media"></video>`;
+
+            let mediaTag = '';
+            if(data.mediaUrl) {
+                if(data.mediaUrl.includes('.mp4')) {
+                    mediaTag = `<video src="${data.mediaUrl}" controls class="post-card-media"></video>`;
+                } else {
+                    mediaTag = `<img src="${data.mediaUrl}" class="post-card-media">`;
                 }
             }
 
             card.innerHTML = `
-                <div class="post-header" onclick="goToUser('${post.username}')">
-                    <img class="post-avatar" src="https://via.placeholder.com/40" alt="Avatar">
+                <div class="post-card-header" style="cursor:pointer;" id="header-click-${postId}">
+                    <img class="post-card-avatar" src="${data.avatar || 'https://via.placeholder.com/40'}">
                     <div>
-                        <div class="post-author-name">${post.authorName}</div>
-                        <div class="post-time">${post.time}</div>
+                        <div class="post-card-author">@${data.authorUid}</div>
+                        <div style="font-size:10px; color:var(--text-muted);">Экосистема Podnebesye</div>
                     </div>
                 </div>
-                <div class="post-content">${post.text}</div>
-                ${mediaHtml}
-                <div class="post-footer">
-                    <button class="interaction-btn" onclick="alert('Лайк поставлен')">❤️ Нравится (${post.likes})</button>
-                    <button class="interaction-btn">💬 Комментировать</button>
+                <div class="post-card-body">${data.content || ''}</div>
+                ${mediaTag}
+                <div class="post-card-actions">
+                    <button class="like-btn" id="like-trigger-${postId}">❤️ Нравится (${data.likesCount || 0})</button>
                 </div>
             `;
+
+            setTimeout(() => {
+                document.getElementById(`header-click-${postId}`).onclick = () => {
+                    switchSection('profile', document.getElementById('m-prof'));
+                    openUserProfile(data.authorUid);
+                };
+                document.getElementById(`like-trigger-${postId}`).onclick = async () => {
+                    const list = data.likedBy || [];
+                    if(list.includes(activeUserUid)) return alert("Уже лайкнуто!");
+                    list.push(activeUserUid);
+                    await updateDoc(doc(db, "global_posts", postId), {
+                        likesCount: (data.likesCount || 0) + 1,
+                        likedBy: list
+                    });
+                };
+            }, 20);
+
             return card;
         }
 
-        function goToUser(username) {
-            switchView('profile-view', null);
-            showProfile(username);
+        // Профиль любого игрока
+        async function openUserProfile(uid) {
+            const snap = await getDoc(doc(db, "users", uid));
+            if(!snap.exists()) return;
+            const profile = snap.data();
+
+            document.getElementById('profile-top-meta').innerText = `ПРОФИЛЬ: ${profile.title.toUpperCase()} | ЮЗЕР`;
+            document.getElementById('user-avatar-gfx').src = profile.avatarUrl;
+            document.getElementById('profile-display-name').innerText = profile.nickname || uid;
+            document.getElementById('profile-display-username').innerText = `@${uid}`;
+            
+            // Если администратор или премиум, вешаем корону
+            if(profile.title === "Администратор" || profile.title.includes("Премиум")) {
+                document.getElementById('user-crown-gfx').style.display = 'block';
+            } else {
+                document.getElementById('user-crown-gfx').style.display = 'none';
+            }
+
+            document.getElementById('dropdown-title-selector').value = profile.title || "Участник";
+
+            if(uid === activeUserUid) {
+                document.getElementById('owner-actions-zone').style.display = 'block';
+            } else {
+                document.getElementById('owner-actions-zone').style.display = 'none';
+            }
+
+            // Посты этого автора
+            const q = query(collection(db, "global_posts"), where("authorUid", "==", uid));
+            onSnapshot(q, (postSnap) => {
+                const stream = document.getElementById('user-personal-posts-stream');
+                stream.innerHTML = "";
+                postSnap.forEach(pDoc => {
+                    stream.appendChild(buildHtmlPostCard(pDoc.id, pDoc.data()));
+                });
+            });
+        }
+
+        // Дуэли и Чаты ЛС
+        async function connectChatOpponent() {
+            const target = document.getElementById('target-opponent-id').value.trim().toLowerCase();
+            if(!target) return;
+            const snap = await getDoc(doc(db, "users", target));
+            if(!snap.exists()) return alert("Игрок не найден!");
+
+            currentChatOpponent = target;
+            alert(`Связь с @${target} установлена. Откройте игровой чат ниже.`);
+            initPrivateChatSession(target);
+        }
+
+        function initPrivateChatSession(opponentUid) {
+            if(unsubscribeChat) unsubscribeChat();
+            if(unsubscribeDuel) unsubscribeDuel();
+
+            const chatRoomId = [activeUserUid, opponentUid].sort().join("_");
+            document.getElementById('duel-status-bar').style.display = 'block';
+
+            // Слушатель сообщений чата
+            const qChat = query(collection(db, `chats/${chatRoomId}/messages`), orderBy("timestamp", "asc"));
+            unsubscribeChat = onSnapshot(qChat, (snap) => {
+                const box = document.getElementById('private-chat-lines');
+                box.innerHTML = "";
+                snap.forEach(mDoc => {
+                    const m = mDoc.data();
+                    const line = document.createElement('div');
+                    line.className = 'chat-line';
+                    line.innerHTML = `<span class="author-tag">${m.sender}:</span> ${m.msg}`;
+                    box.appendChild(line);
+                });
+                box.scrollTop = box.scrollHeight;
+            });
+
+            // Слушатель дуэлей
+            unsubscribeDuel = onSnapshot(doc(db, "duels", chatRoomId), (snap) => {
+                const btn = document.getElementById('btn-duel-action');
+                const txt = document.getElementById('duel-status-msg');
+
+                if(!snap.exists() || snap.data().status === 'ended') {
+                    txt.innerText = "Дуэль на скорость реакции (Ставка: 50 ⭐)";
+                    btn.innerText = "Бросить вызов";
+                    btn.dataset.mode = "init";
+                } else {
+                    const d = snap.data();
+                    if(d.status === 'waiting') {
+                        if(d.challenger === activeUserUid) {
+                            txt.innerText = "Ожидание подтверждения соперника...";
+                            btn.innerText = "Отмена";
+                            btn.dataset.mode = "cancel";
+                        } else {
+                            txt.innerText = `@${d.challenger} бросил вам вызов!`;
+                            btn.innerText = "Принять дуэль";
+                            btn.dataset.mode = "accept";
+                        }
+                    } else if(d.status === 'active') {
+                        txt.innerText = "🔥 ДУЭЛЬ НАЧАЛАСЬ! НАЖМИ ПЕРВЫМ! 🔥";
+                        btn.innerText = "💥 КЛИК! 💥";
+                        btn.dataset.mode = "click";
+                    }
+                }
+            });
+        }
+
+        async function sendPrivateChatMessage() {
+            if(!currentChatOpponent) return alert("Сначала добавьте оппонента!");
+            const input = document.getElementById('private-chat-input');
+            const txt = input.value.trim();
+            if(!txt) return;
+
+            const chatRoomId = [activeUserUid, currentChatOpponent].sort().join("_");
+            await addDoc(collection(db, `chats/${chatRoomId}/messages`), {
+                sender: activeUserUid, msg: txt, timestamp: Date.now()
+            });
+            input.value = "";
+        }
+
+        async function triggerDuelLogic() {
+            if(!currentChatOpponent) return;
+            const btn = document.getElementById('btn-duel-action');
+            const mode = btn.dataset.mode;
+            const chatRoomId = [activeUserUid, currentChatOpponent].sort().join("_");
+            const dRef = doc(db, "duels", chatRoomId);
+
+            if(mode === "init") {
+                if(activeUserData.stars < 50) return alert("Недостаточно звёзд для ставки!");
+                await setDoc(dRef, { challenger: activeUserUid, status: "waiting" });
+            } else if(mode === "cancel") {
+                await setDoc(dRef, { status: "ended" });
+            } else if(mode === "accept") {
+                if(activeUserData.stars < 50) return alert("Недостаточно звёзд!");
+                await updateDoc(dRef, { status: "active" });
+            } else if(mode === "click") {
+                const snap = await getDoc(dRef);
+                if(snap.exists() && snap.data().status === 'active') {
+                    await setDoc(dRef, { status: "ended" });
+                    
+                    // Обновляем победителя
+                    await updateDoc(doc(db, "users", activeUserUid), {
+                        stars: activeUserData.stars + 50,
+                        wins_duels: (activeUserData.wins_duels || 0) + 1
+                    });
+                    
+                    // Снимаем у проигравшего
+                    const oppRef = doc(db, "users", currentChatOpponent);
+                    const oppSnap = await getDoc(oppRef);
+                    if(oppSnap.exists()) {
+                        await updateDoc(oppRef, { stars: oppSnap.data().stars - 50 });
+                    }
+                    alert("💥 Победа! Вы забрали 50 ⭐ соперника!");
+                }
+            }
         }
     </script>
 </body>
