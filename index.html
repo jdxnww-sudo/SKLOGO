@@ -19,16 +19,15 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
 
-        /* --- АВТОРИЗАЦИЯ ОВЕРЛЕЙ --- */
+        /* --- ЧИСТЫЙ БЕЛЫЙ АВТОРИЗАЦИОННЫЙ ОВЕРЛЕЙ --- */
         #auth-overlay {
-            position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(43,37,31,0.97);
+            position: fixed; top:0; left:0; width:100vw; height:100vh; background: #ffffff;
             z-index: 9999; display: flex; align-items: center; justify-content: center;
         }
         .auth-box {
-            background: #fff; padding: 40px; border-radius: 8px; width: 100%; max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;
+            background: #ffffff; padding: 40px; width: 100%; max-width: 380px; text-align: center;
         }
-        .auth-box h2 { font-family: "Times New Roman", Times, serif; margin-bottom: 25px; letter-spacing: 1px; }
+        .auth-box h2 { font-family: "Times New Roman", Times, serif; font-size: 28px; font-weight: 400; margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase; }
 
         /* --- СИДЕНБАР --- */
         .sidebar {
@@ -65,7 +64,6 @@
         .avatar-container { width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 2px solid var(--accent-gold); background: #eee; }
         .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Стили накладываемых шляп */
         .hat-overlay { position: absolute; left: 50%; transform: translateX(-50%); z-index: 10; pointer-events: none; display: none; }
         .hat-top-hat { top: -28px; width: 70px; height: auto; }
         .hat-crown { top: -25px; width: 65px; height: auto; }
@@ -73,7 +71,8 @@
         .hat-cap { top: -15px; width: 70px; height: auto; }
 
         .profile-card h3 { font-size: 20px; margin-bottom: 5px; font-family: "Times New Roman", Times, serif; }
-        .profile-card .username-label { font-size: 12px; color: var(--text-muted); margin-bottom: 15px; }
+        .profile-card .username-label { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
+        .profile-card .title-display { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--accent-gold); letter-spacing: 1.5px; margin-bottom: 15px; display: block; }
 
         .info-block { background-color: var(--bg-sidebar); border: 1px solid var(--border-color); padding: 30px; border-radius: 6px; margin-bottom: 30px; }
         .info-block h4 { font-family: "Times New Roman", Times, serif; font-size: 18px; margin-bottom: 20px; font-weight: 400; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
@@ -102,7 +101,7 @@
 
         /* МАРКЕТ СЕТКА */
         .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        .market-item { background: #fff; border: 1px solid var(--border-color); padding: 20px; text-align: center; border-radius: 6px; }
+        .market-item { background: #fff; border: 1px solid var(--border-color); padding: 20px; text-align: center; border-radius: 6px; display: flex; flex-direction: column; justify-content: space-between; }
 
         /* Общие элементы ввода */
         .input-field { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; outline: none; margin-bottom: 15px; color: var(--text-main); }
@@ -124,16 +123,16 @@
             <h2>Podnebesye</h2>
             <input type="text" id="auth-user" class="input-field" placeholder="Уникальный юзернейм">
             <input type="password" id="auth-pass" class="input-field" placeholder="Пароль">
-            <button class="btn-gold" onclick="processAuth('login')" style="margin-bottom: 10px;">Войти</button>
-            <a href="#" style="color: var(--accent-gold); font-size: 12px;" onclick="toggleAuthForm(false)">Создать аккаунт</a>
+            <button class="btn-gold" id="btn-login-trigger" style="margin-bottom: 15px;">Войти в экосистему</button>
+            <a href="#" style="color: var(--accent-gold); font-size: 12px; text-decoration: none;" id="link-to-reg">Создать аккаунт</a>
         </div>
         <div class="auth-box" id="register-box" style="display: none;">
             <h2>Регистрация</h2>
-            <input type="text" id="reg-user" class="input-field" placeholder="Придумайте юзернейм (нельзя изменить)">
+            <input type="text" id="reg-user" class="input-field" placeholder="Придумайте юзернейм (латиница)">
             <input type="text" id="reg-name" class="input-field" placeholder="Ваше имя / Никнейм">
-            <input type="password" id="reg-pass" class="input-field" placeholder="Пароль">
-            <button class="btn-gold" onclick="processAuth('register')" style="margin-bottom: 10px;">Зарегистрироваться</button>
-            <a href="#" style="color: var(--accent-gold); font-size: 12px;" onclick="toggleAuthForm(true)">Уже есть аккаунт</a>
+            <input type="password" id="reg-pass" class="input-field" placeholder="Пароль (минимум 6 символов)">
+            <button class="btn-gold" id="btn-reg-trigger" style="margin-bottom: 15px;">Зарегистрироваться</button>
+            <a href="#" style="color: var(--accent-gold); font-size: 12px; text-decoration: none;" id="link-to-login">Уже есть аккаунт</a>
         </div>
     </div>
 
@@ -141,11 +140,11 @@
         <div class="logo-area">
             <h2>Podnebesye</h2>
             <ul class="nav-menu">
-                <li class="nav-item active" onclick="switchTab('hub')">01 // Главный хаб</li>
-                <li class="nav-item" onclick="switchTab('friends')">02 // Друзья & Чаты</li>
-                <li class="nav-item" onclick="switchTab('games')">03 // Игры & Маркет</li>
-                <li class="nav-item" onclick="switchTab('council')">04 // Совет семьи</li>
-                <li class="nav-item" onclick="switchTab('history')">05 // История</li>
+                <li class="nav-item active" id="tab-nav-hub">01 // Главный хаб</li>
+                <li class="nav-item" id="tab-nav-friends">02 // Друзья & Чаты</li>
+                <li class="nav-item" id="tab-nav-games">03 // Игры & Маркет</li>
+                <li class="nav-item" id="tab-nav-council">04 // Совет семьи</li>
+                <li class="nav-item" id="tab-nav-history">05 // История</li>
             </ul>
         </div>
         <div class="sidebar-footer"><span>Skyline FM</span></div>
@@ -170,17 +169,10 @@
                             <img src="https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg" alt="Avatar">
                         </div>
                     </div>
-                    <h3 id="profile-name-display" style="cursor: pointer;" onclick="changeNickname()">Гость</h3>
+                    <h3 id="profile-name-display" style="cursor: pointer;" title="Нажмите для смены никнейма">Гость</h3>
                     <div class="username-label" id="profile-user-display">@username</div>
-                    
-                    <div style="text-align: left; margin-top: 15px;">
-                        <select class="title-select" id="profile-title-select" onchange="updateTitle(this.value)">
-                            <option value="Инвестор">Инвестор</option>
-                            <option value="Разработчик">Разработчик</option>
-                            <option value="Администратор">Администратор</option>
-                            <option value="Создатель">Создатель</option>
-                        </select>
-                    </div>
+                    <div class="title-display" id="profile-title-display">Инвестор</div>
+                    <button class="btn-gold" id="btn-buy-title-trigger" style="font-size: 10px; padding: 6px 12px;">Купить Титул Премиум</button>
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 30px;">
@@ -188,7 +180,7 @@
                         <h4>Головоломка: Пазл Пятнашки</h4>
                         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">Расположите плитки по порядку от 1 до 15. Награда за победу: 100 ⭐</p>
                         <div id="puzzle-grid"></div>
-                        <button class="btn-gold" onclick="initPuzzle()" style="width: auto;">Перемешать пазл</button>
+                        <button class="btn-gold" id="btn-shuffle-puzzle" style="width: auto;">Перемешать пазл</button>
                     </div>
                 </div>
             </div>
@@ -200,7 +192,7 @@
                     <div class="info-block" style="padding: 20px; margin-bottom: 20px;">
                         <h4>Добавить по @username</h4>
                         <input type="text" id="friend-search-input" class="input-field" placeholder="Введите юзернейм..." style="margin-bottom: 10px;">
-                        <button class="btn-gold" onclick="sendFriendRequest()">Отправить запрос</button>
+                        <button class="btn-gold" id="btn-send-request-friend">Отправить запрос</button>
                     </div>
 
                     <div class="info-block" style="padding: 20px; margin-bottom: 20px;" id="incoming-requests-block">
@@ -219,14 +211,14 @@
                     
                     <div class="duel-box" id="duel-game-zone">
                         <p id="duel-status-text">Бросить вызов на быструю реакцию (Ставка: 50 ⭐)</p>
-                        <button class="btn-gold" id="duel-action-btn" onclick="handleDuelAction()" style="width:auto; margin-top:10px; padding:8px 16px;"></button>
+                        <button class="btn-gold" id="duel-action-btn" style="width:auto; margin-top:10px; padding:8px 16px;"></button>
                     </div>
 
                     <div class="chat-container">
                         <div class="chat-messages" id="chat-messages-box"></div>
                         <div class="chat-input-row">
-                            <input type="text" id="chat-input" placeholder="Сообщение..." onkeydown="if(event.key === 'Enter') sendPrivateMessage()">
-                            <button onclick="sendPrivateMessage()">Отправить</button>
+                            <input type="text" id="chat-input" placeholder="Сообщение..." onkeydown="if(event.key === 'Enter') window.sendPrivateMessage()">
+                            <button id="btn-send-msg-priv">Отправить</button>
                         </div>
                     </div>
                 </div>
@@ -235,25 +227,13 @@
 
         <div id="section-games" class="content-section">
             <div class="info-block">
-                <h4>Магазин кастомизации (Шляпы)</h4>
-                <div class="market-grid">
-                    <div class="market-item">
-                        <h5>🎩 Цилиндр</h5><p style="margin: 10px 0; font-weight: bold;">200 ⭐</p>
-                        <button class="btn-gold" onclick="buyHat('top-hat', 200)">Купить</button>
-                    </div>
-                    <div class="market-item">
-                        <h5>👑 Корона</h5><p style="margin: 10px 0; font-weight: bold;">500 ⭐</p>
-                        <button class="btn-gold" onclick="buyHat('crown', 500)">Купить</button>
-                    </div>
-                    <div class="market-item">
-                        <h5>🎅 Шапка Санты</h5><p style="margin: 10px 0; font-weight: bold;">150 ⭐</p>
-                        <button class="btn-gold" onclick="buyHat('santa', 150)">Купить</button>
-                    </div>
-                    <div class="market-item">
-                        <h5>🧢 Кепка</h5><p style="margin: 10px 0; font-weight: bold;">100 ⭐</p>
-                        <button class="btn-gold" onclick="buyHat('cap', 100)">Купить</button>
-                    </div>
-                </div>
+                <h4 style="margin-bottom:25px;">Магазин кастомизации (Шляпы сверху аватарки)</h4>
+                <div class="market-grid" id="market-hats-container"></div>
+            </div>
+            
+            <div class="info-block" id="market-titles-block" style="display:none;">
+                <h4 style="margin-bottom:25px;">Премиальные Элитные Титулы (Свыше 500 000 ⭐)</h4>
+                <div class="market-grid" id="market-titles-container"></div>
             </div>
         </div>
 
@@ -261,7 +241,7 @@
             <div class="info-block"><h4>Совет семьи Podnebesye</h4><p>Модуль голосования закрытого консилиума.</p></div>
         </div>
         <div id="section-history" class="content-section">
-            <div class="info-block"><h4>История изменений экосистемы</h4><p>v2.0.0 — Интегрирована полноценная авторизация аккаунтов, база друзей, синхронизация личных чатов, соревновательные дуэли и магазин визуальных шляп сверху аватарки.</p></div>
+            <div class="info-block"><h4>История изменений экосистемы</h4><p>v2.2.0 — Исправлена сквозная архитектура модулей авторизации, добавлена валидация безопасной длины паролей (>=6) и внедрён элитный маркет кастомных статусов.</p></div>
         </div>
     </div>
 
@@ -281,58 +261,73 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Глобальное состояние сессии
         let userDocRef = null;
         let userData = {};
         let activeChatFriend = null;
         let unsubscribeChat = null;
         let unsubscribeDuel = null;
 
-        // Переключение окон Логин / Регистрация
+        // Конфигурация премиум-титулов
+        const eliteTitles = [
+            { id: "oligarch", name: "⚜️ Олигарх", cost: 500000 },
+            { id: "monarch", name: "👑 Монарх Экосистемы", cost: 1000000 },
+            { id: "shadow", name: "👁️ Теневой Доминант", cost: 2000000 },
+            { id: "immortal", name: "🌌 Бессмертный", cost: 3500000 },
+            { id: "creator_hand", name: "⚡ Правая Рука Создателя", cost: 5000000 }
+        ];
+
+        const shopHats = [
+            { id: 'top-hat', name: '🎩 Цилиндр', cost: 200 },
+            { id: 'crown', name: '👑 Корона', cost: 500 },
+            { id: 'santa', name: '🎅 Шапка Санты', cost: 150 },
+            { id: 'cap', name: '🧢 Кепка', cost: 100 }
+        ];
+
+        // Экспортируем методы переключения форм в глобальную область
         window.toggleAuthForm = function(showLogin) {
             document.getElementById('login-box').style.display = showLogin ? 'block' : 'none';
             document.getElementById('register-box').style.display = showLogin ? 'none' : 'block';
         };
 
-        // Обработка авторизации
-        window.processAuth = async function(type) {
+        // Логика авторизации / Регистрации
+        async function processAuth(type) {
             if (type === 'register') {
                 const username = document.getElementById('reg-user').value.trim().toLowerCase();
                 const nickname = document.getElementById('reg-name').value.trim();
                 const password = document.getElementById('reg-pass').value;
 
-                if(!username || !nickname || !password) return alert("Заполните все поля!");
-                if(username.includes(' ')) return alert("Юзернейм не должен содержать пробелы!");
+                if(!username || !nickname || !password) return alert("Заполните все доступные поля!");
+                if(username.includes(' ')) return alert("Юзернейм не может содержать пробелов!");
+                if(password.length < 6) return alert("Безопасность: Пароль должен быть не менее 6 символов!");
                 
                 const checkRef = doc(db, "users", username);
                 const checkSnap = await getDoc(checkRef);
-                if(checkSnap.exists()) return alert("Этот юзернейм уже занят!");
+                if(checkSnap.exists()) return alert("Этот уникальный юзернейм уже зарезервирован!");
 
-                userData = { username, nickname, password, stars: 1000, title: "Инвестор", activeHat: "", friends: [] };
+                userData = { username, nickname, password, stars: 600000, title: "Инвестор", activeHat: "", friends: [] };
                 await setDoc(checkRef, userData);
-                alert("Успешная регистрация!");
+                alert("Аккаунт успешно создан!");
                 enterEcosystem(username);
             } else {
                 const username = document.getElementById('auth-user').value.trim().toLowerCase();
                 const password = document.getElementById('auth-pass').value;
 
-                if(!username || !password) return alert("Введите юзернейм и пароль!");
+                if(!username || !password) return alert("Введите свои авторизационные данные!");
 
                 const checkRef = doc(db, "users", username);
                 const userSnap = await getDoc(checkRef);
                 if(!userSnap.exists() || userSnap.data().password !== password) {
-                    return alert("Неверный юзернейм или пароль!");
+                    return alert("Неверное имя пользователя или секретный пароль!");
                 }
                 userData = userSnap.data();
                 enterEcosystem(username);
             }
-        };
+        }
 
         function enterEcosystem(username) {
             userDocRef = doc(db, "users", username);
             document.getElementById('auth-overlay').style.display = 'none';
             
-            // Живой слушатель нашего профиля
             onSnapshot(userDocRef, (snap) => {
                 if(snap.exists()) {
                     userData = snap.data();
@@ -342,15 +337,15 @@
 
             initFriendsListeners();
             initPuzzle();
+            buildMarketUI();
         }
 
         function syncProfileUI() {
             document.getElementById('profile-name-display').textContent = userData.nickname;
             document.getElementById('profile-user-display').textContent = `@${userData.username}`;
             document.getElementById('top-stars-badge').textContent = `${userData.stars} ⭐`;
-            document.getElementById('profile-title-select').value = userData.title || "Инвестор";
+            document.getElementById('profile-title-display').textContent = userData.title || "Инвестор";
 
-            // Отображение надетой шляпы
             document.querySelectorAll('.hat-overlay').forEach(el => el.style.display = 'none');
             if(userData.activeHat) {
                 const targetHat = document.querySelector(`.hat-${userData.activeHat}`);
@@ -359,15 +354,9 @@
         }
 
         window.changeNickname = async function() {
-            const newNick = prompt("Введите новый никнейм:", userData.nickname);
+            const newNick = prompt("Изменение никнейма (юзернейм останется прежним):", userData.nickname);
             if(newNick && newNick.trim() !== "") {
                 await updateDoc(userDocRef, { nickname: newNick.trim() });
-            }
-        };
-
-        window.updateTitle = async function(newTitle) {
-            if(userDocRef) {
-                await updateDoc(userDocRef, { title: newTitle });
             }
         };
 
@@ -375,34 +364,30 @@
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             
-            if(event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
             const targetSec = document.getElementById(`section-${tabId}`);
             if(targetSec) targetSec.classList.add('active');
         };
 
         // ==========================================
-        // ЛОГИКА ДРУЗЕЙ И ВЗАИМОДЕЙСТВИЯ
+        // ДРУЗЬЯ
         // ==========================================
         window.sendFriendRequest = async function() {
             const targetUsername = document.getElementById('friend-search-input').value.trim().toLowerCase();
-            if(!targetUsername || targetUsername === userData.username) return alert("Неверный или собственный юзернейм");
+            if(!targetUsername || targetUsername === userData.username) return alert("Укажите корректный чужой юзернейм");
 
             const targetSnap = await getDoc(doc(db, "users", targetUsername));
-            if(!targetSnap.exists()) return alert("Пользователь не найден!");
+            if(!targetSnap.exists()) return alert("Пользователь с таким юзернеймом не обнаружен!");
 
             await addDoc(collection(db, "friend_requests"), {
                 from: userData.username,
                 to: targetUsername,
                 status: "pending"
             });
-            alert("Запрос отправлен!");
+            alert("Запрос на дружбу отправлен оппоненту!");
             document.getElementById('friend-search-input').value = "";
         };
 
         function initFriendsListeners() {
-            // Слушаем входящие запросы
             const reqQuery = query(collection(db, "friend_requests"), where("to", "==", userData.username), where("status", "==", "pending"));
             onSnapshot(reqQuery, (snap) => {
                 const container = document.getElementById('requests-list');
@@ -410,14 +395,13 @@
                 snap.forEach(docSnap => {
                     const reqData = docSnap.data();
                     const div = document.createElement('div');
-                    div.style = "display:flex; justify-content:space-between; align-items:center; background:#fff; padding:6px; border:1px solid #eee; border-radius:4px;";
-                    div.innerHTML = `<span>@${reqData.from}</span> <button class="btn-gold" style="width:auto; padding:6px 12px; font-size:11px;" id="accept-btn-${docSnap.id}">Принять</button>`;
+                    div.style = "display:flex; justify-content:space-between; align-items:center; background:#fff; padding:8px; border:1px solid #eee; border-radius:4px;";
+                    div.innerHTML = `<span>@${reqData.from}</span> <button class="btn-gold" style="width:auto; padding:6px 12px; font-size:11px;" id="accept-btn-${docSnap.id}">Подтвердить</button>`;
                     container.appendChild(div);
                     document.getElementById(`accept-btn-${docSnap.id}`).onclick = () => acceptFriend(docSnap.id, reqData.from);
                 });
             });
 
-            // Слушаем список друзей
             onSnapshot(userDocRef, (snap) => {
                 if(!snap.exists()) return;
                 const flist = snap.data().friends || [];
@@ -435,14 +419,10 @@
 
         async function acceptFriend(reqId, fromUser) {
             await updateDoc(doc(db, "friend_requests", reqId), { status: "accepted" });
-            
-            // Добавляем себе в список друзей
             const currentFriends = userData.friends || [];
             if(!currentFriends.includes(fromUser)) {
                 await updateDoc(userDocRef, { friends: [...currentFriends, fromUser] });
             }
-
-            // Добавляем оппоненту в список друзей
             const companionRef = doc(db, "users", fromUser);
             const compSnap = await getDoc(companionRef);
             if(compSnap.exists()) {
@@ -454,7 +434,7 @@
         }
 
         // ==========================================
-        // СИНХРОНИЗАЦИЯ ЛИЧНОГО ЧАТА И ДУЭЛЕЙ
+        // ЛИЧНЫЕ ЧАТЫ И ДУЭЛИ НА СКОРОСТЬ
         // ==========================================
         function openFriendChat(friendUsername) {
             activeChatFriend = friendUsername;
@@ -466,7 +446,6 @@
 
             const chatId = [userData.username, friendUsername].sort().join("_");
             
-            // Загрузка сообщений
             const chatQ = query(collection(db, `chats/${chatId}/messages`), orderBy("timestamp", "asc"));
             unsubscribeChat = onSnapshot(chatQ, (snap) => {
                 const box = document.getElementById('chat-messages-box');
@@ -481,7 +460,6 @@
                 box.scrollTop = box.scrollHeight;
             });
 
-            // Слушатель дуэлей
             unsubscribeDuel = onSnapshot(doc(db, "duels", chatId), (snap) => {
                 const btn = document.getElementById('duel-action-btn');
                 const txt = document.getElementById('duel-status-text');
@@ -528,7 +506,6 @@
             input.value = "";
         };
 
-        // ДУЭЛЬ В ЧАТЕ: ИГРА НА РЕАКЦИЮ
         window.handleDuelAction = async function() {
             const btn = document.getElementById('duel-action-btn');
             const mode = btn.dataset.mode;
@@ -549,40 +526,63 @@
                     await setDoc(dRef, { status: "ended" });
                     const loser = activeChatFriend;
                     
-                    // Расчет баланса звезд победителю
                     await updateDoc(userDocRef, { stars: userData.stars + 50 });
-                    // Снятие у проигравшего
                     const oppRef = doc(db, "users", loser);
                     const oppSnap = await getDoc(oppRef);
                     if(oppSnap.exists()) {
                         await updateDoc(oppRef, { stars: oppSnap.data().stars - 50 });
                     }
-                    alert("🎉 Вы победили в дуэли на скорость! +50 ⭐");
+                    alert("🎉 Успех! Вы среагировали быстрее оппонента! +50 ⭐");
                 }
             }
         };
 
         // ==========================================
-        // МАГАЗИН КАСТОМИЗАЦИИ ШЛЯП
+        // ЭЛИТНЫЙ МАРКЕТ СТАТУСОВ И ШЛЯП
         // ==========================================
-        window.buyHat = async function(hatId, cost) {
-            if(userData.stars < cost) return alert("Недостаточно звёзд!");
-            await updateDoc(userDocRef, {
-                stars: userData.stars - cost,
-                activeHat: hatId
+        function buildMarketUI() {
+            const hatsContainer = document.getElementById('market-hats-container');
+            hatsContainer.innerHTML = "";
+            shopHats.forEach(h => {
+                const div = document.createElement('div');
+                div.className = "market-item";
+                div.innerHTML = `<h5>${h.name}</h5><p style="margin:10px 0; font-weight:bold;">${h.cost} ⭐</p><button class="btn-gold" id="btn-buy-hat-${h.id}">Купить</button>`;
+                hatsContainer.appendChild(div);
+                document.getElementById(`btn-buy-hat-${h.id}`).onclick = () => buyItem('hat', h.id, h.cost, h.name);
             });
-            alert("Шляпа успешно куплена и надета!");
-        };
+
+            const titlesContainer = document.getElementById('market-titles-container');
+            titlesContainer.innerHTML = "";
+            eliteTitles.forEach(t => {
+                const div = document.createElement('div');
+                div.className = "market-item";
+                div.innerHTML = `<h5>${t.name}</h5><p style="margin:10px 0; font-weight:bold; color:var(--accent-gold);">${t.cost.toLocaleString()} ⭐</p><button class="btn-gold" id="btn-buy-title-${t.id}">Приобрести</button>`;
+                titlesContainer.appendChild(div);
+                document.getElementById(`btn-buy-title-${t.id}`).onclick = () => buyItem('title', t.id, t.cost, t.name);
+            });
+            document.getElementById('market-titles-block').style.display = 'block';
+        }
+
+        async function buyItem(type, id, cost, name) {
+            if(userData.stars < cost) return alert("Недостаточно звёзд на балансе аккаунта!");
+            
+            if(type === 'hat') {
+                await updateDoc(userDocRef, { stars: userData.stars - cost, activeHat: id });
+                alert(`Визуальное украшение "${name}" успешно добавлено на аватарку!`);
+            } else if(type === 'title') {
+                await updateDoc(userDocRef, { stars: userData.stars - cost, title: name });
+                alert(`Поздравляем! Вам присвоен эксклюзивный премиум-титул: ${name}`);
+            }
+        }
 
         // ==========================================
-        // ИСПРАВЛЕННЫЙ И ПОЛНОСТЬЮ КЛИКАБЕЛЬНЫЙ ПАЗЛ
+        // МАТЕМАТИЧЕСКИ РАЗРЕШИМЫЙ ПАЗЛ ПЯТНАШКИ
         // ==========================================
         let puzzleState = [];
         window.initPuzzle = function() {
             let arr = Array.from({length: 15}, (_, i) => i + 1);
-            arr.push(0); // 0 - пустая плитка
+            arr.push(0);
 
-            // Валидное перемешивание из решенного состояния гарантирует 100% разрешимость
             let emptyIdx = 15;
             for(let i=0; i<100; i++) {
                 let validMoves = [];
@@ -597,7 +597,6 @@
                 arr[nextMove] = 0;
                 emptyIdx = nextMove;
             }
-
             puzzleState = arr;
             drawPuzzle();
         };
@@ -612,24 +611,20 @@
                 tile.className = `puzzle-tile ${val === 0 ? 'empty' : ''}`;
                 tile.textContent = val === 0 ? "" : val;
                 if(val !== 0) {
-                    tile.onclick = () => movePuzzleTile(idx);
+                    tile.onclick = () => {
+                        let emptyIdx = puzzleState.indexOf(0);
+                        let r = Math.floor(idx / 4), c = idx % 4;
+                        let er = Math.floor(emptyIdx / 4), ec = emptyIdx % 4;
+                        if (Math.abs(r - er) + Math.abs(c - ec) === 1) {
+                            puzzleState[emptyIdx] = puzzleState[idx];
+                            puzzleState[idx] = 0;
+                            drawPuzzle();
+                            checkPuzzleWin();
+                        }
+                    };
                 }
                 grid.appendChild(tile);
             });
-        }
-
-        function movePuzzleTile(idx) {
-            let emptyIdx = puzzleState.indexOf(0);
-            let r = Math.floor(idx / 4), c = idx % 4;
-            let er = Math.floor(emptyIdx / 4), ec = emptyIdx % 4;
-
-            // Проверяем, находится ли пустая плитка в соседней ячейке
-            if (Math.abs(r - er) + Math.abs(c - ec) === 1) {
-                puzzleState[emptyIdx] = puzzleState[idx];
-                puzzleState[idx] = 0;
-                drawPuzzle();
-                checkPuzzleWin();
-            }
         }
 
         async function checkPuzzleWin() {
@@ -638,17 +633,37 @@
                 if(puzzleState[i] !== i + 1) isWin = false;
             }
             if(isWin && puzzleState[15] === 0) {
-                alert("🎉 Поздравляем! Пазл собран! Награда: +100 ⭐");
+                alert("🎉 Пазл полностью собран! Награда: +100 ⭐");
                 if(userDocRef) {
                     await updateDoc(userDocRef, { stars: userData.stars + 100 });
                 }
-                initPuzzle();
+                window.initPuzzle();
             }
         }
 
-        // Привязываем события после полной загрузки DOM
+        // ПРИВЯЗКА НАПРАВЛЕННЫХ СОБЫТИЙ С КЛИКОВ НА КНОПКИ В DOM
         document.addEventListener("DOMContentLoaded", () => {
-            // Кнопки и инпуты активны
+            document.getElementById('btn-login-trigger').onclick = () => processAuth('login');
+            document.getElementById('btn-reg-trigger').onclick = () => processAuth('register');
+            document.getElementById('link-to-reg').onclick = () => window.toggleAuthForm(false);
+            document.getElementById('link-to-login').onclick = () => window.toggleAuthForm(true);
+            
+            document.getElementById('tab-nav-hub').onclick = (e) => { window.switchTab('hub'); e.currentTarget.classList.add('active'); };
+            document.getElementById('tab-nav-friends').onclick = (e) => { window.switchTab('friends'); e.currentTarget.classList.add('active'); };
+            document.getElementById('tab-nav-games').onclick = (e) => { window.switchTab('games'); e.currentTarget.classList.add('active'); };
+            document.getElementById('tab-nav-council').onclick = (e) => { window.switchTab('council'); e.currentTarget.classList.add('active'); };
+            document.getElementById('tab-nav-history').onclick = (e) => { window.switchTab('history'); e.currentTarget.classList.add('active'); };
+
+            document.getElementById('profile-name-display').onclick = () => window.changeNickname();
+            document.getElementById('btn-shuffle-puzzle').onclick = () => window.initPuzzle();
+            document.getElementById('btn-send-request-friend').onclick = () => window.sendFriendRequest();
+            document.getElementById('btn-send-msg-priv').onclick = () => window.sendPrivateMessage();
+            
+            document.getElementById('btn-buy-title-trigger').onclick = () => {
+                window.switchTab('games');
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                document.getElementById('tab-nav-games').classList.add('active');
+            };
         });
     </script>
 </body>
