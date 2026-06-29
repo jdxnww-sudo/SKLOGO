@@ -164,7 +164,8 @@
 
         /* --- СТИЛИ ДЛЯ ЛЕНТЫ ПОСТОВ И МОДАЛЬНОГО ОКНА ПРОФИЛЯ --- */
         .post-card { background: #fff; border: 1px solid var(--border-color); padding: 20px; border-radius: 6px; margin-bottom: 20px; }
-        .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; cursor: pointer; }
+        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .post-author-wrapper { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .post-avatar { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--accent-gold); object-fit: cover; }
         .post-author-info h5 { font-size: 14px; color: var(--text-main); }
         .post-author-info span { font-size: 11px; color: var(--text-muted); }
@@ -201,7 +202,6 @@
 </head>
 <body>
 
-    <!-- ОКНА АВТОРИЗАЦИИ С МЕДИА СЛОЕМ -->
     <div id="auth-overlay">
         <video id="auth-video-bg" autoplay loop muted playsinline>
             <source src="background-video.mp4" type="video/mp4">
@@ -225,11 +225,9 @@
         </div>
     </div>
 
-    <!-- СКРЫТЫЕ ИНПУТЫ ДЛЯ ГАЛЕРЕИ -->
     <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
     <input type="file" id="post-media-input" accept="image/*,video/*" style="display: none;">
 
-    <!-- НАВИГАЦИЯ СИДЕНБАРА -->
     <div class="sidebar">
         <div class="logo-area">
             <h2>SKYLINE</h2>
@@ -246,19 +244,16 @@
         <div class="sidebar-footer"><span>Skyline FM</span></div>
     </div>
 
-    <!-- КОНТЕНТ -->
     <div class="main-content">
         <div class="header-section">
             <h1 id="page-title">LOGO WEB</h1>
             <div class="stars-badge" id="top-stars-badge">0 ⭐</div>
         </div>
 
-        <!-- ВКЛАДКА 01: ГЛАВНЫЙ ХАБ -->
         <div id="section-hub" class="content-section active">
             <div class="grid-layout">
                 <div class="profile-card">
                     <div class="avatar-wrapper">
-                        <!-- Шляпы -->
                         <svg class="hat-overlay hat-top-hat" viewBox="0 0 100 50"><rect x="20" y="5" width="60" height="35" fill="#111"/><ellipse cx="50" cy="40" rx="45" ry="8" fill="#111"/></svg>
                         <svg class="hat-overlay hat-crown" viewBox="0 0 100 50"><polygon points="10,45 20,15 40,30 50,10 60,30 80,15 90,45" fill="#ffd700" stroke="#b3946b"/></svg>
                         <svg class="hat-overlay hat-santa" viewBox="0 0 100 50"><polygon points="20,40 50,5 80,40" fill="#d9534f"/><rect x="15" y="38" width="70" height="10" rx="5" fill="#fff"/><circle cx="50" cy="6" r="7" fill="#fff"/></svg>
@@ -276,7 +271,6 @@
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 30px;">
-                    <!-- ЦЕНТРАЛЬНЫЙ КЛИКЕР С ЛОГОТИПОМ -->
                     <div class="info-block" style="text-align: center;">
                         <h4>Центральный Логотип-Кликер</h4>
                         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Кликайте на фамильный герб для генерации ресурсов экосистемы (+1 ⭐)</p>
@@ -290,7 +284,6 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА 02: ДРУЗЬЯ И ЛИЧНЫЕ ЧАТЫ -->
         <div id="section-friends" class="content-section">
             <div class="friends-split">
                 <div>
@@ -331,7 +324,6 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА 03: ИГРОВОЙ ЗАЛ -->
         <div id="section-games" class="content-section">
             <div class="grid-layout">
                 <div class="games-flex-layout">
@@ -366,7 +358,6 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА 04: СОВЕТ СЕМЬИ (ОЛИМП) -->
         <div id="section-council" class="content-section">
             <div class="info-block">
                 <div class="olympus-quote">
@@ -394,7 +385,6 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА 05: ПРЕМИУМ МАРКЕТ -->
         <div id="section-market" class="content-section">
             <div class="info-block">
                 <h4>Ваш личный гардероб головных уборов</h4>
@@ -413,7 +403,6 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА 06: ИСТОРИЯ -->
         <div id="section-history" class="content-section">
             <div class="info-block">
                 <div class="patent-card">
@@ -431,12 +420,14 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА 07: ПУБЛИЧНАЯ ЛЕНТА ПОСТОВ -->
         <div id="section-feed" class="content-section">
             <div class="info-block">
                 <h4>Создать новую публикацию</h4>
                 <textarea id="post-text-input" class="input-field" placeholder="Что у вас нового? Напишите текст..." style="height: 80px; resize: none; margin-top: 10px;"></textarea>
-                <button class="btn-gold" id="btn-open-media-gallery" style="background:#2b251f; margin-bottom: 15px;">Выбрать медиа (Фото/Видео)</button>
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+                    <button class="btn-gold" id="btn-open-media-gallery" style="background:#2b251f; width: auto;">Выбрать медиа</button>
+                    <label style="font-size: 12px; cursor: pointer;"><input type="checkbox" id="post-comments-disabled"> Запретить комменты</label>
+                </div>
                 <div id="media-preview-box" style="margin-bottom: 10px; display:none; font-size: 12px; color: var(--accent-gold);">Медиа выбрано.</div>
                 <button class="btn-gold" id="btn-publish-post">Добавить пост</button>
             </div>
@@ -444,7 +435,6 @@
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО ПРОСМОТРА ПРОФИЛЯ ДРУГА / ПОЛЬЗОВАТЕЛЯ -->
     <div class="modal-overlay" id="profile-modal">
         <div class="modal-content-box">
             <span class="close-modal-btn" id="btn-close-modal">&times;</span>
@@ -482,10 +472,9 @@
         </div>
     </div>
 
-    <!-- ЛОГИКА СИСТЕМЫ -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, where, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBidafkcn8FUZcZ9LuUxbiXv9r8o7YnX0",
@@ -636,7 +625,6 @@
             reader.readAsDataURL(file);
         }
 
-        // РАБОТА С ГАЛЕРЕЕЙ ПОСТОВ
         window.triggerPostMedia = function() {
             document.getElementById('post-media-input').click();
         };
@@ -672,7 +660,6 @@
             if(targetSec) targetSec.classList.add('active');
         };
 
-        // ЧАТЫ И ДУЭЛИ
         async function openFriendChat(friendUsername) {
             activeChatFriend = friendUsername;
             document.getElementById('chat-with-title').textContent = `Чат с @${friendUsername}`;
@@ -802,7 +789,6 @@
                     const fAv = (fSnap.exists() && fSnap.data().avatarUrl) ? fSnap.data().avatarUrl : "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg";
                     
                     div.innerHTML = `<img class="friend-avatar-mini" src="${fAv}"> <strong>@${f}</strong>`;
-                    // Клик по другу открывает его профиль через inspectProfile
                     div.onclick = (e) => {
                         if(e.target.tagName === 'IMG') {
                             window.inspectProfile(f);
@@ -843,7 +829,6 @@
             }
         }
 
-        // МАРКЕТ И ИНВЕНТАРЬ
         function buildMarketUI() {
             const hatsContainer = document.getElementById('market-hats-container');
             hatsContainer.innerHTML = "";
@@ -909,7 +894,6 @@
             });
         }
 
-        // ИГРЫ
         let puzzleState = [];
         window.initPuzzle = function() {
             let arr = Array.from({length: 15}, (_, i) => i + 1); arr.push(0);
@@ -1019,9 +1003,10 @@
             }, 2000);
         };
 
-        // --- ЛОГИКА ФЕЙСБУК-ЛЕНТЫ ПОСТОВ ---
         window.publishNewPost = async function() {
             const text = document.getElementById('post-text-input').value.trim();
+            const commentsDisabled = document.getElementById('post-comments-disabled').checked;
+            
             if(!text && !selectedPostMediaUrl) return alert("Напишите текст или добавьте медиа!");
 
             await addDoc(collection(db, "posts"), {
@@ -1032,6 +1017,7 @@
                 media: selectedPostMediaUrl,
                 likes: [],
                 comments: [],
+                commentsDisabled: commentsDisabled,
                 timestamp: new Date().getTime()
             });
 
@@ -1059,31 +1045,26 @@
             const card = document.createElement('div');
             card.className = "post-card";
 
-            let mediaHtml = "";
-            if(post.media) {
-                if(post.media.includes('video')) mediaHtml = `<video src="${post.media}" class="post-media" controls></video>`;
-                else mediaHtml = `<img src="${post.media}" class="post-media">`;
-            }
+            let mediaHtml = post.media ? (post.media.includes('video') ? `<video src="${post.media}" class="post-media" controls></video>` : `<img src="${post.media}" class="post-media">`) : "";
 
+            const isAuthor = post.authorUsername === userData.username;
             const likesCount = post.likes ? post.likes.length : 0;
             const isLiked = post.likes && post.likes.includes(userData.username);
 
-            let commentsHtml = "";
-            if(post.comments && post.comments.length > 0) {
-                commentsHtml = `<div class="comments-section">`;
-                post.comments.forEach(c => {
-                    commentsHtml += `<div class="comment-item"><strong>@${c.user}:</strong> ${c.text}</div>`;
-                });
-                commentsHtml += `</div>`;
-            }
+            let commentsHtml = `<div class="comments-section" id="comments-${postId}">`;
+            (post.comments || []).forEach(c => commentsHtml += `<div class="comment-item"><strong>@${c.user}:</strong> ${c.text}</div>`);
+            commentsHtml += `</div>`;
 
             card.innerHTML = `
-                <div class="post-header" onclick="window.inspectProfile('${post.authorUsername}')">
-                    <img src="${post.authorAvatar}" class="post-avatar">
-                    <div class="post-author-info">
-                        <h5>${post.authorNickname} (@${post.authorUsername})</h5>
-                        <span>${new Date(post.timestamp).toLocaleString()}</span>
+                <div class="post-header">
+                    <div class="post-author-wrapper" onclick="window.inspectProfile('${post.authorUsername}')">
+                        <img src="${post.authorAvatar}" class="post-avatar">
+                        <div class="post-author-info">
+                            <h5>${post.authorNickname} (@${post.authorUsername})</h5>
+                            <span>${new Date(post.timestamp).toLocaleString()}</span>
+                        </div>
                     </div>
+                    ${isAuthor ? `<button class="btn-gold" style="width:auto; padding:5px 10px; background:#d9534f" onclick="window.deletePost('${postId}')">Удалить</button>` : ""}
                 </div>
                 <div class="post-content">${post.text || ""}</div>
                 ${mediaHtml}
@@ -1091,25 +1072,26 @@
                     <span class="action-link" id="like-btn-${postId}">${isLiked ? "❤️ Убрать лайк" : "🤍 Лайк"} (${likesCount})</span>
                 </div>
                 ${commentsHtml}
+                ${!post.commentsDisabled ? `
                 <div class="comment-input-row">
                     <input type="text" id="comment-input-${postId}" placeholder="Написать комментарий...">
                     <button class="btn-gold" id="comment-btn-${postId}">Отправить</button>
-                </div>
+                </div>` : `<p style="font-size:11px; color:var(--text-muted); margin-top:10px;">Комментарии запрещены автором.</p>`}
             `;
-
             targetContainer.appendChild(card);
 
-            document.getElementById(`like-btn-${postId}`).onclick = () => toggleLikePost(postId, post.likes || []);
-            document.getElementById(`comment-btn-${postId}`).onclick = () => addCommentToPost(postId, post.comments || []);
+            if(document.getElementById(`like-btn-${postId}`)) document.getElementById(`like-btn-${postId}`).onclick = () => toggleLikePost(postId, post.likes || []);
+            if(document.getElementById(`comment-btn-${postId}`)) document.getElementById(`comment-btn-${postId}`).onclick = () => addCommentToPost(postId, post.comments || []);
         }
 
-        async function toggleLikePost(postId, currentLikes) {
-            let updated;
-            if(currentLikes.includes(userData.username)) {
-                updated = currentLikes.filter(u => u !== userData.username);
-            } else {
-                updated = [...currentLikes, userData.username];
+        window.deletePost = async function(postId) {
+            if(confirm("Удалить пост?")) {
+                await deleteDoc(doc(db, "posts", postId));
             }
+        };
+
+        async function toggleLikePost(postId, currentLikes) {
+            let updated = currentLikes.includes(userData.username) ? currentLikes.filter(u => u !== userData.username) : [...currentLikes, userData.username];
             await updateDoc(doc(db, "posts", postId), { likes: updated });
         }
 
@@ -1117,29 +1099,20 @@
             const input = document.getElementById(`comment-input-${postId}`);
             const text = input.value.trim();
             if(!text) return;
-
             const newComment = { user: userData.username, text: text, timestamp: new Date().getTime() };
             await updateDoc(doc(db, "posts", postId), { comments: [...currentComments, newComment] });
             input.value = "";
         }
 
-        // --- ЛОГИКА ПРОСМОТРА СТРАНИЦЫ ДРУГА / ЛЮБОГО ПОЛЬЗОВАТЕЛЯ ---
         window.inspectProfile = async function(targetUser) {
-            if(!targetUser) {
-                targetUser = document.getElementById('friend-search-input').value.trim().toLowerCase();
-            }
-            if(!targetUser) return alert("Введите юзернейм!");
-
             const tSnap = await getDoc(doc(db, "users", targetUser));
             if(!tSnap.exists()) return alert("Пользователь не найден!");
-
             const fData = tSnap.data();
             
             document.getElementById('modal-friend-avatar').src = fData.avatarUrl || "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg";
             document.getElementById('modal-friend-name').textContent = fData.nickname;
             document.getElementById('modal-friend-username').textContent = `@${fData.username}`;
             document.getElementById('modal-friend-title').textContent = fData.title || "Участник";
-            
             document.getElementById('modal-stat-stars').textContent = `${fData.stars || 0} ⭐`;
             document.getElementById('modal-stat-rank').textContent = fData.title || "Участник";
             document.getElementById('modal-stat-duel-wins').textContent = fData.duelWins || 0;
@@ -1151,19 +1124,10 @@
             } else {
                 actBtn.style.display = "block";
                 const isFriend = userData.friends && userData.friends.includes(targetUser);
-                if(isFriend) {
-                    actBtn.textContent = "Вы в друзьях";
-                    actBtn.disabled = true;
-                    actBtn.style.background = "#8a7f73";
-                } else {
-                    actBtn.textContent = "Добавить в друзья";
-                    actBtn.disabled = false;
-                    actBtn.style.background = "var(--accent-gold)";
-                    actBtn.onclick = async () => {
-                        await addDoc(collection(db, "friend_requests"), { from: userData.username, to: targetUser, status: "pending" });
-                        alert("Запрос в друзья отправлен!");
-                    };
-                }
+                actBtn.textContent = isFriend ? "Вы в друзьях" : "Добавить в друзья";
+                actBtn.disabled = isFriend;
+                actBtn.style.background = isFriend ? "#8a7f73" : "var(--accent-gold)";
+                if(!isFriend) actBtn.onclick = async () => { await addDoc(collection(db, "friend_requests"), { from: userData.username, to: targetUser, status: "pending" }); alert("Запрос отправлен!"); };
             }
 
             const postsContainer = document.getElementById('modal-friend-posts');
@@ -1171,63 +1135,39 @@
             
             onSnapshot(query(collection(db, "posts"), where("authorUsername", "==", targetUser), orderBy("timestamp", "desc")), (s) => {
                 postsContainer.innerHTML = "";
-                if(s.empty) {
-                    postsContainer.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">Нет публикаций.</p>`;
-                } else {
-                    s.forEach(pDoc => {
-                        renderPostItem(pDoc, postsContainer);
-                    });
-                }
+                s.forEach(pDoc => renderPostItem(pDoc, postsContainer));
             });
-
             document.getElementById('profile-modal').style.display = "flex";
         };
 
-        window.closeProfileModal = function() {
-            document.getElementById('profile-modal').style.display = "none";
-        };
+        window.closeProfileModal = () => document.getElementById('profile-modal').style.display = "none";
 
-        // DOM НАПРАВЛЕНИЯ
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('btn-login-trigger').onclick = () => processAuth('login');
             document.getElementById('btn-reg-trigger').onclick = () => processAuth('register');
             document.getElementById('link-to-reg').onclick = () => window.toggleAuthForm(false);
             document.getElementById('link-to-login').onclick = () => window.toggleAuthForm(true);
-            
-            document.getElementById('tab-nav-hub').onclick = (e) => { window.switchTab('hub'); e.currentTarget.classList.add('active'); };
-            document.getElementById('tab-nav-friends').onclick = (e) => { window.switchTab('friends'); e.currentTarget.classList.add('active'); };
-            document.getElementById('tab-nav-games').onclick = (e) => { window.switchTab('games'); e.currentTarget.classList.add('active'); };
-            document.getElementById('tab-nav-market').onclick = (e) => { window.switchTab('market'); e.currentTarget.classList.add('active'); };
-            document.getElementById('tab-nav-council').onclick = (e) => { window.switchTab('council'); e.currentTarget.classList.add('active'); };
-            document.getElementById('tab-nav-history').onclick = (e) => { window.switchTab('history'); e.currentTarget.classList.add('active'); };
-            document.getElementById('tab-nav-feed').onclick = (e) => { window.switchTab('feed'); e.currentTarget.classList.add('active'); };
-
+            document.getElementById('tab-nav-hub').onclick = () => window.switchTab('hub');
+            document.getElementById('tab-nav-friends').onclick = () => window.switchTab('friends');
+            document.getElementById('tab-nav-games').onclick = () => window.switchTab('games');
+            document.getElementById('tab-nav-market').onclick = () => window.switchTab('market');
+            document.getElementById('tab-nav-council').onclick = () => window.switchTab('council');
+            document.getElementById('tab-nav-history').onclick = () => window.switchTab('history');
+            document.getElementById('tab-nav-feed').onclick = () => window.switchTab('feed');
             document.getElementById('profile-name-display').onclick = () => window.changeNickname();
             document.getElementById('btn-change-avatar-trigger').onclick = () => window.triggerAvatarUpload();
             document.getElementById('avatar-file-input').onchange = (e) => handleAvatarFile(e);
             document.getElementById('btn-open-media-gallery').onclick = () => window.triggerPostMedia();
-            
             document.getElementById('core-logo-clicker').onclick = () => window.coreClickerAction();
             document.getElementById('btn-shuffle-puzzle').onclick = () => window.initPuzzle();
             document.getElementById('btn-restart-memory').onclick = () => window.initMemoryGame();
             document.getElementById('btn-spin-wheel').onclick = () => window.spinFortuneWheel();
-            
             document.getElementById('btn-send-request-friend').onclick = () => window.sendFriendRequest();
-            document.getElementById('btn-inspect-profile-user').onclick = () => window.inspectProfile(null);
+            document.getElementById('btn-inspect-profile-user').onclick = () => window.inspectProfile(document.getElementById('friend-search-input').value.trim().toLowerCase());
             document.getElementById('btn-close-modal').onclick = () => window.closeProfileModal();
             document.getElementById('btn-publish-post').onclick = () => window.publishNewPost();
             document.getElementById('btn-send-msg-priv').onclick = () => window.sendPrivateMessage();
             document.getElementById('duel-action-btn').onclick = () => window.handleDuelAction();
-            
-            document.getElementById('btn-buy-title-trigger').onclick = () => {
-                window.switchTab('market');
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                document.getElementById('tab-nav-market').classList.add('active');
-            };
-
-            document.getElementById('chat-input').onkeydown = (e) => {
-                if(e.key === 'Enter') window.sendPrivateMessage();
-            };
         });
     </script>
 </body>
