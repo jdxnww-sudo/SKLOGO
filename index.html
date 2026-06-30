@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SKYWEB</title>
+    <title>SKYLINE Premium Ecosystem</title>
     <style>
         :root {
             --bg-main: #fdfbf7;
@@ -423,7 +423,7 @@
             </div>
         </div>
 
-<div id="section-feed" class="content-section">
+        <div id="section-feed" class="content-section">
             <div class="info-block">
                 <h4>Создать новую публикацию</h4>
                 <textarea id="post-text-input" class="input-field" placeholder="Что у вас нового? Напишите текст..." style="height: 80px; resize: none; margin-top: 10px;"></textarea>
@@ -435,6 +435,20 @@
                 <button class="btn-gold" id="btn-publish-post">Добавить пост</button>
             </div>
             <div id="global-feed-container"></div>
+        </div>
+
+        <div id="section-rating" class="content-section">
+            <div class="info-block">
+                <h4>Глобальный рейтинг (Звезды)</h4>
+                <div id="rating-list" style="font-size: 14px; line-height: 2;"></div>
+            </div>
+        </div>
+
+        <div id="section-users" class="content-section">
+            <div class="info-block">
+                <h4>Все пользователи (<span id="total-users-count">0</span>)</h4>
+                <div id="all-users-list" style="font-size: 14px; line-height: 2;"></div>
+            </div>
         </div>
     </div>
 
@@ -499,17 +513,17 @@
         let selectedPostMediaUrl = "";
 
         const eliteTitles = [
-    { id: "oligarch", name: "⚜️ Олигарх", cost: 2000 },
-    { id: "legend", name: "⭐ Легенда", cost: 50000 },
-    { id: "mythic", name: "⚡ Мифический", cost: 150000 },
-    { id: "god", name: "☄️ Бог Лого", cost: 500000 }
-];
+            { id: "oligarch", name: "⚜️ Олигарх", cost: 2000 },
+            { id: "legend", name: "⭐ Легенда", cost: 50000 },
+            { id: "mythic", name: "⚡ Мифический", cost: 150000 },
+            { id: "god", name: "☄️ Бог Лого", cost: 500000 }
+        ];
 
         const shopHats = [
-    { id: 'top-hat', name: '🎩 Цилиндр', cost: 200 },
-    { id: 'halo', name: '😇 Нимб', cost: 75000 },
-    { id: 'gold-crown', name: '👑 Золотая Корона', cost: 500000 }
-];
+            { id: 'top-hat', name: '🎩 Цилиндр', cost: 200 },
+            { id: 'halo', name: '😇 Нимб', cost: 75000 },
+            { id: 'gold-crown', name: '👑 Золотая Корона', cost: 500000 }
+        ];
 
         window.toggleAuthForm = function(showLogin) {
             const vBg = document.getElementById('auth-video-bg');
@@ -588,6 +602,7 @@
             initMemoryGame();
             buildMarketUI();
             initGlobalFeed();
+            window.updateGlobalStats();
         }
 
         function syncProfileUI() {
@@ -658,7 +673,10 @@
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             
             const targetSec = document.getElementById(`section-${tabId}`);
-            if(targetSec) targetSec.classList.add('active');
+            if(targetSec) {
+                targetSec.classList.add('active');
+                document.getElementById(`tab-nav-${tabId}`).classList.add('active');
+            }
         };
 
         async function openFriendChat(friendUsername) {
@@ -1155,6 +1173,11 @@
             document.getElementById('tab-nav-council').onclick = () => window.switchTab('council');
             document.getElementById('tab-nav-history').onclick = () => window.switchTab('history');
             document.getElementById('tab-nav-feed').onclick = () => window.switchTab('feed');
+            
+            // Новые табы
+            document.getElementById('tab-nav-rating').onclick = () => window.switchTab('rating');
+            document.getElementById('tab-nav-users').onclick = () => window.switchTab('users');
+
             document.getElementById('profile-name-display').onclick = () => window.changeNickname();
             document.getElementById('btn-change-avatar-trigger').onclick = () => window.triggerAvatarUpload();
             document.getElementById('avatar-file-input').onchange = (e) => handleAvatarFile(e);
@@ -1170,34 +1193,31 @@
             document.getElementById('btn-send-msg-priv').onclick = () => window.sendPrivateMessage();
             document.getElementById('duel-action-btn').onclick = () => window.handleDuelAction();
             document.getElementById('btn-edit-bio').onclick = () => window.editBio();
-            document.getElementById('tab-nav-rating').onclick = () => window.showSection('section-rating');
-            document.getElementById('tab-nav-users').onclick = () => window.showSection('section-users');
         });
 
-window.updateGlobalStats = function() {
-    onSnapshot(collection(db, "users"), (snap) => {
-        const users = [];
-        snap.forEach(d => users.push(d.data()));
-        
-        users.sort((a, b) => b.stars - a.stars);
-        const ratingList = document.getElementById('rating-list');
-        if(ratingList) ratingList.innerHTML = users.map((u, i) => `<div>${i+1}. ${u.nickname} - ${u.stars} ⭐</div>`).join('');
-        
-        const totalCount = document.getElementById('total-users-count');
-        if(totalCount) totalCount.textContent = users.length;
-        
-        const allUsersList = document.getElementById('all-users-list');
-        if(allUsersList) allUsersList.innerHTML = users.map(u => `<div>@${u.username}</div>`).join('');
-    });
-}
-window.editBio = async function() {
-    const newBio = prompt("Введите ваше био:", userData.bio || "");
-    if(newBio !== null) {
-        await updateDoc(userDocRef, { bio: newBio });
-        document.getElementById('bio-display').textContent = newBio;
-    }
-};
-
+        window.updateGlobalStats = function() {
+            onSnapshot(collection(db, "users"), (snap) => {
+                const users = [];
+                snap.forEach(d => users.push(d.data()));
+                
+                users.sort((a, b) => (b.stars || 0) - (a.stars || 0));
+                const ratingList = document.getElementById('rating-list');
+                if(ratingList) ratingList.innerHTML = users.map((u, i) => `<div>${i+1}. ${u.nickname} - ${u.stars || 0} ⭐</div>`).join('');
+                
+                const totalCount = document.getElementById('total-users-count');
+                if(totalCount) totalCount.textContent = users.length;
+                
+                const allUsersList = document.getElementById('all-users-list');
+                if(allUsersList) allUsersList.innerHTML = users.map(u => `<div>@${u.username}</div>`).join('');
+            });
+        }
+        window.editBio = async function() {
+            const newBio = prompt("Введите ваше био:", userData.bio || "");
+            if(newBio !== null) {
+                await updateDoc(userDocRef, { bio: newBio });
+                document.getElementById('bio-display').textContent = newBio;
+            }
+        };
     </script>
 </body>
 </html>
