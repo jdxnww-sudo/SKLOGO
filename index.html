@@ -189,6 +189,69 @@
         .stat-item span { display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
         .stat-item strong { font-size: 15px; color: var(--text-main); }
 
+        /* --- КЛАНЫ --- */
+        .clan-search-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        .clan-search-row input { flex: 1; margin-bottom: 0; }
+        .clan-result-item { display: flex; align-items: center; gap: 12px; background: #fff; border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 4px; margin-bottom: 8px; }
+        .clan-result-item img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #eee; }
+        .clan-result-info { flex: 1; }
+        .clan-result-info h5 { font-size: 14px; }
+        .clan-result-info span { font-size: 11px; color: var(--text-muted); }
+        .clan-hero { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+        .clan-hero img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; background: #eee; border: 2px solid var(--accent-gold); }
+        .clan-hero-info h3 { font-family: "Times New Roman", Times, serif; font-size: 24px; font-weight: 400; }
+        .clan-hero-info p { font-size: 13px; color: var(--text-muted); margin-top: 6px; max-width: 500px; }
+        .clan-stat-row { display: flex; gap: 20px; margin: 15px 0 20px 0; flex-wrap: wrap; }
+        .clan-stat-pill { background: var(--chat-bg); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .clan-member-row { display: flex; align-items: center; gap: 12px; padding: 10px; border-bottom: 1px solid #f2ede4; }
+        .clan-member-row img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: #eee; }
+        .clan-owner-tag { background: var(--accent-gold); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 1px; margin-left: 6px; }
+        .top-clan-row { display: flex; align-items: center; gap: 14px; background: #fff; border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 4px; margin-bottom: 8px; }
+        .top-clan-rank { font-family: "Times New Roman", Times, serif; font-size: 20px; color: var(--accent-gold); width: 30px; }
+        .top-clan-row img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; background: #eee; }
+
+        /* Рамки клана вокруг аватара */
+        .frame-bronze { box-shadow: 0 0 0 5px #cd7f32, 0 0 0 7px #fff; }
+        .frame-silver { box-shadow: 0 0 0 5px #c0c0c0, 0 0 0 7px #fff; }
+        .frame-gold { box-shadow: 0 0 0 5px #ffd700, 0 0 0 7px #fff; }
+        .frame-emerald { box-shadow: 0 0 0 5px #50c878, 0 0 0 7px #fff; }
+        .frame-diamond { box-shadow: 0 0 0 5px #b9f2ff, 0 0 0 7px #fff, 0 0 0 9px #7fdbff; }
+        .frame-royal { box-shadow: 0 0 0 5px #7d3cff, 0 0 0 7px #fff, 0 0 0 9px #ffd700; }
+
+        /* --- ПОДАРКИ / КЕЙСЫ --- */
+        .case-grid, .gift-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; margin-top: 15px; }
+        .case-card { background: #fff; border: 1px solid var(--border-color); border-radius: 6px; padding: 18px 12px; text-align: center; }
+        .case-card .case-emoji { font-size: 40px; margin-bottom: 8px; }
+        .case-card .case-price { font-weight: 700; color: var(--accent-gold); margin: 6px 0; }
+        .gift-card { background: #fff; border: 1px solid var(--border-color); border-radius: 6px; padding: 14px 8px; text-align: center; position: relative; }
+        .gift-card .gift-emoji { font-size: 34px; }
+        .gift-card .gift-name { font-size: 11px; margin-top: 6px; line-height: 1.3; }
+        .gift-rarity-common { border-color: #b8b8b8; }
+        .gift-rarity-uncommon { border-color: #4caf7d; }
+        .gift-rarity-rare { border-color: #3b8fd9; }
+        .gift-rarity-epic { border-color: #a557d1; }
+        .gift-rarity-legendary { border-color: var(--accent-gold); box-shadow: 0 0 12px rgba(197,168,128,0.5); }
+        .gift-rarity-tag { position: absolute; top: 4px; right: 6px; font-size: 8px; text-transform: uppercase; color: var(--text-muted); }
+        #case-reveal-modal .reveal-box { text-align: center; }
+        #case-reveal-modal .reveal-emoji { font-size: 90px; margin: 15px 0; }
+        .trade-row { display: flex; align-items: center; gap: 12px; background: #fff; border: 1px solid var(--border-color); padding: 10px; border-radius: 4px; margin-bottom: 8px; }
+
+        /* --- УВЕДОМЛЕНИЯ --- */
+        .friend-item { position: relative; }
+        .unread-dot { width: 9px; height: 9px; border-radius: 50%; background: #d9534f; margin-left: auto; }
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 10500; display: flex; flex-direction: column; gap: 10px; }
+        .toast-popup { background: #fff; border: 1px solid var(--accent-gold); border-radius: 6px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 6px 18px rgba(0,0,0,0.12); cursor: pointer; max-width: 300px; animation: toastIn 0.3s ease; }
+        .toast-popup img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+        @keyframes toastIn { from { transform: translateX(30px); opacity:0; } to { transform: translateX(0); opacity:1; } }
+
+        /* --- МИНИ ИГРЫ ДИНОЗАВРА --- */
+        .dino-canvas-box { border: 1px solid var(--border-color); border-radius: 6px; background: #f7f4ee; margin: 15px 0; }
+        canvas.dino-canvas { display: block; width: 100%; max-width: 500px; touch-action: manipulation; }
+
+        /* --- ГАРДЕРОБ ПОДАРКОВ В ПРОФИЛЕ --- */
+        .profile-gifts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 8px; margin-top: 12px; }
+        .profile-gifts-grid .mini-gift { font-size: 24px; text-align: center; background: var(--chat-bg); border-radius: 4px; padding: 6px 0; border: 1px solid var(--border-color); cursor: default; }
+
         /* МОБИЛЬНАЯ АДАПТАЦИЯ */
         @media (max-width: 768px) {
             body { flex-direction: column; }
@@ -227,6 +290,8 @@
 
     <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
     <input type="file" id="post-media-input" accept="image/*,video/*" style="display: none;">
+    <input type="file" id="clan-avatar-file-input" accept="image/*" style="display: none;">
+    <div id="toast-container"></div>
 
     <div class="sidebar">
         <div class="logo-area">
@@ -241,6 +306,8 @@
                 <li class="nav-item" id="tab-nav-feed">07 // Публичная лента</li>
                 <li class="nav-item" id="tab-nav-rating">08 // Рейтинг</li>
                 <li class="nav-item" id="tab-nav-users">09 // Пользователи</li>
+                <li class="nav-item" id="tab-nav-clans">10 // Кланы</li>
+                <li class="nav-item" id="tab-nav-topclans">11 // Топ Кланов</li>
             </ul>
         </div>
         <div class="sidebar-footer"><span>Skyline FM</span></div>
@@ -261,16 +328,18 @@
                         <svg class="hat-overlay hat-santa" viewBox="0 0 100 50"><polygon points="20,40 50,5 80,40" fill="#d9534f"/><rect x="15" y="38" width="70" height="10" rx="5" fill="#fff"/><circle cx="50" cy="6" r="7" fill="#fff"/></svg>
                         <svg class="hat-overlay hat-cap" viewBox="0 0 100 50"><path d="M20,40 Q50,10 80,40 Z" fill="#337ab7"/><path d="M75,35 L95,42 L75,45 Z" fill="#23527c"/></svg>
                         
-                        <div class="avatar-container">
+                        <div class="avatar-container" id="main-avatar-container">
                             <img id="main-avatar-img" src="https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg" alt="Avatar">
                         </div>
                     </div>
                     <h3 id="profile-name-display" style="cursor: pointer;" title="Нажмите для смены никнейма">Гость</h3>
                     <div class="username-label" id="profile-user-display">@username</div>
                     <div class="title-display" id="profile-title-display">Участник</div>
+                    <div id="profile-clan-badge" style="font-size:11px; color:var(--accent-gold); margin-bottom:10px; cursor:pointer; display:none;"></div>
                     <button class="btn-gold" id="btn-change-avatar-trigger" style="font-size: 10px; padding: 6px 12px; margin-bottom: 8px;">Выбрать фото из галереи</button>
                     <button class="btn-gold" id="btn-buy-title-trigger" style="font-size: 10px; padding: 6px 12px; background:#2b251f;">Купить Титул Премиум</button>
                     <button class="btn-gold" id="btn-edit-bio" style="font-size: 10px; padding: 6px 12px; background:#8a7f73; margin-top:5px;">Редактировать Био</button><p id="bio-display" style="font-size: 12px; color: var(--text-muted); margin-top: 10px;"></p>
+                    <div class="profile-gifts-grid" id="profile-gifts-mini"></div>
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 30px;">
@@ -359,6 +428,49 @@
                     </div>
                 </div>
             </div>
+
+            <div class="info-block">
+                <h4>🦖 Логотип Раннер (нет подключения)</h4>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Классический раннер с логотипом семьи вместо динозавра. Прыгайте через препятствия (пробел / клик / тап). Награда зависит от очков.</p>
+                <div class="dino-canvas-box"><canvas id="dino-runner-canvas" class="dino-canvas" width="500" height="160"></canvas></div>
+                <button class="btn-gold" id="btn-start-dino-runner" style="width:auto;">Старт</button>
+                <span id="dino-runner-score" style="margin-left:12px; font-size:12px; color:var(--text-muted);">Очки: 0</span>
+            </div>
+
+            <div class="games-flex-layout">
+                <div class="info-block" style="text-align:center;">
+                    <h4>🌙 Ночной Дино-Прыжок</h4>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Вариация раннера: ночной режим, препятствия падают сверху. Уклоняйтесь!</p>
+                    <div class="dino-canvas-box"><canvas id="dino-night-canvas" class="dino-canvas" width="500" height="160"></canvas></div>
+                    <button class="btn-gold" id="btn-start-dino-night" style="width:auto;">Старт</button>
+                    <span id="dino-night-score" style="margin-left:12px; font-size:12px; color:var(--text-muted);">Очки: 0</span>
+                </div>
+                <div class="info-block" style="text-align:center;">
+                    <h4>🕊️ Летающий Логотип</h4>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Третья игра линейки: пролетите между колоннами, кликая для взлёта (в стиле Flappy).</p>
+                    <div class="dino-canvas-box"><canvas id="dino-flappy-canvas" class="dino-canvas" width="500" height="160"></canvas></div>
+                    <button class="btn-gold" id="btn-start-dino-flappy" style="width:auto;">Старт</button>
+                    <span id="dino-flappy-score" style="margin-left:12px; font-size:12px; color:var(--text-muted);">Очки: 0</span>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <h4>🎁 Подарки — Пчёлы</h4>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Ваша коллекция пчёл, полученных из кейсов в Магазине.</p>
+                <div class="profile-gifts-grid" id="games-gifts-inventory"></div>
+            </div>
+
+            <div class="info-block">
+                <h4>🔄 Трейд — передать пчелу другу</h4>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Выберите друга и пчелу из своей коллекции, чтобы предложить трейд.</p>
+                <select id="trade-friend-select" class="input-field"></select>
+                <select id="trade-gift-select" class="input-field"></select>
+                <button class="btn-gold" id="btn-send-trade" style="width:auto;">Предложить трейд</button>
+                <div style="margin-top:15px;">
+                    <h5 style="font-size:13px; margin-bottom:8px;">Входящие трейды</h5>
+                    <div id="incoming-trades-list"></div>
+                </div>
+            </div>
         </div>
 
         <div id="section-council" class="content-section">
@@ -403,6 +515,17 @@
             <div class="info-block">
                 <h4 style="margin-bottom:25px;">Премиальные Элитные Титулы (Доступные предложения)</h4>
                 <div class="market-grid" id="market-titles-container"></div>
+            </div>
+
+            <div class="info-block">
+                <h4 style="margin-bottom:10px;">Рамки для клана</h4>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Доступно только владельцу клана. Куплено — сразу применяется как рамка клана и видна у всех участников.</p>
+                <div class="market-grid" id="market-frames-container"></div>
+            </div>
+
+            <div class="info-block">
+                <h4 style="margin-bottom:25px;">Кейсы с подарками (пчёлы)</h4>
+                <div class="case-grid" id="market-cases-container"></div>
             </div>
         </div>
 
@@ -450,6 +573,65 @@
                 <div id="all-users-list" style="font-size: 14px; line-height: 2;"></div>
             </div>
         </div>
+
+        <div id="section-clans" class="content-section">
+            <div id="clan-no-clan-block">
+                <div class="info-block">
+                    <h4>Найти клан</h4>
+                    <div class="clan-search-row">
+                        <input type="text" id="clan-search-input" class="input-field" placeholder="Название клана...">
+                        <button class="btn-gold" id="btn-search-clan" style="width:auto;">Искать</button>
+                    </div>
+                    <div id="clan-search-results"></div>
+                </div>
+                <div class="info-block">
+                    <h4>Создать клан</h4>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Стоимость создания: <strong>50 000 ⭐</strong>. Вы станете владельцем (owner).</p>
+                    <input type="text" id="new-clan-name" class="input-field" placeholder="Название клана">
+                    <textarea id="new-clan-desc" class="input-field" placeholder="Описание клана" style="height:70px; resize:none;"></textarea>
+                    <button class="btn-gold" id="btn-upload-clan-avatar" style="background:#2b251f; margin-bottom:15px;">Выбрать аватарку клана</button>
+                    <div id="new-clan-avatar-status" style="font-size:11px; color:var(--accent-gold); margin-bottom:10px; display:none;">Аватарка выбрана.</div>
+                    <button class="btn-gold" id="btn-create-clan">Создать клан за 50 000 ⭐</button>
+                </div>
+            </div>
+
+            <div id="clan-has-clan-block" style="display:none;">
+                <div class="info-block">
+                    <div class="clan-hero">
+                        <img id="my-clan-avatar" src="">
+                        <div class="clan-hero-info">
+                            <h3 id="my-clan-name">Название</h3>
+                            <p id="my-clan-desc">Описание</p>
+                        </div>
+                    </div>
+                    <div class="clan-stat-row">
+                        <div class="clan-stat-pill">💰 Казна: <span id="my-clan-treasury">0</span> ⭐</div>
+                        <div class="clan-stat-pill">🏅 Ранг: <span id="my-clan-rank">-</span></div>
+                        <div class="clan-stat-pill">👥 Участников: <span id="my-clan-count">0</span></div>
+                    </div>
+                    <input type="number" id="clan-donate-amount" class="input-field" placeholder="Сумма пополнения казны" style="max-width:250px; display:inline-block; margin-right:10px;">
+                    <button class="btn-gold" id="btn-donate-clan" style="width:auto; display:inline-block;">Пополнить казну</button>
+                    <button class="btn-gold" id="btn-leave-clan" style="width:auto; background:#d9534f; margin-left:10px;">Покинуть клан</button>
+                </div>
+
+                <div class="info-block" id="clan-requests-block" style="display:none;">
+                    <h4>Заявки на вступление</h4>
+                    <div id="clan-requests-list"></div>
+                </div>
+
+                <div class="info-block">
+                    <h4>Участники клана</h4>
+                    <div id="clan-members-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-topclans" class="content-section">
+            <div class="info-block">
+                <h4>Топ Кланов по казне</h4>
+                <div id="top-clans-list"></div>
+            </div>
+        </div>
     </div>
 
     <div class="modal-overlay" id="profile-modal">
@@ -491,7 +673,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, where, deleteDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, collection, addDoc, query, orderBy, onSnapshot, where, deleteDoc, increment, runTransaction, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
@@ -508,8 +690,8 @@
         const storage = getStorage(app);
 
         // --- Ограничения на размер файлов (защита от зависания браузера) ---
-        const MAX_IMAGE_SIZE_MB = 25;
-        const MAX_VIDEO_SIZE_MB = 200;
+        const MAX_IMAGE_SIZE_MB = 50;
+        const MAX_VIDEO_SIZE_MB = 500;
 
         let userDocRef = null;
         let userData = {};
@@ -532,6 +714,61 @@
             { id: 'gold-crown', name: '👑 Золотая Корона', cost: 500000 }
         ];
 
+        // --- РАМКИ ДЛЯ КЛАНА (5-6 штук, 100к - 1млн) ---
+        const clanFrames = [
+            { id: 'bronze', name: '🥉 Бронзовая рамка', cost: 100000, css: 'frame-bronze' },
+            { id: 'silver', name: '🥈 Серебряная рамка', cost: 250000, css: 'frame-silver' },
+            { id: 'gold', name: '🥇 Золотая рамка', cost: 500000, css: 'frame-gold' },
+            { id: 'emerald', name: '💚 Изумрудная рамка', cost: 750000, css: 'frame-emerald' },
+            { id: 'diamond', name: '💎 Алмазная рамка', cost: 900000, css: 'frame-diamond' },
+            { id: 'royal', name: '👑 Королевская рамка', cost: 1000000, css: 'frame-royal' }
+        ];
+
+        // --- КЕЙСЫ (5 штук, 10к - 500к). Чем дороже - тем реже редкие подарки. ---
+        const shopCases = [
+            { id: 'case1', name: 'Полевой кейс', emoji: '📦', cost: 10000, odds: { common: 70, uncommon: 22, rare: 7, epic: 1, legendary: 0 } },
+            { id: 'case2', name: 'Медовый кейс', emoji: '🍯', cost: 50000, odds: { common: 50, uncommon: 32, rare: 15, epic: 2.5, legendary: 0.5 } },
+            { id: 'case3', name: 'Цветочный кейс', emoji: '🌼', cost: 120000, odds: { common: 30, uncommon: 35, rare: 25, epic: 8, legendary: 2 } },
+            { id: 'case4', name: 'Королевский кейс', emoji: '👑', cost: 250000, odds: { common: 15, uncommon: 30, rare: 32, epic: 18, legendary: 5 } },
+            { id: 'case5', name: 'Мифический кейс', emoji: '✨', cost: 500000, odds: { common: 5, uncommon: 15, rare: 30, epic: 35, legendary: 15 } }
+        ];
+
+        // --- 30 ПОДАРКОВ-ПЧЁЛ (авторский дизайн в стиле пчелиной фермы, от обычных до легендарных) ---
+        const giftsPool = [
+            { id: 'bee01', name: 'Обычная пчела', emoji: '🐝', rarity: 'common' },
+            { id: 'bee02', name: 'Полевая пчела', emoji: '🐝', rarity: 'common' },
+            { id: 'bee03', name: 'Ленивая пчела', emoji: '🐝', rarity: 'common' },
+            { id: 'bee04', name: 'Малышка-пчела', emoji: '🐝', rarity: 'common' },
+            { id: 'bee05', name: 'Пыльцевая пчела', emoji: '🐝', rarity: 'common' },
+            { id: 'bee06', name: 'Садовая пчела', emoji: '🐝', rarity: 'common' },
+            { id: 'bee07', name: 'Клеверная пчела', emoji: '🐝', rarity: 'common' },
+            { id: 'bee08', name: 'Ромашковая пчела', emoji: '🐝', rarity: 'common' },
+            { id: 'bee09', name: 'Полосатая пчела', emoji: '🐝', rarity: 'common' },
+            { id: 'bee10', name: 'Утренняя пчела', emoji: '🐝', rarity: 'common' },
+            { id: 'bee11', name: 'Пчела-разведчик', emoji: '🐛', rarity: 'uncommon' },
+            { id: 'bee12', name: 'Медовая пчела', emoji: '🐝', rarity: 'uncommon' },
+            { id: 'bee13', name: 'Дымчатая пчела', emoji: '🌫️', rarity: 'uncommon' },
+            { id: 'bee14', name: 'Быстрая пчела', emoji: '💨', rarity: 'uncommon' },
+            { id: 'bee15', name: 'Пчела-строитель', emoji: '🏗️', rarity: 'uncommon' },
+            { id: 'bee16', name: 'Ветряная пчела', emoji: '🍃', rarity: 'uncommon' },
+            { id: 'bee17', name: 'Ягодная пчела', emoji: '🍓', rarity: 'uncommon' },
+            { id: 'bee18', name: 'Ночная пчела', emoji: '🌙', rarity: 'uncommon' },
+            { id: 'bee19', name: 'Кристальная пчела', emoji: '🔷', rarity: 'rare' },
+            { id: 'bee20', name: 'Огненная пчела', emoji: '🔥', rarity: 'rare' },
+            { id: 'bee21', name: 'Ледяная пчела', emoji: '❄️', rarity: 'rare' },
+            { id: 'bee22', name: 'Штормовая пчела', emoji: '⚡', rarity: 'rare' },
+            { id: 'bee23', name: 'Королевская пчела', emoji: '👑', rarity: 'rare' },
+            { id: 'bee24', name: 'Стеклянная пчела', emoji: '🔮', rarity: 'rare' },
+            { id: 'bee25', name: 'Звёздная пчела', emoji: '🌟', rarity: 'epic' },
+            { id: 'bee26', name: 'Радужная пчела', emoji: '🌈', rarity: 'epic' },
+            { id: 'bee27', name: 'Призрачная пчела', emoji: '👻', rarity: 'epic' },
+            { id: 'bee28', name: 'Галактическая пчела', emoji: '🌌', rarity: 'legendary' },
+            { id: 'bee29', name: 'Золотая пчела-матка', emoji: '👸', rarity: 'legendary' },
+            { id: 'bee30', name: 'Пчела-феникс', emoji: '🔥🐝', rarity: 'legendary' }
+        ];
+        const giftsById = Object.fromEntries(giftsPool.map(g => [g.id, g]));
+        const rarityLabelsRu = { common: 'Обычный', uncommon: 'Необычный', rare: 'Редкий', epic: 'Эпический', legendary: 'Легендарный' };
+
         window.toggleAuthForm = function(showLogin) {
             const vBg = document.getElementById('auth-video-bg');
             const mask = document.getElementById('auth-blur-mask');
@@ -550,45 +787,83 @@
             }
         };
 
+        let authInProgress = false;
         async function processAuth(type) {
-            if (type === 'register') {
-                const username = document.getElementById('reg-user').value.trim().toLowerCase();
-                const nickname = document.getElementById('reg-name').value.trim();
-                const password = document.getElementById('reg-pass').value;
+            if(authInProgress) return;
+            authInProgress = true;
+            const loginBtn = document.getElementById('btn-login-trigger');
+            const regBtn = document.getElementById('btn-reg-trigger');
+            if(loginBtn) loginBtn.disabled = true;
+            if(regBtn) regBtn.disabled = true;
 
-                if(!username || !nickname || !password) return alert("Заполните поля!");
-                if(username.includes(' ')) return alert("Пробелы запрещены!");
-                if(password.length < 6) return alert("Пароль от 6 символов!");
-                
-                const checkRef = doc(db, "users", username);
-                const checkSnap = await getDoc(checkRef);
-                if(checkSnap.exists()) return alert("Юзернейм занят!");
+            try {
+                if (type === 'register') {
+                    const username = document.getElementById('reg-user').value.trim().toLowerCase();
+                    const nickname = document.getElementById('reg-name').value.trim();
+                    const password = document.getElementById('reg-pass').value;
 
-                userData = { 
-                    username, nickname, password, 
-                    stars: 100, title: "Участник", 
-                    activeHat: "", ownedHats: [], 
-                    avatarUrl: "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg", 
-                    friends: [],
-                    duelWins: 0,
-                    gameWins: 0
-                };
-                await setDoc(checkRef, userData);
-                alert("Успешно зарегистрировано!");
-                enterEcosystem(username);
-            } else {
-                const username = document.getElementById('auth-user').value.trim().toLowerCase();
-                const password = document.getElementById('auth-pass').value;
+                    if(!username || !nickname || !password) return alert("Заполните поля!");
+                    // Разрешаем только латиницу, цифры, "_" и "-", 3-20 символов.
+                    // Это защищает от невалидных ID документов (например, символ "/"),
+                    // из-за которых часть пользователей раньше не могла зарегистрироваться.
+                    if(!/^[a-z0-9_-]{3,20}$/.test(username)) {
+                        return alert("Юзернейм должен содержать 3-20 символов: латинские буквы, цифры, '_' или '-' (без пробелов и других символов)!");
+                    }
+                    if(password.length < 6) return alert("Пароль от 6 символов!");
 
-                if(!username || !password) return alert("Заполните данные!");
+                    const checkRef = doc(db, "users", username);
 
-                const checkRef = doc(db, "users", username);
-                const userSnap = await getDoc(checkRef);
-                if(!userSnap.exists() || userSnap.data().password !== password) {
-                    return alert("Неверный логин или пароль!");
+                    // Атомарная транзакция: исключает гонки при одновременной регистрации
+                    // одного и того же юзернейма и гарантирует, что запись либо полностью
+                    // пройдёт, либо пользователь увидит понятную ошибку (а не "тишину").
+                    const newUserData = {
+                        username, nickname, password,
+                        stars: 100, title: "Участник",
+                        activeHat: "", ownedHats: [],
+                        avatarUrl: "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg",
+                        friends: [],
+                        duelWins: 0,
+                        gameWins: 0,
+                        clan: "",
+                        ownedFrames: [],
+                        gifts: [],
+                        bio: ""
+                    };
+
+                    await runTransaction(db, async (tx) => {
+                        const existing = await tx.get(checkRef);
+                        if(existing.exists()) throw new Error("USERNAME_TAKEN");
+                        tx.set(checkRef, newUserData);
+                    });
+
+                    userData = newUserData;
+                    alert("Успешно зарегистрировано!");
+                    enterEcosystem(username);
+                } else {
+                    const username = document.getElementById('auth-user').value.trim().toLowerCase();
+                    const password = document.getElementById('auth-pass').value;
+
+                    if(!username || !password) return alert("Заполните данные!");
+
+                    const checkRef = doc(db, "users", username);
+                    const userSnap = await getDoc(checkRef);
+                    if(!userSnap.exists() || userSnap.data().password !== password) {
+                        return alert("Неверный логин или пароль!");
+                    }
+                    userData = userSnap.data();
+                    enterEcosystem(username);
                 }
-                userData = userSnap.data();
-                enterEcosystem(username);
+            } catch(err) {
+                console.error(err);
+                if(err && err.message === "USERNAME_TAKEN") {
+                    alert("Юзернейм занят!");
+                } else {
+                    alert("Не удалось выполнить вход/регистрацию: " + (err && err.message ? err.message : "неизвестная ошибка") + ". Проверьте подключение к интернету и попробуйте снова.");
+                }
+            } finally {
+                authInProgress = false;
+                if(loginBtn) loginBtn.disabled = false;
+                if(regBtn) regBtn.disabled = false;
             }
         }
 
@@ -601,6 +876,10 @@
                     userData = snap.data();
                     syncProfileUI();
                     buildInventoryUI();
+                    refreshClanSubscription();
+                    renderGiftsInventory();
+                    renderTradeSelectors();
+                    subscribeMessageNotifications();
                 }
             });
 
@@ -608,8 +887,12 @@
             initPuzzle();
             initMemoryGame();
             buildMarketUI();
+            buildShopFramesAndCases();
             initGlobalFeed();
             window.updateGlobalStats();
+            initTopClansListener();
+            initTradeListener();
+            initDinoGames();
         }
 
         function syncProfileUI() {
@@ -626,6 +909,32 @@
             if(userData.activeHat) {
                 const targetHat = document.querySelector(`.hat-${userData.activeHat}`);
                 if(targetHat) targetHat.style.display = 'block';
+            }
+
+            // Клан-бейдж
+            const clanBadge = document.getElementById('profile-clan-badge');
+            if(userData.clan) {
+                clanBadge.style.display = 'block';
+                clanBadge.textContent = '🛡️ Клан: ' + userData.clan;
+                clanBadge.onclick = () => window.switchTab('clans');
+            } else {
+                clanBadge.style.display = 'none';
+            }
+
+            // Рамка клана на аватаре
+            const avatarContainer = document.getElementById('main-avatar-container');
+            avatarContainer.classList.remove(...clanFrames.map(f => f.css));
+            if(userData.clanFrameCss) avatarContainer.classList.add(userData.clanFrameCss);
+
+            // Мини-коллекция подарков в профиле
+            const giftsMini = document.getElementById('profile-gifts-mini');
+            if(giftsMini) {
+                const owned = userData.gifts || [];
+                giftsMini.innerHTML = owned.slice(0, 12).map(instId => {
+                    const giftId = instId.split('__')[0];
+                    const g = giftsById[giftId];
+                    return g ? `<div class="mini-gift" title="${g.name}">${g.emoji}</div>` : '';
+                }).join('');
             }
         }
 
@@ -712,9 +1021,29 @@
             }
         };
 
+        // Единая безопасная обёртка для начисления/списания звёзд.
+        // Раньше ошибки записи (например, при потере сети во время игры)
+        // никак не обрабатывались, из-за чего награда "терялась" молча.
+        // Теперь делаем до 2 повторных попыток и явно сообщаем пользователю о сбое.
+        async function safeUpdateUserDoc(dataObj, attempt = 1) {
+            if(!userDocRef) return false;
+            try {
+                await updateDoc(userDocRef, dataObj);
+                return true;
+            } catch(err) {
+                console.error("safeUpdateUserDoc error:", err);
+                if(attempt < 3) {
+                    await new Promise(r => setTimeout(r, 500 * attempt));
+                    return safeUpdateUserDoc(dataObj, attempt + 1);
+                }
+                alert("⚠️ Не удалось сохранить результат из-за проблемы с подключением. Награда не была начислена — попробуйте ещё раз, когда появится интернет.");
+                return false;
+            }
+        }
+
         window.coreClickerAction = async function() {
             if(!userDocRef) return;
-            await updateDoc(userDocRef, { stars: increment(1) });
+            await safeUpdateUserDoc({ stars: increment(1) });
         };
 
         window.switchTab = function(tabId) {
@@ -803,7 +1132,7 @@
                 if(snap.exists() && snap.data().status === 'active') {
                     await setDoc(dRef, { status: "ended" });
                     
-                    await updateDoc(userDocRef, { stars: increment(50), duelWins: increment(1) });
+                    await safeUpdateUserDoc({ stars: increment(50), duelWins: increment(1) });
                     const oppRef = doc(db, "users", activeChatFriend);
                     const oppSnap = await getDoc(oppRef);
                     if(oppSnap.exists()) {
@@ -856,12 +1185,13 @@
                     const fSnap = await getDoc(doc(db, "users", f));
                     const fAv = (fSnap.exists() && fSnap.data().avatarUrl) ? fSnap.data().avatarUrl : "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg";
                     
-                    div.innerHTML = `<img class="friend-avatar-mini" src="${fAv}"> <strong>@${f}</strong>`;
+                    div.innerHTML = `<img class="friend-avatar-mini" src="${fAv}"> <strong>@${f}</strong> <span class="unread-dot" id="unread-dot-${f}" style="display:${unreadFriendsSet.has(f) ? 'inline-block' : 'none'};"></span>`;
                     div.onclick = (e) => {
                         if(e.target.tagName === 'IMG') {
                             window.inspectProfile(f);
                         } else {
                             openFriendChat(f);
+                            window.clearFriendUnread(f);
                         }
                     };
                     container.appendChild(div);
@@ -962,6 +1292,688 @@
             });
         }
 
+        /* =========================================================
+           ============  МАГАЗИН: РАМКИ КЛАНА + КЕЙСЫ  ================
+           ========================================================= */
+        function buildShopFramesAndCases() {
+            const framesContainer = document.getElementById('market-frames-container');
+            if(framesContainer) {
+                framesContainer.innerHTML = "";
+                clanFrames.forEach(f => {
+                    const div = document.createElement('div');
+                    div.className = "market-item";
+                    div.innerHTML = `<h5>${f.name}</h5><p style="margin:10px 0; font-weight:bold; color:var(--accent-gold);">${f.cost.toLocaleString()} ⭐</p><button class="btn-gold" id="btn-buy-frame-${f.id}">Купить для клана</button>`;
+                    framesContainer.appendChild(div);
+                    document.getElementById(`btn-buy-frame-${f.id}`).onclick = () => buyClanFrame(f);
+                });
+            }
+
+            const casesContainer = document.getElementById('market-cases-container');
+            if(casesContainer) {
+                casesContainer.innerHTML = "";
+                shopCases.forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = "case-card";
+                    div.innerHTML = `<div class="case-emoji">${c.emoji}</div><h5>${c.name}</h5><div class="case-price">${c.cost.toLocaleString()} ⭐</div><button class="btn-gold" id="btn-open-case-${c.id}" style="width:auto;">Открыть</button>`;
+                    casesContainer.appendChild(div);
+                    document.getElementById(`btn-open-case-${c.id}`).onclick = () => openCase(c);
+                });
+            }
+        }
+
+        async function buyClanFrame(frame) {
+            if(!currentClanData) return alert("Вы не состоите в клане!");
+            if(currentClanData.owner !== userData.username) return alert("Купить рамку может только владелец клана!");
+            if((userData.stars || 0) < frame.cost) return alert("Недостаточно звёзд!");
+            if((currentClanData.ownedFrames || []).includes(frame.id)) return alert("Рамка уже куплена — просто наденьте её на клан.");
+
+            try {
+                await safeUpdateUserDoc({ stars: increment(-frame.cost) });
+                const clanRef = doc(db, "clans", currentClanData.id);
+                await updateDoc(clanRef, {
+                    ownedFrames: arrayUnion(frame.id),
+                    activeFrame: frame.id,
+                    activeFrameCss: frame.css
+                });
+                await propagateClanFrameToMembers(currentClanData.id, frame.css);
+                alert(`Рамка "${frame.name}" куплена и надета на клан!`);
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось купить рамку: " + err.message);
+            }
+        }
+
+        async function propagateClanFrameToMembers(clanId, frameCss) {
+            const clanSnap = await getDoc(doc(db, "clans", clanId));
+            if(!clanSnap.exists()) return;
+            const members = clanSnap.data().members || [];
+            for(const m of members) {
+                try { await updateDoc(doc(db, "users", m), { clanFrameCss: frameCss || "" }); } catch(e) { console.error(e); }
+            }
+        }
+
+        /* =========================================================
+           ==================  КЕЙСЫ И ПОДАРКИ  =======================
+           ========================================================= */
+        function pickRandomGiftForCase(caseConfig) {
+            const roll = Math.random() * 100;
+            let cumulative = 0;
+            let chosenRarity = 'common';
+            for(const rarity of ['common', 'uncommon', 'rare', 'epic', 'legendary']) {
+                cumulative += caseConfig.odds[rarity] || 0;
+                if(roll <= cumulative) { chosenRarity = rarity; break; }
+            }
+            const pool = giftsPool.filter(g => g.rarity === chosenRarity);
+            return pool[Math.floor(Math.random() * pool.length)] || giftsPool[0];
+        }
+
+        async function openCase(caseConfig) {
+            if((userData.stars || 0) < caseConfig.cost) return alert("Недостаточно звёзд для этого кейса!");
+            const ok = await safeUpdateUserDoc({ stars: increment(-caseConfig.cost) });
+            if(!ok) return;
+
+            const wonGift = pickRandomGiftForCase(caseConfig);
+            const instanceId = `${wonGift.id}__${Date.now()}_${Math.floor(Math.random()*10000)}`;
+            await safeUpdateUserDoc({ gifts: arrayUnion(instanceId) });
+            showCaseReveal(wonGift);
+        }
+
+        function showCaseReveal(gift) {
+            let modal = document.getElementById('case-reveal-modal');
+            if(!modal) {
+                modal = document.createElement('div');
+                modal.className = "modal-overlay";
+                modal.id = "case-reveal-modal";
+                modal.innerHTML = `<div class="modal-content-box reveal-box">
+                    <span class="close-modal-btn" id="btn-close-case-reveal">&times;</span>
+                    <h4>Поздравляем!</h4>
+                    <div class="reveal-emoji" id="reveal-gift-emoji"></div>
+                    <h3 id="reveal-gift-name"></h3>
+                    <p id="reveal-gift-rarity" style="color:var(--accent-gold); text-transform:uppercase; font-size:12px; letter-spacing:1px; margin-top:6px;"></p>
+                </div>`;
+                document.body.appendChild(modal);
+                document.getElementById('btn-close-case-reveal').onclick = () => modal.style.display = 'none';
+            }
+            document.getElementById('reveal-gift-emoji').textContent = gift.emoji;
+            document.getElementById('reveal-gift-name').textContent = gift.name;
+            document.getElementById('reveal-gift-rarity').textContent = rarityLabelsRu[gift.rarity] || gift.rarity;
+            modal.style.display = 'flex';
+        }
+
+        function renderGiftsInventory() {
+            const container = document.getElementById('games-gifts-inventory');
+            if(!container) return;
+            const owned = userData.gifts || [];
+            if(owned.length === 0) { container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">Пока нет подарков. Купите кейс в Магазине!</p>`; return; }
+            container.innerHTML = owned.map(instId => {
+                const giftId = instId.split('__')[0];
+                const g = giftsById[giftId];
+                if(!g) return '';
+                return `<div class="mini-gift" title="${g.name} (${rarityLabelsRu[g.rarity]})">${g.emoji}</div>`;
+            }).join('');
+        }
+
+        /* =========================================================
+           =======================  ТРЕЙД  ============================
+           ========================================================= */
+        function renderTradeSelectors() {
+            const friendSelect = document.getElementById('trade-friend-select');
+            const giftSelect = document.getElementById('trade-gift-select');
+            if(!friendSelect || !giftSelect) return;
+
+            const friends = userData.friends || [];
+            friendSelect.innerHTML = friends.length
+                ? friends.map(f => `<option value="${f}">@${f}</option>`).join('')
+                : `<option value="">Нет друзей</option>`;
+
+            const owned = userData.gifts || [];
+            giftSelect.innerHTML = owned.length
+                ? owned.map(instId => {
+                    const giftId = instId.split('__')[0];
+                    const g = giftsById[giftId];
+                    return g ? `<option value="${instId}">${g.emoji} ${g.name}</option>` : '';
+                  }).join('')
+                : `<option value="">Нет подарков</option>`;
+        }
+
+        window.sendTradeOffer = async function() {
+            const toUser = document.getElementById('trade-friend-select').value;
+            const giftInstanceId = document.getElementById('trade-gift-select').value;
+            if(!toUser || !giftInstanceId) return alert("Выберите друга и подарок!");
+
+            try {
+                await addDoc(collection(db, "trades"), {
+                    from: userData.username,
+                    to: toUser,
+                    giftInstanceId,
+                    status: "pending",
+                    timestamp: new Date().getTime()
+                });
+                alert("Предложение трейда отправлено!");
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось отправить трейд: " + err.message);
+            }
+        };
+
+        function initTradeListener() {
+            const tradesQ = query(collection(db, "trades"), where("to", "==", userData.username), where("status", "==", "pending"));
+            onSnapshot(tradesQ, (snap) => {
+                const container = document.getElementById('incoming-trades-list');
+                if(!container) return;
+                container.innerHTML = "";
+                snap.forEach(tDoc => {
+                    const t = tDoc.data();
+                    const giftId = t.giftInstanceId.split('__')[0];
+                    const g = giftsById[giftId];
+                    if(!g) return;
+                    const row = document.createElement('div');
+                    row.className = "trade-row";
+                    row.innerHTML = `<span>${g.emoji}</span><span style="flex:1;">@${t.from} предлагает: ${g.name}</span>
+                        <button class="btn-gold" style="width:auto; padding:6px 12px; font-size:11px;" id="accept-trade-${tDoc.id}">Принять</button>
+                        <button class="btn-gold" style="width:auto; padding:6px 12px; font-size:11px; background:#d9534f;" id="decline-trade-${tDoc.id}">Отклонить</button>`;
+                    container.appendChild(row);
+                    document.getElementById(`accept-trade-${tDoc.id}`).onclick = () => respondTrade(tDoc.id, t, true);
+                    document.getElementById(`decline-trade-${tDoc.id}`).onclick = () => respondTrade(tDoc.id, t, false);
+                });
+            });
+        }
+
+        async function respondTrade(tradeId, tradeData, accepted) {
+            try {
+                if(accepted) {
+                    const senderRef = doc(db, "users", tradeData.from);
+                    await updateDoc(senderRef, { gifts: arrayRemove(tradeData.giftInstanceId) });
+                    await safeUpdateUserDoc({ gifts: arrayUnion(tradeData.giftInstanceId) });
+                }
+                await updateDoc(doc(db, "trades", tradeId), { status: accepted ? "accepted" : "declined" });
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось обработать трейд: " + err.message);
+            }
+        }
+
+        /* =========================================================
+           =======================  КЛАНЫ  ============================
+           ========================================================= */
+        let currentClanData = null;
+        let currentClanUnsub = null;
+        let currentClanRequestsUnsub = null;
+        let lastSubscribedClanId = "__none__";
+        let clanAvatarUploadedUrl = "";
+
+        function refreshClanSubscription() {
+            const clanId = userData.clanId || "";
+            if(clanId === lastSubscribedClanId) { renderMyClanUI(); return; }
+            lastSubscribedClanId = clanId;
+
+            if(currentClanUnsub) { currentClanUnsub(); currentClanUnsub = null; }
+            if(currentClanRequestsUnsub) { currentClanRequestsUnsub(); currentClanRequestsUnsub = null; }
+
+            if(!clanId) {
+                currentClanData = null;
+                renderMyClanUI();
+                return;
+            }
+
+            currentClanUnsub = onSnapshot(doc(db, "clans", clanId), (snap) => {
+                if(!snap.exists()) { currentClanData = null; renderMyClanUI(); return; }
+                currentClanData = { id: clanId, ...snap.data() };
+                renderMyClanUI();
+            });
+
+            currentClanRequestsUnsub = onSnapshot(query(collection(db, "clan_requests"), where("clanId", "==", clanId), where("status", "==", "pending")), (snap) => {
+                const block = document.getElementById('clan-requests-block');
+                const list = document.getElementById('clan-requests-list');
+                if(!block || !list) return;
+                const isOwner = currentClanData && currentClanData.owner === userData.username;
+                block.style.display = (isOwner && !snap.empty) ? 'block' : 'none';
+                list.innerHTML = "";
+                snap.forEach(rDoc => {
+                    const r = rDoc.data();
+                    const row = document.createElement('div');
+                    row.className = "clan-result-item";
+                    row.innerHTML = `<div class="clan-result-info"><h5>@${r.from}</h5></div>
+                        <button class="btn-gold" style="width:auto; padding:6px 12px; font-size:11px;" id="approve-req-${rDoc.id}">Принять</button>`;
+                    list.appendChild(row);
+                    document.getElementById(`approve-req-${rDoc.id}`).onclick = () => approveClanRequest(rDoc.id, r.from, r.clanId);
+                });
+            });
+        }
+
+        function initMyClanListener() { refreshClanSubscription(); }
+
+        function renderMyClanUI() {
+            const noClanBlock = document.getElementById('clan-no-clan-block');
+            const hasClanBlock = document.getElementById('clan-has-clan-block');
+            if(!noClanBlock || !hasClanBlock) return;
+
+            if(!currentClanData) {
+                noClanBlock.style.display = 'block';
+                hasClanBlock.style.display = 'none';
+                return;
+            }
+
+            noClanBlock.style.display = 'none';
+            hasClanBlock.style.display = 'block';
+
+            document.getElementById('my-clan-avatar').src = currentClanData.avatarUrl || "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg";
+            document.getElementById('my-clan-name').textContent = currentClanData.name;
+            document.getElementById('my-clan-desc').textContent = currentClanData.description || "";
+            document.getElementById('my-clan-treasury').textContent = (currentClanData.treasury || 0).toLocaleString();
+            document.getElementById('my-clan-rank').textContent = clanRankByTreasury(currentClanData.treasury || 0);
+            document.getElementById('my-clan-count').textContent = (currentClanData.members || []).length;
+
+            const membersList = document.getElementById('clan-members-list');
+            membersList.innerHTML = "";
+            (currentClanData.members || []).forEach(async (m) => {
+                const mSnap = await getDoc(doc(db, "users", m));
+                const mData = mSnap.exists() ? mSnap.data() : {};
+                const row = document.createElement('div');
+                row.className = "clan-member-row";
+                row.innerHTML = `<img src="${mData.avatarUrl || 'https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg'}">
+                    <span>@${m} ${m === currentClanData.owner ? '<span class="clan-owner-tag">owner</span>' : ''}</span>`;
+                row.style.cursor = "pointer";
+                row.onclick = () => window.inspectProfile(m);
+                membersList.appendChild(row);
+            });
+        }
+
+        function clanRankByTreasury(treasury) {
+            if(treasury >= 5000000) return "💎 Легендарный";
+            if(treasury >= 1000000) return "🥇 Золотой";
+            if(treasury >= 250000) return "🥈 Серебряный";
+            if(treasury >= 50000) return "🥉 Бронзовый";
+            return "Новичок";
+        }
+
+        window.triggerClanAvatarUpload = function() { document.getElementById('clan-avatar-file-input').click(); };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const clanAvatarInput = document.getElementById('clan-avatar-file-input');
+            if(clanAvatarInput) {
+                clanAvatarInput.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if(!file) return;
+                    if(!file.type.startsWith('image/')) return alert("Нужно изображение!");
+                    if(file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) return alert(`Файл слишком большой! Максимум ${MAX_IMAGE_SIZE_MB} МБ.`);
+                    try {
+                        const path = `clan_avatars/${userData.username}_${Date.now()}_${file.name}`;
+                        const fileRef = ref(storage, path);
+                        const uploadTask = uploadBytesResumable(fileRef, file);
+                        uploadTask.on('state_changed', null, (err) => { alert("Ошибка загрузки: " + err.message); }, async () => {
+                            clanAvatarUploadedUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                            const statusEl = document.getElementById('new-clan-avatar-status');
+                            if(statusEl) statusEl.style.display = 'block';
+                        });
+                    } catch(err) { alert("Не удалось загрузить аватарку клана: " + err.message); }
+                };
+            }
+        });
+
+        window.createClan = async function() {
+            if(userData.clanId) return alert("Вы уже состоите в клане!");
+            const name = document.getElementById('new-clan-name').value.trim();
+            const description = document.getElementById('new-clan-desc').value.trim();
+            if(!name) return alert("Введите название клана!");
+            if((userData.stars || 0) < 50000) return alert("Недостаточно звёзд! Нужно 50 000 ⭐.");
+
+            try {
+                const existingQ = query(collection(db, "clans"), where("name", "==", name));
+                const existingSnap = await getDocs(existingQ);
+                if(!existingSnap.empty) return alert("Клан с таким названием уже существует!");
+
+                const ok = await safeUpdateUserDoc({ stars: increment(-50000) });
+                if(!ok) return;
+
+                const clanRef = await addDoc(collection(db, "clans"), {
+                    name, description,
+                    avatarUrl: clanAvatarUploadedUrl || "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg",
+                    owner: userData.username,
+                    members: [userData.username],
+                    treasury: 0,
+                    ownedFrames: [],
+                    activeFrame: "",
+                    activeFrameCss: "",
+                    createdAt: new Date().getTime()
+                });
+
+                await safeUpdateUserDoc({ clanId: clanRef.id, clan: name });
+                clanAvatarUploadedUrl = "";
+                alert("Клан успешно создан! Вы — владелец.");
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось создать клан: " + err.message);
+            }
+        };
+
+        window.searchClans = async function() {
+            const term = document.getElementById('clan-search-input').value.trim().toLowerCase();
+            const resultsBox = document.getElementById('clan-search-results');
+            resultsBox.innerHTML = "Поиск...";
+            try {
+                const allClans = await getDocs(collection(db, "clans"));
+                resultsBox.innerHTML = "";
+                let found = 0;
+                allClans.forEach(cDoc => {
+                    const c = cDoc.data();
+                    if(!term || c.name.toLowerCase().includes(term)) {
+                        found++;
+                        const row = document.createElement('div');
+                        row.className = "clan-result-item";
+                        row.innerHTML = `<img src="${c.avatarUrl || ''}">
+                            <div class="clan-result-info"><h5>${c.name}</h5><span>${(c.members||[]).length} участников · 💰 ${(c.treasury||0).toLocaleString()}</span></div>
+                            <button class="btn-gold" style="width:auto; padding:6px 12px; font-size:11px;" id="apply-clan-${cDoc.id}">Подать заявку</button>`;
+                        resultsBox.appendChild(row);
+                        document.getElementById(`apply-clan-${cDoc.id}`).onclick = () => window.applyToClan(cDoc.id);
+                    }
+                });
+                if(found === 0) resultsBox.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">Кланы не найдены.</p>`;
+            } catch(err) {
+                console.error(err);
+                resultsBox.innerHTML = `<p style="font-size:12px; color:#d9534f;">Ошибка поиска: ${err.message}</p>`;
+            }
+        };
+
+        window.applyToClan = async function(clanId) {
+            if(userData.clanId) return alert("Вы уже состоите в клане! Сначала покиньте текущий.");
+            try {
+                await addDoc(collection(db, "clan_requests"), { clanId, from: userData.username, status: "pending", timestamp: new Date().getTime() });
+                alert("Заявка отправлена владельцу клана!");
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось отправить заявку: " + err.message);
+            }
+        };
+
+        async function approveClanRequest(reqId, fromUser, clanId) {
+            try {
+                await updateDoc(doc(db, "clans", clanId), { members: arrayUnion(fromUser) });
+                const clanSnap = await getDoc(doc(db, "clans", clanId));
+                const clanData = clanSnap.data();
+                await updateDoc(doc(db, "users", fromUser), { clanId, clan: clanData.name, clanFrameCss: clanData.activeFrameCss || "" });
+                await updateDoc(doc(db, "clan_requests", reqId), { status: "accepted" });
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось принять в клан: " + err.message);
+            }
+        }
+
+        window.leaveClan = async function() {
+            if(!currentClanData) return;
+            if(!confirm("Покинуть клан?")) return;
+            try {
+                const clanRef = doc(db, "clans", currentClanData.id);
+                const remainingMembers = (currentClanData.members || []).filter(m => m !== userData.username);
+
+                if(currentClanData.owner === userData.username) {
+                    if(remainingMembers.length === 0) {
+                        await deleteDoc(clanRef);
+                    } else {
+                        await updateDoc(clanRef, { members: remainingMembers, owner: remainingMembers[0] });
+                    }
+                } else {
+                    await updateDoc(clanRef, { members: arrayRemove(userData.username) });
+                }
+
+                await safeUpdateUserDoc({ clanId: "", clan: "", clanFrameCss: "" });
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось покинуть клан: " + err.message);
+            }
+        };
+
+        window.donateToClanTreasury = async function() {
+            if(!currentClanData) return;
+            const amount = parseInt(document.getElementById('clan-donate-amount').value, 10);
+            if(!amount || amount <= 0) return alert("Введите сумму больше 0!");
+            if((userData.stars || 0) < amount) return alert("Недостаточно звёзд!");
+
+            try {
+                const ok = await safeUpdateUserDoc({ stars: increment(-amount) });
+                if(!ok) return;
+                await updateDoc(doc(db, "clans", currentClanData.id), { treasury: increment(amount) });
+                document.getElementById('clan-donate-amount').value = "";
+                alert(`Вы пополнили казну клана на ${amount.toLocaleString()} ⭐!`);
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось пополнить казну: " + err.message);
+            }
+        };
+
+        function initTopClansListener() {
+            onSnapshot(collection(db, "clans"), (snap) => {
+                const list = document.getElementById('top-clans-list');
+                if(!list) return;
+                const clansArr = [];
+                snap.forEach(d => clansArr.push({ id: d.id, ...d.data() }));
+                clansArr.sort((a, b) => (b.treasury || 0) - (a.treasury || 0));
+                list.innerHTML = clansArr.map((c, i) => `
+                    <div class="top-clan-row">
+                        <span class="top-clan-rank">${i+1}</span>
+                        <img src="${c.avatarUrl || ''}">
+                        <div style="flex:1;">
+                            <strong>${c.name}</strong><br>
+                            <span style="font-size:11px; color:var(--text-muted);">${clanRankByTreasury(c.treasury||0)} · ${(c.members||[]).length} участников</span>
+                        </div>
+                        <strong>💰 ${(c.treasury||0).toLocaleString()}</strong>
+                    </div>
+                `).join('') || `<p style="font-size:12px; color:var(--text-muted);">Кланов пока нет.</p>`;
+            });
+        }
+
+        /* =========================================================
+           ===================  УВЕДОМЛЕНИЯ ЧАТА  ======================
+           ========================================================= */
+        const chatNotifSeenTimestamps = {};
+        const chatNotifUnsubs = {};
+
+        function subscribeMessageNotifications() {
+            const friends = userData.friends || [];
+            friends.forEach(f => {
+                if(chatNotifUnsubs[f]) return; // уже подписаны
+                const chatId = [userData.username, f].sort().join("_");
+                const q = query(collection(db, `chats/${chatId}/messages`), orderBy("timestamp", "desc"), limit(1));
+                chatNotifUnsubs[f] = onSnapshot(q, (snap) => {
+                    if(snap.empty) return;
+                    const lastMsg = snap.docs[0].data();
+                    if(lastMsg.sender === userData.username) return; // своё сообщение
+                    if(chatNotifSeenTimestamps[f] === undefined) {
+                        chatNotifSeenTimestamps[f] = lastMsg.timestamp; // первая загрузка — не уведомляем о старых
+                        return;
+                    }
+                    if(lastMsg.timestamp > chatNotifSeenTimestamps[f]) {
+                        chatNotifSeenTimestamps[f] = lastMsg.timestamp;
+                        if(activeChatFriend !== f) {
+                            markFriendUnread(f);
+                            showMessageToast(f, lastMsg.msg);
+                        }
+                    }
+                });
+            });
+        }
+
+        const unreadFriendsSet = new Set();
+        function markFriendUnread(friendUsername) {
+            unreadFriendsSet.add(friendUsername);
+            const dot = document.getElementById(`unread-dot-${friendUsername}`);
+            if(dot) dot.style.display = 'inline-block';
+        }
+        window.clearFriendUnread = function(friendUsername) {
+            unreadFriendsSet.delete(friendUsername);
+            const dot = document.getElementById(`unread-dot-${friendUsername}`);
+            if(dot) dot.style.display = 'none';
+        };
+
+        async function showMessageToast(fromUser, msgText) {
+            const container = document.getElementById('toast-container');
+            if(!container) return;
+            const fSnap = await getDoc(doc(db, "users", fromUser));
+            const fData = fSnap.exists() ? fSnap.data() : {};
+            const toast = document.createElement('div');
+            toast.className = "toast-popup";
+            toast.innerHTML = `<img src="${fData.avatarUrl || 'https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg'}">
+                <div><strong>@${fromUser}</strong><br><span style="font-size:12px; color:var(--text-muted);">${(msgText||'').slice(0,40)}</span></div>`;
+            toast.onclick = () => { window.switchTab('friends'); openFriendChat(fromUser); window.clearFriendUnread(fromUser); toast.remove(); };
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 6000);
+        }
+
+        /* =========================================================
+           ============  МИНИ-ИГРЫ "НЕТ ПОДКЛЮЧЕНИЯ" (ДИНО)  ===========
+           ========================================================= */
+        const dinoGames = {};
+        const dinoColors = { bg: '#f7f4ee', ground: '#c5a880', obstacle: '#2b251f', player: '#c5a880' };
+
+        function initDinoGames() {
+            setupDinoCanvas('runner', 'dino-runner-canvas');
+            setupDinoCanvas('night', 'dino-night-canvas');
+            setupDinoCanvas('flappy', 'dino-flappy-canvas');
+        }
+
+        function setupDinoCanvas(type, canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = dinoColors.bg;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#8a7f73';
+            ctx.font = '13px sans-serif';
+            ctx.fillText('Нажмите "Старт", затем кликайте по полю', 20, 85);
+
+            canvas.onclick = () => handleDinoInput(type);
+            document.addEventListener('keydown', (e) => {
+                if(e.code === 'Space' && dinoGames[type] && dinoGames[type].running) handleDinoInput(type);
+            });
+        }
+
+        function handleDinoInput(type) {
+            const state = dinoGames[type];
+            if(!state || !state.running) return;
+            if(type === 'runner' || type === 'flappy') {
+                state.velocityY = type === 'flappy' ? -4.2 : (state.onGround ? -9 : state.velocityY);
+                if(type === 'runner') state.onGround = false;
+            } else if(type === 'night') {
+                state.lane = (state.lane + 1) % 3;
+            }
+        }
+
+        window.startDinoGame = function(type) {
+            const canvasIds = { runner: 'dino-runner-canvas', night: 'dino-night-canvas', flappy: 'dino-flappy-canvas' };
+            const scoreIds = { runner: 'dino-runner-score', night: 'dino-night-score', flappy: 'dino-flappy-score' };
+            const canvas = document.getElementById(canvasIds[type]);
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            const state = {
+                running: true, score: 0, tick: 0,
+                playerY: 110, velocityY: 0, onGround: true,
+                lane: 1, obstacles: [], speed: 3.2
+            };
+            dinoGames[type] = state;
+
+            function endGame() {
+                state.running = false;
+                const earned = Math.min(200, Math.floor(state.score / 5));
+                document.getElementById(scoreIds[type]).textContent = `Очки: ${state.score} (игра окончена)`;
+                if(earned > 0) {
+                    safeUpdateUserDoc({ stars: increment(earned), gameWins: increment(1) });
+                    alert(`Игра окончена! Счёт: ${state.score}. Начислено: +${earned} ⭐`);
+                } else {
+                    alert(`Игра окончена! Счёт: ${state.score}.`);
+                }
+            }
+
+            function loopRunner() {
+                if(!state.running) return;
+                state.tick++;
+                state.score++;
+                ctx.fillStyle = dinoColors.bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = dinoColors.ground; ctx.fillRect(0, 135, canvas.width, 2);
+
+                state.velocityY += 0.5;
+                state.playerY += state.velocityY;
+                if(state.playerY >= 110) { state.playerY = 110; state.velocityY = 0; state.onGround = true; }
+
+                ctx.fillStyle = dinoColors.player; ctx.fillRect(40, state.playerY, 24, 24);
+
+                if(state.tick % Math.max(35 - Math.floor(state.speed), 15) === 0) {
+                    state.obstacles.push({ x: canvas.width, w: 14, h: 26 });
+                }
+                state.speed += 0.002;
+                ctx.fillStyle = dinoColors.obstacle;
+                for(const ob of state.obstacles) {
+                    ob.x -= state.speed;
+                    ctx.fillRect(ob.x, 134 - ob.h, ob.w, ob.h);
+                    if(ob.x < 64 && ob.x + ob.w > 40 && state.playerY + 24 > 134 - ob.h) { endGame(); return; }
+                }
+                state.obstacles = state.obstacles.filter(o => o.x > -20);
+
+                document.getElementById(scoreIds.runner).textContent = `Очки: ${state.score}`;
+                requestAnimationFrame(loopRunner);
+            }
+
+            function loopNight() {
+                if(!state.running) return;
+                state.tick++;
+                state.score++;
+                ctx.fillStyle = '#20242e'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const laneWidth = canvas.width / 3;
+                ctx.fillStyle = '#f2ede4';
+                ctx.fillRect(state.lane * laneWidth + laneWidth/2 - 12, 130, 24, 24);
+
+                if(state.tick % 40 === 0) {
+                    state.obstacles.push({ lane: Math.floor(Math.random()*3), y: -20 });
+                }
+                ctx.fillStyle = '#d9534f';
+                for(const ob of state.obstacles) {
+                    ob.y += 2.6 + state.speed * 0.3;
+                    ctx.fillRect(ob.lane * laneWidth + laneWidth/2 - 12, ob.y, 24, 20);
+                    if(ob.y > 122 && ob.y < 150 && ob.lane === state.lane) { endGame(); return; }
+                }
+                state.obstacles = state.obstacles.filter(o => o.y < canvas.height + 20);
+                state.speed += 0.001;
+
+                document.getElementById(scoreIds.night).textContent = `Очки: ${state.score}`;
+                requestAnimationFrame(loopNight);
+            }
+
+            function loopFlappy() {
+                if(!state.running) return;
+                state.tick++;
+                ctx.fillStyle = '#e8f2ff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                state.velocityY += 0.28;
+                state.playerY += state.velocityY;
+                ctx.fillStyle = dinoColors.player;
+                ctx.beginPath(); ctx.arc(70, state.playerY, 10, 0, Math.PI*2); ctx.fill();
+
+                if(state.tick % 70 === 0) {
+                    const gapY = 30 + Math.random() * 80;
+                    state.obstacles.push({ x: canvas.width, gapY, passed: false });
+                }
+                ctx.fillStyle = '#4caf7d';
+                for(const ob of state.obstacles) {
+                    ob.x -= 2.4;
+                    ctx.fillRect(ob.x, 0, 22, ob.gapY);
+                    ctx.fillRect(ob.x, ob.gapY + 45, 22, canvas.height - ob.gapY - 45);
+                    if(!ob.passed && ob.x < 70) { ob.passed = true; state.score++; }
+                    if(ob.x < 82 && ob.x + 22 > 58 && (state.playerY < ob.gapY || state.playerY > ob.gapY + 45)) { endGame(); return; }
+                }
+                state.obstacles = state.obstacles.filter(o => o.x > -30);
+
+                if(state.playerY > canvas.height || state.playerY < 0) { endGame(); return; }
+
+                document.getElementById(scoreIds.flappy).textContent = `Очки: ${state.score}`;
+                requestAnimationFrame(loopFlappy);
+            }
+
+            if(type === 'runner') requestAnimationFrame(loopRunner);
+            else if(type === 'night') requestAnimationFrame(loopNight);
+            else requestAnimationFrame(loopFlappy);
+        };
+
         let puzzleState = [];
         window.initPuzzle = function() {
             let arr = Array.from({length: 15}, (_, i) => i + 1); arr.push(0);
@@ -1005,7 +2017,7 @@
             for(let i=0; i<15; i++) { if(puzzleState[i] !== i + 1) isWin = false; }
             if(isWin && puzzleState[15] === 0) {
                 alert("Пятнашки собраны! +100 ⭐");
-                await updateDoc(userDocRef, { stars: increment(100), gameWins: increment(1) });
+                await safeUpdateUserDoc({ stars: increment(100), gameWins: increment(1) });
                 window.initPuzzle();
             }
         }
@@ -1042,7 +2054,7 @@
             const unmatched = document.querySelectorAll('.memory-card:not(.matched)');
             if(unmatched.length === 0) {
                 alert("Вы собрали все логотипы! +50 ⭐");
-                await updateDoc(userDocRef, { stars: increment(50), gameWins: increment(1) }); window.initMemoryGame();
+                await safeUpdateUserDoc({ stars: increment(50), gameWins: increment(1) }); window.initMemoryGame();
             }
         }
 
@@ -1052,7 +2064,8 @@
             if(userData.stars < 30) return alert("Недостаточно звёзд для игры (Прокрут стоит 30 ⭐)!");
 
             isWheelSpinning = true;
-            await updateDoc(userDocRef, { stars: increment(-30) });
+            const spendOk = await safeUpdateUserDoc({ stars: increment(-30) });
+            if(!spendOk) { isWheelSpinning = false; return; }
 
             const wheel = document.getElementById('fortune-wheel-element');
             const randomDegrees = Math.floor(Math.random() * 360) + 1440;
@@ -1066,7 +2079,7 @@
                 const updateData = { stars: increment(finalPrize) };
                 if(finalPrize > 0) updateData.gameWins = increment(1);
 
-                await updateDoc(userDocRef, updateData);
+                await safeUpdateUserDoc(updateData);
                 alert(`Колесо остановилось! Вы выиграли: + ${finalPrize} ⭐`);
             }, 2000);
         };
@@ -1166,14 +2179,30 @@
         }
 
         window.deletePost = async function(postId) {
-            if(confirm("Удалить пост?")) {
+            if(!confirm("Удалить пост?")) return;
+            try {
                 await deleteDoc(doc(db, "posts", postId));
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось удалить пост: " + err.message);
             }
         };
 
+        // ИСПРАВЛЕНИЕ БАГА С "ПРОПАДАЮЩИМИ" ЛАЙКАМИ/КОММЕНТАРИЯМИ:
+        // раньше запись велась поверх массива, снятого в момент рендера карточки поста.
+        // Если два человека почти одновременно ставили лайк/писали комментарий,
+        // более поздняя запись перезаписывала весь массив и "стирала" чужие данные.
+        // Теперь используем атомарные arrayUnion/arrayRemove — ничего не теряется.
         async function toggleLikePost(postId, currentLikes) {
-            let updated = currentLikes.includes(userData.username) ? currentLikes.filter(u => u !== userData.username) : [...currentLikes, userData.username];
-            await updateDoc(doc(db, "posts", postId), { likes: updated });
+            try {
+                const alreadyLiked = currentLikes.includes(userData.username);
+                await updateDoc(doc(db, "posts", postId), {
+                    likes: alreadyLiked ? arrayRemove(userData.username) : arrayUnion(userData.username)
+                });
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось поставить лайк: " + err.message);
+            }
         }
 
         async function addCommentToPost(postId, currentComments) {
@@ -1181,8 +2210,13 @@
             const text = input.value.trim();
             if(!text) return;
             const newComment = { user: userData.username, text: text, timestamp: new Date().getTime() };
-            await updateDoc(doc(db, "posts", postId), { comments: [...currentComments, newComment] });
-            input.value = "";
+            try {
+                await updateDoc(doc(db, "posts", postId), { comments: arrayUnion(newComment) });
+                input.value = "";
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось отправить комментарий: " + err.message);
+            }
         }
 
         window.inspectProfile = async function(targetUser) {
@@ -1239,6 +2273,8 @@
             // Новые табы
             document.getElementById('tab-nav-rating').onclick = () => window.switchTab('rating');
             document.getElementById('tab-nav-users').onclick = () => window.switchTab('users');
+            document.getElementById('tab-nav-clans').onclick = () => window.switchTab('clans');
+            document.getElementById('tab-nav-topclans').onclick = () => window.switchTab('topclans');
 
             document.getElementById('profile-name-display').onclick = () => window.changeNickname();
             document.getElementById('btn-change-avatar-trigger').onclick = () => window.triggerAvatarUpload();
@@ -1255,6 +2291,21 @@
             document.getElementById('btn-send-msg-priv').onclick = () => window.sendPrivateMessage();
             document.getElementById('duel-action-btn').onclick = () => window.handleDuelAction();
             document.getElementById('btn-edit-bio').onclick = () => window.editBio();
+
+            // Кланы
+            document.getElementById('btn-search-clan').onclick = () => window.searchClans();
+            document.getElementById('btn-create-clan').onclick = () => window.createClan();
+            document.getElementById('btn-upload-clan-avatar').onclick = () => window.triggerClanAvatarUpload();
+            document.getElementById('btn-donate-clan').onclick = () => window.donateToClanTreasury();
+            document.getElementById('btn-leave-clan').onclick = () => window.leaveClan();
+
+            // Трейд
+            document.getElementById('btn-send-trade').onclick = () => window.sendTradeOffer();
+
+            // Дино-игры
+            document.getElementById('btn-start-dino-runner').onclick = () => window.startDinoGame('runner');
+            document.getElementById('btn-start-dino-night').onclick = () => window.startDinoGame('night');
+            document.getElementById('btn-start-dino-flappy').onclick = () => window.startDinoGame('flappy');
         });
 
         window.updateGlobalStats = function() {
@@ -1264,13 +2315,22 @@
                 
                 users.sort((a, b) => (b.stars || 0) - (a.stars || 0));
                 const ratingList = document.getElementById('rating-list');
-                if(ratingList) ratingList.innerHTML = users.map((u, i) => `<div>${i+1}. ${u.nickname} - ${u.stars || 0} ⭐</div>`).join('');
+                if(ratingList) ratingList.innerHTML = users.map((u, i) => `
+                    <div style="display:flex; align-items:center; gap:10px; padding:6px 0;">
+                        <span style="width:24px;">${i+1}.</span>
+                        <img src="${u.avatarUrl || 'https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg'}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid var(--accent-gold);">
+                        <span>${u.nickname} — ${u.stars || 0} ⭐</span>
+                    </div>`).join('');
                 
                 const totalCount = document.getElementById('total-users-count');
                 if(totalCount) totalCount.textContent = users.length;
                 
                 const allUsersList = document.getElementById('all-users-list');
-                if(allUsersList) allUsersList.innerHTML = users.map(u => `<div>@${u.username}</div>`).join('');
+                if(allUsersList) allUsersList.innerHTML = users.map(u => `
+                    <div style="display:flex; align-items:center; gap:10px; padding:6px 0;">
+                        <img src="${u.avatarUrl || 'https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg'}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid var(--accent-gold);">
+                        <span>@${u.username}</span>
+                    </div>`).join('');
             });
         }
         window.editBio = async function() {
