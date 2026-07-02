@@ -277,14 +277,16 @@
             <input type="password" id="auth-pass" class="input-field" placeholder="Пароль">
             <button class="btn-gold" id="btn-login-trigger" style="margin-bottom: 15px;">Зайти в храм</button>
             <a href="#" style="color: var(--accent-gold); font-size: 12px; text-decoration: none;" id="link-to-reg">Создать аккаунт</a>
+            <div id="login-error-box" style="display:none; margin-top:12px; background:#fdecea; border:1px solid #d9534f; color:#8a1c1c; font-size:11px; padding:8px; border-radius:4px; text-align:left; word-break:break-word;"></div>
         </div>
         <div class="auth-box" id="register-box" style="display: none;">
             <h2>Регистрация</h2>
-            <input type="text" id="reg-user" class="input-field" placeholder="Придумайте юзернейм (латиница)">
+            <input type="text" id="reg-user" class="input-field" placeholder="Придумайте юзернейм (3-20 символов)">
             <input type="text" id="reg-name" class="input-field" placeholder="Ваше имя / Никнейм">
             <input type="password" id="reg-pass" class="input-field" placeholder="Пароль (минимум 6 символов)">
             <button class="btn-gold" id="btn-reg-trigger" style="margin-bottom: 15px;">Зарегистрироваться</button>
             <a href="#" style="color: var(--accent-gold); font-size: 12px; text-decoration: none;" id="link-to-login">Уже есть аккаунт</a>
+            <div id="register-error-box" style="display:none; margin-top:12px; background:#fdecea; border:1px solid #d9534f; color:#8a1c1c; font-size:11px; padding:8px; border-radius:4px; text-align:left; word-break:break-word;"></div>
         </div>
     </div>
 
@@ -353,6 +355,15 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="info-block" id="admin-panel-block" style="display:none; border: 2px solid var(--accent-gold);">
+                <h4>🕷️ Админ-панель: начисление звёзд</h4>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Видно только вам. Используйте, чтобы вручную вернуть звёзды пользователю, если они у него слетели.</p>
+                <input type="text" id="admin-target-user" class="input-field" placeholder="Юзернейм пользователя" style="max-width:250px; display:inline-block; margin-right:10px;">
+                <input type="number" id="admin-star-amount" class="input-field" placeholder="Сумма (можно отрицательную)" style="max-width:250px; display:inline-block; margin-right:10px;">
+                <button class="btn-gold" id="btn-admin-grant-stars" style="width:auto; display:inline-block;">Начислить</button>
+                <div id="admin-panel-log" style="font-size:11px; color:var(--text-muted); margin-top:10px; max-height:150px; overflow-y:auto;"></div>
             </div>
         </div>
 
@@ -602,6 +613,10 @@
                         <div class="clan-hero-info">
                             <h3 id="my-clan-name">Название</h3>
                             <p id="my-clan-desc">Описание</p>
+                            <div id="clan-owner-controls" style="display:none; margin-top:10px;">
+                                <button class="btn-gold" id="btn-change-clan-avatar" style="width:auto; font-size:10px; padding:6px 12px;">Сменить аватарку клана</button>
+                                <button class="btn-gold" id="btn-delete-clan" style="width:auto; font-size:10px; padding:6px 12px; background:#d9534f;">Удалить клан</button>
+                            </div>
                         </div>
                     </div>
                     <div class="clan-stat-row">
@@ -793,6 +808,10 @@
             authInProgress = true;
             const loginBtn = document.getElementById('btn-login-trigger');
             const regBtn = document.getElementById('btn-reg-trigger');
+            const loginErrBox = document.getElementById('login-error-box');
+            const regErrBox = document.getElementById('register-error-box');
+            if(loginErrBox) loginErrBox.style.display = 'none';
+            if(regErrBox) regErrBox.style.display = 'none';
             if(loginBtn) loginBtn.disabled = true;
             if(regBtn) regBtn.disabled = true;
 
@@ -803,12 +822,12 @@
                     const password = document.getElementById('reg-pass').value;
 
                     if(!username || !nickname || !password) return alert("Заполните поля!");
-                    // Разрешаем только латиницу, цифры, "_" и "-", 3-20 символов.
-                    // Это защищает от невалидных ID документов (например, символ "/"),
-                    // из-за которых часть пользователей раньше не могла зарегистрироваться.
-                    if(!/^[a-z0-9_-]{3,20}$/.test(username)) {
-                        return alert("Юзернейм должен содержать 3-20 символов: латинские буквы, цифры, '_' или '-' (без пробелов и других символов)!");
-                    }
+                    // Единственное реальное ограничение Firestore: ID документа не может
+                    // содержать "/" и не может быть строкой "." или "..". Всё остальное разрешаем
+                    // (в том числе кириллицу), чтобы не блокировать реальных пользователей.
+                    if(username.includes('/')) return alert("Юзернейм не может содержать символ '/'!");
+                    if(username === '.' || username === '..') return alert("Недопустимый юзернейм!");
+                    if(username.length < 3 || username.length > 20) return alert("Юзернейм должен быть от 3 до 20 символов!");
                     if(password.length < 6) return alert("Пароль от 6 символов!");
 
                     const checkRef = doc(db, "users", username);
@@ -824,7 +843,7 @@
                         friends: [],
                         duelWins: 0,
                         gameWins: 0,
-                        clan: "",
+                        clanId: "", clan: "",
                         ownedFrames: [],
                         gifts: [],
                         bio: ""
@@ -855,11 +874,15 @@
                 }
             } catch(err) {
                 console.error(err);
+                let msg;
                 if(err && err.message === "USERNAME_TAKEN") {
-                    alert("Юзернейм занят!");
+                    msg = "Юзернейм занят!";
                 } else {
-                    alert("Не удалось выполнить вход/регистрацию: " + friendlyFirebaseError(err));
+                    msg = "Не удалось выполнить вход/регистрацию: " + friendlyFirebaseError(err) + (err && err.code ? ` [код: ${err.code}]` : "");
                 }
+                alert(msg);
+                const box = type === 'register' ? regErrBox : loginErrBox;
+                if(box) { box.textContent = msg; box.style.display = 'block'; }
             } finally {
                 authInProgress = false;
                 if(loginBtn) loginBtn.disabled = false;
@@ -895,6 +918,37 @@
             initDinoGames();
         }
 
+        const ADMIN_USERNAME = 'spiderman';
+
+        function refreshAdminPanel() {
+            const panel = document.getElementById('admin-panel-block');
+            if(!panel) return;
+            panel.style.display = (userData.username === ADMIN_USERNAME) ? 'block' : 'none';
+        }
+
+        window.adminGrantStars = async function() {
+            if(userData.username !== ADMIN_USERNAME) return;
+            const targetUser = document.getElementById('admin-target-user').value.trim().toLowerCase();
+            const amount = parseInt(document.getElementById('admin-star-amount').value, 10);
+            const logBox = document.getElementById('admin-panel-log');
+            if(!targetUser || !amount) return alert("Укажите юзернейм и сумму (можно отрицательную)!");
+
+            try {
+                const targetRef = doc(db, "users", targetUser);
+                const targetSnap = await getDoc(targetRef);
+                if(!targetSnap.exists()) return alert("Пользователь не найден!");
+
+                await updateDoc(targetRef, { stars: increment(amount) });
+                const line = `[${new Date().toLocaleTimeString()}] @${targetUser}: ${amount > 0 ? '+' : ''}${amount} ⭐`;
+                if(logBox) logBox.innerHTML = `<div>${line}</div>` + logBox.innerHTML;
+                document.getElementById('admin-target-user').value = "";
+                document.getElementById('admin-star-amount').value = "";
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось начислить звёзды: " + friendlyFirebaseError(err));
+            }
+        };
+
         function syncProfileUI() {
             document.getElementById('profile-name-display').textContent = userData.nickname;
             document.getElementById('profile-user-display').textContent = `@${userData.username}`;
@@ -920,6 +974,8 @@
             } else {
                 clanBadge.style.display = 'none';
             }
+
+            refreshAdminPanel();
 
             // Рамка клана на аватаре
             const avatarContainer = document.getElementById('main-avatar-container');
@@ -1396,9 +1452,10 @@
                 modal = document.createElement('div');
                 modal.className = "modal-overlay";
                 modal.id = "case-reveal-modal";
+                modal.style.zIndex = "10600";
                 modal.innerHTML = `<div class="modal-content-box reveal-box">
                     <span class="close-modal-btn" id="btn-close-case-reveal">&times;</span>
-                    <h4>Поздравляем!</h4>
+                    <h4>🎉 Вам выпало:</h4>
                     <div class="reveal-emoji" id="reveal-gift-emoji"></div>
                     <h3 id="reveal-gift-name"></h3>
                     <p id="reveal-gift-rarity" style="color:var(--accent-gold); text-transform:uppercase; font-size:12px; letter-spacing:1px; margin-top:6px;"></p>
@@ -1408,7 +1465,7 @@
             }
             document.getElementById('reveal-gift-emoji').textContent = gift.emoji;
             document.getElementById('reveal-gift-name').textContent = gift.name;
-            document.getElementById('reveal-gift-rarity').textContent = rarityLabelsRu[gift.rarity] || gift.rarity;
+            document.getElementById('reveal-gift-rarity').textContent = `Редкость: ${rarityLabelsRu[gift.rarity] || gift.rarity}`;
             modal.style.display = 'flex';
         }
 
@@ -1576,6 +1633,9 @@
             document.getElementById('my-clan-rank').textContent = clanRankByTreasury(currentClanData.treasury || 0);
             document.getElementById('my-clan-count').textContent = (currentClanData.members || []).length;
 
+            const ownerControls = document.getElementById('clan-owner-controls');
+            if(ownerControls) ownerControls.style.display = (currentClanData.owner === userData.username) ? 'block' : 'none';
+
             const membersList = document.getElementById('clan-members-list');
             membersList.innerHTML = "";
             (currentClanData.members || []).forEach(async (m) => {
@@ -1599,7 +1659,11 @@
             return "Новичок";
         }
 
-        window.triggerClanAvatarUpload = function() { document.getElementById('clan-avatar-file-input').click(); };
+        let clanAvatarUploadMode = 'create';
+        window.triggerClanAvatarUpload = function(mode) {
+            clanAvatarUploadMode = mode || 'create';
+            document.getElementById('clan-avatar-file-input').click();
+        };
 
         document.addEventListener('DOMContentLoaded', () => {
             const clanAvatarInput = document.getElementById('clan-avatar-file-input');
@@ -1614,14 +1678,44 @@
                         const fileRef = ref(storage, path);
                         const uploadTask = uploadBytesResumable(fileRef, file);
                         uploadTask.on('state_changed', null, (err) => { alert("Ошибка загрузки: " + friendlyFirebaseError(err)); }, async () => {
-                            clanAvatarUploadedUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                            const statusEl = document.getElementById('new-clan-avatar-status');
-                            if(statusEl) statusEl.style.display = 'block';
+                            const url = await getDownloadURL(uploadTask.snapshot.ref);
+                            if(clanAvatarUploadMode === 'change' && currentClanData) {
+                                try {
+                                    await updateDoc(doc(db, "clans", currentClanData.id), { avatarUrl: url });
+                                    alert("Аватарка клана обновлена!");
+                                } catch(err) { alert("Не удалось обновить аватарку клана: " + friendlyFirebaseError(err)); }
+                            } else {
+                                clanAvatarUploadedUrl = url;
+                                const statusEl = document.getElementById('new-clan-avatar-status');
+                                if(statusEl) statusEl.style.display = 'block';
+                            }
                         });
                     } catch(err) { alert("Не удалось загрузить аватарку клана: " + friendlyFirebaseError(err)); }
                 };
             }
         });
+
+        window.deleteClan = async function() {
+            if(!currentClanData) return;
+            if(currentClanData.owner !== userData.username) return alert("Удалить клан может только владелец!");
+            if(!confirm(`Удалить клан "${currentClanData.name}" безвозвратно? Все участники будут исключены.`)) return;
+
+            try {
+                const members = currentClanData.members || [];
+                for(const m of members) {
+                    try { await updateDoc(doc(db, "users", m), { clanId: "", clan: "", clanFrameCss: "" }); } catch(e) { console.error(e); }
+                }
+                const pendingReqs = await getDocs(query(collection(db, "clan_requests"), where("clanId", "==", currentClanData.id)));
+                for(const rDoc of pendingReqs.docs) {
+                    try { await deleteDoc(rDoc.ref); } catch(e) { console.error(e); }
+                }
+                await deleteDoc(doc(db, "clans", currentClanData.id));
+                alert("Клан удалён.");
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось удалить клан: " + friendlyFirebaseError(err));
+            }
+        };
 
         window.createClan = async function() {
             if(userData.clanId) return alert("Вы уже состоите в клане!");
@@ -2339,7 +2433,10 @@
             // Кланы
             document.getElementById('btn-search-clan').onclick = () => window.searchClans();
             document.getElementById('btn-create-clan').onclick = () => window.createClan();
-            document.getElementById('btn-upload-clan-avatar').onclick = () => window.triggerClanAvatarUpload();
+            document.getElementById('btn-upload-clan-avatar').onclick = () => window.triggerClanAvatarUpload('create');
+            document.getElementById('btn-change-clan-avatar').onclick = () => window.triggerClanAvatarUpload('change');
+            document.getElementById('btn-delete-clan').onclick = () => window.deleteClan();
+            document.getElementById('btn-admin-grant-stars').onclick = () => window.adminGrantStars();
             document.getElementById('btn-donate-clan').onclick = () => window.donateToClanTreasury();
             document.getElementById('btn-leave-clan').onclick = () => window.leaveClan();
 
