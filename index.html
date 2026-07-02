@@ -858,7 +858,7 @@
                 if(err && err.message === "USERNAME_TAKEN") {
                     alert("Юзернейм занят!");
                 } else {
-                    alert("Не удалось выполнить вход/регистрацию: " + (err && err.message ? err.message : "неизвестная ошибка") + ". Проверьте подключение к интернету и попробуйте снова.");
+                    alert("Не удалось выполнить вход/регистрацию: " + friendlyFirebaseError(err));
                 }
             } finally {
                 authInProgress = false;
@@ -1032,11 +1032,12 @@
                 return true;
             } catch(err) {
                 console.error("safeUpdateUserDoc error:", err);
-                if(attempt < 3) {
+                const isPermission = err && err.code && err.code.includes("permission-denied");
+                if(!isPermission && attempt < 3) {
                     await new Promise(r => setTimeout(r, 500 * attempt));
                     return safeUpdateUserDoc(dataObj, attempt + 1);
                 }
-                alert("⚠️ Не удалось сохранить результат из-за проблемы с подключением. Награда не была начислена — попробуйте ещё раз, когда появится интернет.");
+                alert("⚠️ Не удалось сохранить результат: " + friendlyFirebaseError(err) + "\nЕсли что-то было списано (например, звёзды за кейс) — оно будет автоматически возвращено.");
                 return false;
             }
         }
@@ -1327,19 +1328,28 @@
             if((userData.stars || 0) < frame.cost) return alert("Недостаточно звёзд!");
             if((currentClanData.ownedFrames || []).includes(frame.id)) return alert("Рамка уже куплена — просто наденьте её на клан.");
 
+            const clanRef = doc(db, "clans", currentClanData.id);
             try {
-                await safeUpdateUserDoc({ stars: increment(-frame.cost) });
-                const clanRef = doc(db, "clans", currentClanData.id);
+                // Сначала обновляем клан, затем списываем звёзды. Если списание не удастся —
+                // откатываем изменения клана, чтобы звёзды не пропадали впустую.
+                const prevFrame = { activeFrame: currentClanData.activeFrame || "", activeFrameCss: currentClanData.activeFrameCss || "" };
                 await updateDoc(clanRef, {
                     ownedFrames: arrayUnion(frame.id),
                     activeFrame: frame.id,
                     activeFrameCss: frame.css
                 });
+
+                const ok = await safeUpdateUserDoc({ stars: increment(-frame.cost) });
+                if(!ok) {
+                    await updateDoc(clanRef, prevFrame);
+                    return;
+                }
+
                 await propagateClanFrameToMembers(currentClanData.id, frame.css);
                 alert(`Рамка "${frame.name}" куплена и надета на клан!`);
             } catch(err) {
                 console.error(err);
-                alert("Не удалось купить рамку: " + err.message);
+                alert("Не удалось купить рамку: " + friendlyFirebaseError(err));
             }
         }
 
@@ -1369,12 +1379,14 @@
 
         async function openCase(caseConfig) {
             if((userData.stars || 0) < caseConfig.cost) return alert("Недостаточно звёзд для этого кейса!");
-            const ok = await safeUpdateUserDoc({ stars: increment(-caseConfig.cost) });
-            if(!ok) return;
 
             const wonGift = pickRandomGiftForCase(caseConfig);
             const instanceId = `${wonGift.id}__${Date.now()}_${Math.floor(Math.random()*10000)}`;
-            await safeUpdateUserDoc({ gifts: arrayUnion(instanceId) });
+
+            // Одна атомарная запись: списание звёзд И начисление подарка вместе.
+            // Так исключается ситуация "звёзды списаны, а подарок не выдан".
+            const ok = await safeUpdateUserDoc({ stars: increment(-caseConfig.cost), gifts: arrayUnion(instanceId) });
+            if(!ok) return;
             showCaseReveal(wonGift);
         }
 
@@ -1452,7 +1464,7 @@
                 alert("Предложение трейда отправлено!");
             } catch(err) {
                 console.error(err);
-                alert("Не удалось отправить трейд: " + err.message);
+                alert("Не удалось отправить трейд: " + friendlyFirebaseError(err));
             }
         };
 
@@ -1489,7 +1501,7 @@
                 await updateDoc(doc(db, "trades", tradeId), { status: accepted ? "accepted" : "declined" });
             } catch(err) {
                 console.error(err);
-                alert("Не удалось обработать трейд: " + err.message);
+                alert("Не удалось обработать трейд: " + friendlyFirebaseError(err));
             }
         }
 
@@ -1601,12 +1613,12 @@
                         const path = `clan_avatars/${userData.username}_${Date.now()}_${file.name}`;
                         const fileRef = ref(storage, path);
                         const uploadTask = uploadBytesResumable(fileRef, file);
-                        uploadTask.on('state_changed', null, (err) => { alert("Ошибка загрузки: " + err.message); }, async () => {
+                        uploadTask.on('state_changed', null, (err) => { alert("Ошибка загрузки: " + friendlyFirebaseError(err)); }, async () => {
                             clanAvatarUploadedUrl = await getDownloadURL(uploadTask.snapshot.ref);
                             const statusEl = document.getElementById('new-clan-avatar-status');
                             if(statusEl) statusEl.style.display = 'block';
                         });
-                    } catch(err) { alert("Не удалось загрузить аватарку клана: " + err.message); }
+                    } catch(err) { alert("Не удалось загрузить аватарку клана: " + friendlyFirebaseError(err)); }
                 };
             }
         });
@@ -1618,15 +1630,13 @@
             if(!name) return alert("Введите название клана!");
             if((userData.stars || 0) < 50000) return alert("Недостаточно звёзд! Нужно 50 000 ⭐.");
 
+            let clanRef = null;
             try {
                 const existingQ = query(collection(db, "clans"), where("name", "==", name));
                 const existingSnap = await getDocs(existingQ);
                 if(!existingSnap.empty) return alert("Клан с таким названием уже существует!");
 
-                const ok = await safeUpdateUserDoc({ stars: increment(-50000) });
-                if(!ok) return;
-
-                const clanRef = await addDoc(collection(db, "clans"), {
+                clanRef = await addDoc(collection(db, "clans"), {
                     name, description,
                     avatarUrl: clanAvatarUploadedUrl || "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg",
                     owner: userData.username,
@@ -1638,12 +1648,20 @@
                     createdAt: new Date().getTime()
                 });
 
-                await safeUpdateUserDoc({ clanId: clanRef.id, clan: name });
+                // Одна атомарная запись: списание звёзд И привязка клана к юзеру вместе.
+                const ok = await safeUpdateUserDoc({ stars: increment(-50000), clanId: clanRef.id, clan: name });
+                if(!ok) {
+                    // Откат: если не удалось привязать клан к юзеру, удаляем "осиротевший" клан.
+                    await deleteDoc(clanRef);
+                    return;
+                }
+
                 clanAvatarUploadedUrl = "";
                 alert("Клан успешно создан! Вы — владелец.");
             } catch(err) {
                 console.error(err);
-                alert("Не удалось создать клан: " + err.message);
+                if(clanRef) { try { await deleteDoc(clanRef); } catch(e) {} }
+                alert("Не удалось создать клан: " + friendlyFirebaseError(err));
             }
         };
 
@@ -1671,7 +1689,7 @@
                 if(found === 0) resultsBox.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">Кланы не найдены.</p>`;
             } catch(err) {
                 console.error(err);
-                resultsBox.innerHTML = `<p style="font-size:12px; color:#d9534f;">Ошибка поиска: ${err.message}</p>`;
+                resultsBox.innerHTML = `<p style="font-size:12px; color:#d9534f;">Ошибка поиска: ${friendlyFirebaseError(err)}</p>`;
             }
         };
 
@@ -1682,7 +1700,7 @@
                 alert("Заявка отправлена владельцу клана!");
             } catch(err) {
                 console.error(err);
-                alert("Не удалось отправить заявку: " + err.message);
+                alert("Не удалось отправить заявку: " + friendlyFirebaseError(err));
             }
         };
 
@@ -1695,7 +1713,7 @@
                 await updateDoc(doc(db, "clan_requests", reqId), { status: "accepted" });
             } catch(err) {
                 console.error(err);
-                alert("Не удалось принять в клан: " + err.message);
+                alert("Не удалось принять в клан: " + friendlyFirebaseError(err));
             }
         }
 
@@ -1719,7 +1737,7 @@
                 await safeUpdateUserDoc({ clanId: "", clan: "", clanFrameCss: "" });
             } catch(err) {
                 console.error(err);
-                alert("Не удалось покинуть клан: " + err.message);
+                alert("Не удалось покинуть клан: " + friendlyFirebaseError(err));
             }
         };
 
@@ -1729,15 +1747,19 @@
             if(!amount || amount <= 0) return alert("Введите сумму больше 0!");
             if((userData.stars || 0) < amount) return alert("Недостаточно звёзд!");
 
+            const clanRef = doc(db, "clans", currentClanData.id);
             try {
+                await updateDoc(clanRef, { treasury: increment(amount) });
                 const ok = await safeUpdateUserDoc({ stars: increment(-amount) });
-                if(!ok) return;
-                await updateDoc(doc(db, "clans", currentClanData.id), { treasury: increment(amount) });
+                if(!ok) {
+                    await updateDoc(clanRef, { treasury: increment(-amount) });
+                    return;
+                }
                 document.getElementById('clan-donate-amount').value = "";
                 alert(`Вы пополнили казну клана на ${amount.toLocaleString()} ⭐!`);
             } catch(err) {
                 console.error(err);
-                alert("Не удалось пополнить казну: " + err.message);
+                alert("Не удалось пополнить казну: " + friendlyFirebaseError(err));
             }
         };
 
@@ -1822,8 +1844,25 @@
         /* =========================================================
            ============  МИНИ-ИГРЫ "НЕТ ПОДКЛЮЧЕНИЯ" (ДИНО)  ===========
            ========================================================= */
+        // Понятное сообщение об ошибке Firebase. Если это "permission-denied" —
+        // почти всегда означает, что в консоли Firebase (Firestore Database -> Rules)
+        // не разрешена запись в нужную коллекцию — это настраивается НЕ в этом файле,
+        // а в консоли проекта.
+        function friendlyFirebaseError(err) {
+            const code = err && err.code ? err.code : "";
+            if(code.includes("permission-denied")) {
+                return "Firebase запретил операцию (permission-denied). Нужно открыть доступ к записи в правилах Firestore (Firebase Console → Firestore Database → Rules) для коллекций: users, posts, clans, clan_requests, trades, chats.";
+            }
+            if(code.includes("unavailable") || code.includes("network")) {
+                return "Проблема с подключением к серверу. Проверьте интернет и попробуйте ещё раз.";
+            }
+            return (err && err.message) ? err.message : "неизвестная ошибка";
+        }
+
         const dinoGames = {};
         const dinoColors = { bg: '#f7f4ee', ground: '#c5a880', obstacle: '#2b251f', player: '#c5a880' };
+        const gameLogoImg = new Image();
+        gameLogoImg.src = 'image.png';
 
         function initDinoGames() {
             setupDinoCanvas('runner', 'dino-runner-canvas');
@@ -1895,7 +1934,9 @@
                 state.playerY += state.velocityY;
                 if(state.playerY >= 110) { state.playerY = 110; state.velocityY = 0; state.onGround = true; }
 
-                ctx.fillStyle = dinoColors.player; ctx.fillRect(40, state.playerY, 24, 24);
+                ctx.fillStyle = dinoColors.player;
+                if(gameLogoImg.complete && gameLogoImg.naturalWidth > 0) ctx.drawImage(gameLogoImg, 40, state.playerY, 26, 26);
+                else ctx.fillRect(40, state.playerY, 24, 24);
 
                 if(state.tick % Math.max(35 - Math.floor(state.speed), 15) === 0) {
                     state.obstacles.push({ x: canvas.width, w: 14, h: 26 });
@@ -1921,7 +1962,9 @@
 
                 const laneWidth = canvas.width / 3;
                 ctx.fillStyle = '#f2ede4';
-                ctx.fillRect(state.lane * laneWidth + laneWidth/2 - 12, 130, 24, 24);
+                const nightPX = state.lane * laneWidth + laneWidth/2 - 12;
+                if(gameLogoImg.complete && gameLogoImg.naturalWidth > 0) ctx.drawImage(gameLogoImg, nightPX, 128, 26, 26);
+                else ctx.fillRect(nightPX, 130, 24, 24);
 
                 if(state.tick % 40 === 0) {
                     state.obstacles.push({ lane: Math.floor(Math.random()*3), y: -20 });
@@ -1947,7 +1990,8 @@
                 state.velocityY += 0.28;
                 state.playerY += state.velocityY;
                 ctx.fillStyle = dinoColors.player;
-                ctx.beginPath(); ctx.arc(70, state.playerY, 10, 0, Math.PI*2); ctx.fill();
+                if(gameLogoImg.complete && gameLogoImg.naturalWidth > 0) ctx.drawImage(gameLogoImg, 58, state.playerY - 12, 24, 24);
+                else { ctx.beginPath(); ctx.arc(70, state.playerY, 10, 0, Math.PI*2); ctx.fill(); }
 
                 if(state.tick % 70 === 0) {
                     const gapY = 30 + Math.random() * 80;
@@ -2117,7 +2161,7 @@
                 alert("Пост успешно опубликован!");
             } catch(err) {
                 console.error(err);
-                alert("Не удалось опубликовать пост: " + err.message + "\nПопробуйте ещё раз.");
+                alert("Не удалось опубликовать пост: " + friendlyFirebaseError(err));
             }
         };
 
@@ -2184,7 +2228,7 @@
                 await deleteDoc(doc(db, "posts", postId));
             } catch(err) {
                 console.error(err);
-                alert("Не удалось удалить пост: " + err.message);
+                alert("Не удалось удалить пост: " + friendlyFirebaseError(err));
             }
         };
 
@@ -2201,7 +2245,7 @@
                 });
             } catch(err) {
                 console.error(err);
-                alert("Не удалось поставить лайк: " + err.message);
+                alert("Не удалось поставить лайк: " + friendlyFirebaseError(err));
             }
         }
 
@@ -2215,7 +2259,7 @@
                 input.value = "";
             } catch(err) {
                 console.error(err);
-                alert("Не удалось отправить комментарий: " + err.message);
+                alert("Не удалось отправить комментарий: " + friendlyFirebaseError(err));
             }
         }
 
