@@ -763,7 +763,15 @@
         // через Firebase Auth пользователям (request.auth != null). Без этого все загрузки
         // аватарок/медиа/видео падали с ошибкой "permission denied". Анонимная авторизация
         // решает это: пользователь не видит и не вводит для неё ничего, всё происходит в фоне.
-        signInAnonymously(auth).catch((err) => console.error("Anon auth failed:", err));
+        let authReady = false;
+        signInAnonymously(auth).then(() => {
+            authReady = true;
+            console.log("✅ Анонимная авторизация Firebase Auth успешна — загрузки разрешены");
+        }).catch((err) => {
+            console.error("Anon auth failed:", err);
+            // Пробуем всё равно (на случай если правила позволяют)
+            authReady = true;
+        });
 
         // --- Ограничения на размер файлов (защита от зависания браузера) ---
         const MAX_IMAGE_SIZE_MB = 50;
@@ -1056,6 +1064,57 @@
             }
         }
 
+        // Улучшенная функция загрузки с ожиданием auth
+        async function uploadWithRetry(file, path, onProgress, onSuccess, onError, maxRetries = 3) {
+            if (!authReady) {
+                console.log("Ожидаем авторизации Firebase...");
+                await new Promise(resolve => setTimeout(resolve, 800));
+            }
+            
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                try {
+                    const fileRef = ref(storage, path);
+                    const uploadTask = uploadBytesResumable(fileRef, file);
+
+                    return new Promise((resolve, reject) => {
+                        uploadTask.on('state_changed', 
+                            (snapshot) => {
+                                if (onProgress) {
+                                    const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                                    onProgress(pct);
+                                }
+                            }, 
+                            (error) => {
+                                console.error(`Attempt ${attempt} failed:`, error);
+                                if (attempt === maxRetries) {
+                                    onError(error);
+                                    reject(error);
+                                } else {
+                                    // retry
+                                }
+                            }, 
+                            async () => {
+                                try {
+                                    const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                                    onSuccess(downloadUrl);
+                                    resolve(downloadUrl);
+                                } catch (urlErr) {
+                                    onError(urlErr);
+                                    reject(urlErr);
+                                }
+                            }
+                        );
+                    });
+                } catch (err) {
+                    if (attempt === maxRetries) {
+                        onError(err);
+                        throw err;
+                    }
+                    await new Promise(r => setTimeout(r, 700 * attempt));
+                }
+            }
+        }
+
         window.triggerAvatarUpload = function() {
             document.getElementById('avatar-file-input').click();
         };
@@ -1070,17 +1129,20 @@
 
             try {
                 const path = `avatars/${userData.username}_${Date.now()}_${file.name}`;
-                const fileRef = ref(storage, path);
-                const uploadTask = uploadBytesResumable(fileRef, file);
-
-                uploadTask.on('state_changed', null, (error) => {
-                    console.error(error);
-                    alert("Ошибка загрузки аватарки: " + error.message);
-                }, async () => {
-                    const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                    await updateDoc(userDocRef, { avatarUrl: downloadUrl });
-                    alert("Аватарка успешно обновлена!");
-                });
+                
+                await uploadWithRetry(
+                    file, 
+                    path,
+                    null,
+                    async (downloadUrl) => {
+                        await updateDoc(userDocRef, { avatarUrl: downloadUrl });
+                        alert("Аватарка успешно обновлена!");
+                    },
+                    (error) => {
+                        console.error(error);
+                        alert("Ошибка загрузки аватарки: " + friendlyFirebaseError(error) + "\n\nПроверьте правила Firebase Storage (allow read, write: if request.auth != null;)");
+                    }
+                );
             } catch(err) {
                 console.error(err);
                 alert("Не удалось загрузить аватарку. Попробуйте ещё раз.");
@@ -1091,7 +1153,7 @@
             document.getElementById('post-media-input').click();
         };
 
-        document.getElementById('post-media-input').onchange = (e) => {
+        document.getElementById('post-media-input').onchange = async (e) => {
             const file = e.target.files[0];
             if(!file) return;
 
@@ -1114,22 +1176,29 @@
             previewBox.textContent = "⏳ Загрузка медиа: 0%";
 
             const path = `posts/${userData.username}_${Date.now()}_${file.name}`;
-            const fileRef = ref(storage, path);
-            const uploadTask = uploadBytesResumable(fileRef, file);
 
-            uploadTask.on('state_changed', (snapshot) => {
-                const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                previewBox.textContent = `⏳ Загрузка медиа: ${pct}%`;
-            }, (error) => {
-                console.error(error);
-                previewBox.style.display = 'none';
-                selectedPostMediaUrl = "";
-                selectedPostMediaType = "";
-                alert("Ошибка загрузки медиа: " + error.message);
-            }, async () => {
-                selectedPostMediaUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                previewBox.textContent = "✅ Медиа загружено и готово к публикации.";
-            });
+            try {
+                await uploadWithRetry(
+                    file,
+                    path,
+                    (pct) => {
+                        previewBox.textContent = `⏳ Загрузка медиа: ${pct}%`;
+                    },
+                    (downloadUrl) => {
+                        selectedPostMediaUrl = downloadUrl;
+                        previewBox.textContent = "✅ Медиа загружено и готово к публикации.";
+                    },
+                    (error) => {
+                        console.error(error);
+                        previewBox.style.display = 'none';
+                        selectedPostMediaUrl = "";
+                        selectedPostMediaType = "";
+                        alert("Ошибка загрузки медиа: " + friendlyFirebaseError(error));
+                    }
+                );
+            } catch(err) {
+                // already handled
+            }
         };
 
         window.changeNickname = async function() {
@@ -1739,21 +1808,27 @@
                     if(file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) return alert(`Файл слишком большой! Максимум ${MAX_IMAGE_SIZE_MB} МБ.`);
                     try {
                         const path = `clan_avatars/${userData.username}_${Date.now()}_${file.name}`;
-                        const fileRef = ref(storage, path);
-                        const uploadTask = uploadBytesResumable(fileRef, file);
-                        uploadTask.on('state_changed', null, (err) => { alert("Ошибка загрузки: " + friendlyFirebaseError(err)); }, async () => {
-                            const url = await getDownloadURL(uploadTask.snapshot.ref);
-                            if(clanAvatarUploadMode === 'change' && currentClanData) {
-                                try {
-                                    await updateDoc(doc(db, "clans", currentClanData.id), { avatarUrl: url });
-                                    alert("Аватарка клана обновлена!");
-                                } catch(err) { alert("Не удалось обновить аватарку клана: " + friendlyFirebaseError(err)); }
-                            } else {
-                                clanAvatarUploadedUrl = url;
-                                const statusEl = document.getElementById('new-clan-avatar-status');
-                                if(statusEl) statusEl.style.display = 'block';
+                        
+                        await uploadWithRetry(
+                            file,
+                            path,
+                            null,
+                            async (url) => {
+                                if(clanAvatarUploadMode === 'change' && currentClanData) {
+                                    try {
+                                        await updateDoc(doc(db, "clans", currentClanData.id), { avatarUrl: url });
+                                        alert("Аватарка клана обновлена!");
+                                    } catch(err) { alert("Не удалось обновить аватарку клана: " + friendlyFirebaseError(err)); }
+                                } else {
+                                    clanAvatarUploadedUrl = url;
+                                    const statusEl = document.getElementById('new-clan-avatar-status');
+                                    if(statusEl) statusEl.style.display = 'block';
+                                }
+                            },
+                            (error) => {
+                                alert("Ошибка загрузки аватарки клана: " + friendlyFirebaseError(error));
                             }
-                        });
+                        );
                     } catch(err) { alert("Не удалось загрузить аватарку клана: " + friendlyFirebaseError(err)); }
                 };
             }
@@ -2018,10 +2093,10 @@
         function friendlyFirebaseError(err) {
             const code = err && err.code ? err.code : "";
             if(code.includes("permission-denied")) {
-                return "Firebase запретил операцию (permission-denied). Нужно открыть доступ к записи в правилах Firestore (Firebase Console → Firestore Database → Rules) для коллекций: users, posts, clans, clan_requests, trades, chats.";
+                return "Firebase запретил операцию (permission-denied). Нужно открыть доступ к записи в правилах Firestore (Firebase Console → Firestore Database → Rules) для коллекций: users, posts, clans, clan_requests, trades, chats. Для Storage: allow read, write: if request.auth != null;";
             }
-            if(code.includes("unavailable") || code.includes("network")) {
-                return "Проблема с подключением к серверу. Проверьте интернет и попробуйте ещё раз.";
+            if(code.includes("unavailable") || code.includes("network") || code.includes("retry-limit-exceeded")) {
+                return "Проблема с подключением к Firebase Storage. Проверьте интернет и правила Storage. Ошибка: retry limit exceeded.";
             }
             return (err && err.message) ? err.message : "неизвестная ошибка";
         }
@@ -2531,7 +2606,7 @@
             document.getElementById('video-post-input').click();
         };
 
-        document.getElementById('video-post-input').onchange = (e) => {
+        document.getElementById('video-post-input').onchange = async (e) => {
             const file = e.target.files[0];
             if(!file) return;
 
@@ -2550,40 +2625,47 @@
             uploadBtn.textContent = "⏳ Загрузка: 0%";
 
             const path = `video_feed/${userData.username}_${Date.now()}_${file.name}`;
-            const fileRef = ref(storage, path);
-            const uploadTask = uploadBytesResumable(fileRef, file);
 
-            uploadTask.on('state_changed', (snapshot) => {
-                const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                uploadBtn.textContent = `⏳ Загрузка: ${pct}%`;
-            }, (error) => {
-                console.error(error);
-                alert("Ошибка загрузки видео: " + friendlyFirebaseError(error));
-                uploadBtn.disabled = false;
-                uploadBtn.textContent = originalText;
-                e.target.value = "";
-            }, async () => {
-                try {
-                    const videoUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                    await addDoc(collection(db, "video_posts"), {
-                        authorUsername: userData.username,
-                        authorNickname: userData.nickname,
-                        authorAvatar: userData.avatarUrl || "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg",
-                        caption: caption,
-                        videoUrl: videoUrl,
-                        likes: [],
-                        comments: [],
-                        timestamp: new Date().getTime()
-                    });
-                } catch(err) {
-                    console.error(err);
-                    alert("Не удалось опубликовать видео: " + friendlyFirebaseError(err));
-                } finally {
-                    uploadBtn.disabled = false;
-                    uploadBtn.textContent = originalText;
-                    e.target.value = "";
-                }
-            });
+            try {
+                await uploadWithRetry(
+                    file,
+                    path,
+                    (pct) => {
+                        uploadBtn.textContent = `⏳ Загрузка: ${pct}%`;
+                    },
+                    async (videoUrl) => {
+                        try {
+                            await addDoc(collection(db, "video_posts"), {
+                                authorUsername: userData.username,
+                                authorNickname: userData.nickname,
+                                authorAvatar: userData.avatarUrl || "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg",
+                                caption: caption,
+                                videoUrl: videoUrl,
+                                likes: [],
+                                comments: [],
+                                timestamp: new Date().getTime()
+                            });
+                            alert("Видео успешно опубликовано!");
+                        } catch(err) {
+                            console.error(err);
+                            alert("Не удалось опубликовать видео: " + friendlyFirebaseError(err));
+                        } finally {
+                            uploadBtn.disabled = false;
+                            uploadBtn.textContent = originalText;
+                            e.target.value = "";
+                        }
+                    },
+                    (error) => {
+                        console.error(error);
+                        alert("Ошибка загрузки видео: " + friendlyFirebaseError(error));
+                        uploadBtn.disabled = false;
+                        uploadBtn.textContent = originalText;
+                        e.target.value = "";
+                    }
+                );
+            } catch(err) {
+                // handled
+            }
         };
 
         let videoFeedObserver = null;
