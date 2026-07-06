@@ -252,6 +252,47 @@
         .profile-gifts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 8px; margin-top: 12px; }
         .profile-gifts-grid .mini-gift { font-size: 24px; text-align: center; background: var(--chat-bg); border-radius: 4px; padding: 6px 0; border: 1px solid var(--border-color); cursor: default; }
 
+        /* --- ВИДЕО ЛЕНТА (в стиле TikTok) --- */
+        .video-feed-toolbar { display: flex; justify-content: center; margin-bottom: 20px; }
+        .video-feed-toolbar button { width: auto; padding: 14px 32px; font-size: 12px; }
+        .video-feed-container {
+            display: flex; flex-direction: column; gap: 22px;
+            max-width: 420px; margin: 0 auto; height: 78vh; overflow-y: scroll;
+            scroll-snap-type: y mandatory; scrollbar-width: none; border-radius: 14px;
+        }
+        .video-feed-container::-webkit-scrollbar { display: none; }
+        .video-post-card {
+            position: relative; scroll-snap-align: start; scroll-snap-stop: always; flex-shrink: 0;
+            width: 100%; height: 78vh; border-radius: 14px; overflow: hidden; background: #0d0d0d;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+        }
+        .video-post-card video { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+        .video-post-overlay-top {
+            position: absolute; top: 0; left: 0; right: 0; padding: 16px; display: flex; align-items: center;
+            gap: 10px; background: linear-gradient(180deg, rgba(0,0,0,0.6), transparent); color: #fff; cursor: pointer;
+        }
+        .video-post-overlay-top img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-gold); }
+        .video-post-overlay-top strong { font-size: 13px; font-weight: 600; }
+        .video-post-caption {
+            position: absolute; left: 16px; right: 76px; bottom: 22px; color: #fff; font-size: 13px;
+            line-height: 1.4; text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+        }
+        .video-side-actions { position: absolute; right: 12px; bottom: 26px; display: flex; flex-direction: column; align-items: center; gap: 20px; color: #fff; }
+        .video-side-actions .v-action { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; user-select: none; }
+        .video-side-actions .v-action .icon { font-size: 26px; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6)); }
+        .video-side-actions .v-action .count { font-size: 10px; font-weight: 600; }
+        .video-comments-drawer {
+            position: absolute; left: 0; right: 0; bottom: 0; max-height: 50%; background: rgba(15,15,15,0.94);
+            color: #fff; padding: 16px; overflow-y: auto; display: none; border-radius: 16px 16px 0 0;
+        }
+        .video-comments-drawer.open { display: block; }
+        .video-comments-drawer .vc-item { font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 6px 0; }
+        .video-comments-drawer .vc-input-row { display: flex; gap: 8px; margin-top: 10px; }
+        .video-comments-drawer input { flex: 1; padding: 8px 12px; border-radius: 20px; border: none; font-size: 12px; outline: none; }
+        .video-comments-drawer button { width: auto; padding: 8px 16px; font-size: 12px; border-radius: 20px; }
+        .video-empty-state { text-align: center; color: var(--text-muted); padding: 80px 20px; font-size: 14px; }
+
         /* МОБИЛЬНАЯ АДАПТАЦИЯ */
         @media (max-width: 768px) {
             body { flex-direction: column; }
@@ -260,6 +301,8 @@
             .grid-layout, .friends-split { grid-template-columns: 1fr; }
             #puzzle-grid, .memory-grid { margin: 15px auto; }
             .council-grid { grid-template-columns: 1fr; }
+            .video-feed-container { max-width: 100%; height: 70vh; }
+            .video-post-card { height: 70vh; }
         }
     </style>
 </head>
@@ -293,6 +336,7 @@
     <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
     <input type="file" id="post-media-input" accept="image/*,video/*" style="display: none;">
     <input type="file" id="clan-avatar-file-input" accept="image/*" style="display: none;">
+    <input type="file" id="video-post-input" accept="video/*" style="display: none;">
     <div id="toast-container"></div>
 
     <div class="sidebar">
@@ -310,6 +354,7 @@
                 <li class="nav-item" id="tab-nav-users">09 // Пользователи</li>
                 <li class="nav-item" id="tab-nav-clans">10 // Кланы</li>
                 <li class="nav-item" id="tab-nav-topclans">11 // Топ Кланов</li>
+                <li class="nav-item" id="tab-nav-videos">12 // Видео Лента</li>
             </ul>
         </div>
         <div class="sidebar-footer"><span>Skyline FM</span></div>
@@ -647,6 +692,13 @@
                 <div id="top-clans-list"></div>
             </div>
         </div>
+
+        <div id="section-videos" class="content-section">
+            <div class="video-feed-toolbar">
+                <button class="btn-gold" id="btn-upload-video">🎬 Выложить видео</button>
+            </div>
+            <div id="video-feed-container" class="video-feed-container"></div>
+        </div>
     </div>
 
     <div class="modal-overlay" id="profile-modal">
@@ -690,6 +742,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, collection, addDoc, query, orderBy, onSnapshot, where, deleteDoc, increment, runTransaction, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBidafkcn8FUZcZ9LuUxbiXv9r8o7YnX0",
@@ -703,6 +756,14 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const storage = getStorage(app);
+        const auth = getAuth(app);
+
+        // ВАЖНО: сайт использует свою систему логина (через Firestore), а не Firebase Auth.
+        // Но Firebase Storage по умолчанию разрешает загрузку файлов только авторизованным
+        // через Firebase Auth пользователям (request.auth != null). Без этого все загрузки
+        // аватарок/медиа/видео падали с ошибкой "permission denied". Анонимная авторизация
+        // решает это: пользователь не видит и не вводит для неё ничего, всё происходит в фоне.
+        signInAnonymously(auth).catch((err) => console.error("Anon auth failed:", err));
 
         // --- Ограничения на размер файлов (защита от зависания браузера) ---
         const MAX_IMAGE_SIZE_MB = 50;
@@ -912,6 +973,7 @@
             buildMarketUI();
             buildShopFramesAndCases();
             initGlobalFeed();
+            initVideoFeed();
             window.updateGlobalStats();
             initTopClansListener();
             initTradeListener();
@@ -1603,9 +1665,11 @@
                     const row = document.createElement('div');
                     row.className = "clan-result-item";
                     row.innerHTML = `<div class="clan-result-info"><h5>@${r.from}</h5></div>
-                        <button class="btn-gold" style="width:auto; padding:6px 12px; font-size:11px;" id="approve-req-${rDoc.id}">Принять</button>`;
+                        <button class="btn-gold" style="width:auto; padding:6px 12px; font-size:11px;" id="approve-req-${rDoc.id}">Принять</button>
+                        <button class="btn-gold" style="width:auto; padding:6px 12px; font-size:11px; background:#d9534f; margin-left:6px;" id="reject-req-${rDoc.id}">Отклонить</button>`;
                     list.appendChild(row);
                     document.getElementById(`approve-req-${rDoc.id}`).onclick = () => approveClanRequest(rDoc.id, r.from, r.clanId);
+                    document.getElementById(`reject-req-${rDoc.id}`).onclick = () => rejectClanRequest(rDoc.id);
                 });
             });
         }
@@ -1808,6 +1872,15 @@
             } catch(err) {
                 console.error(err);
                 alert("Не удалось принять в клан: " + friendlyFirebaseError(err));
+            }
+        }
+
+        async function rejectClanRequest(reqId) {
+            try {
+                await updateDoc(doc(db, "clan_requests", reqId), { status: "rejected" });
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось отклонить заявку: " + friendlyFirebaseError(err));
             }
         }
 
@@ -2413,6 +2486,8 @@
             document.getElementById('tab-nav-users').onclick = () => window.switchTab('users');
             document.getElementById('tab-nav-clans').onclick = () => window.switchTab('clans');
             document.getElementById('tab-nav-topclans').onclick = () => window.switchTab('topclans');
+            document.getElementById('tab-nav-videos').onclick = () => window.switchTab('videos');
+            document.getElementById('btn-upload-video').onclick = () => window.triggerVideoUpload();
 
             document.getElementById('profile-name-display').onclick = () => window.changeNickname();
             document.getElementById('btn-change-avatar-trigger').onclick = () => window.triggerAvatarUpload();
@@ -2448,6 +2523,189 @@
             document.getElementById('btn-start-dino-night').onclick = () => window.startDinoGame('night');
             document.getElementById('btn-start-dino-flappy').onclick = () => window.startDinoGame('flappy');
         });
+
+        /* =========================================================
+           =================  ВИДЕО ЛЕНТА (TikTok-стиль)  ================
+           ========================================================= */
+        window.triggerVideoUpload = function() {
+            document.getElementById('video-post-input').click();
+        };
+
+        document.getElementById('video-post-input').onchange = (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            if(!file.type.startsWith('video/')) { alert("Можно загружать только видео!"); e.target.value = ""; return; }
+            if(file.size > MAX_VIDEO_SIZE_MB * 1024 * 1024) {
+                alert(`Файл слишком большой! Максимум ${MAX_VIDEO_SIZE_MB} МБ.`);
+                e.target.value = "";
+                return;
+            }
+
+            const caption = prompt("Подпись к видео (можно оставить пустым):", "") || "";
+
+            const uploadBtn = document.getElementById('btn-upload-video');
+            const originalText = uploadBtn.textContent;
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = "⏳ Загрузка: 0%";
+
+            const path = `video_feed/${userData.username}_${Date.now()}_${file.name}`;
+            const fileRef = ref(storage, path);
+            const uploadTask = uploadBytesResumable(fileRef, file);
+
+            uploadTask.on('state_changed', (snapshot) => {
+                const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                uploadBtn.textContent = `⏳ Загрузка: ${pct}%`;
+            }, (error) => {
+                console.error(error);
+                alert("Ошибка загрузки видео: " + friendlyFirebaseError(error));
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = originalText;
+                e.target.value = "";
+            }, async () => {
+                try {
+                    const videoUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                    await addDoc(collection(db, "video_posts"), {
+                        authorUsername: userData.username,
+                        authorNickname: userData.nickname,
+                        authorAvatar: userData.avatarUrl || "https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg",
+                        caption: caption,
+                        videoUrl: videoUrl,
+                        likes: [],
+                        comments: [],
+                        timestamp: new Date().getTime()
+                    });
+                } catch(err) {
+                    console.error(err);
+                    alert("Не удалось опубликовать видео: " + friendlyFirebaseError(err));
+                } finally {
+                    uploadBtn.disabled = false;
+                    uploadBtn.textContent = originalText;
+                    e.target.value = "";
+                }
+            });
+        };
+
+        let videoFeedObserver = null;
+
+        function initVideoFeed() {
+            const feedQ = query(collection(db, "video_posts"), orderBy("timestamp", "desc"));
+            onSnapshot(feedQ, (snap) => {
+                const container = document.getElementById('video-feed-container');
+                if(!container) return;
+                container.innerHTML = "";
+                if(snap.empty) {
+                    container.innerHTML = `<div class="video-empty-state">Пока нет видео.<br>Будьте первым — нажмите «Выложить видео»!</div>`;
+                    return;
+                }
+                snap.forEach(vDoc => renderVideoCard(vDoc, container));
+                setupVideoAutoplay(container);
+            });
+        }
+
+        function renderVideoCard(vDoc, container) {
+            const post = vDoc.data();
+            const postId = vDoc.id;
+            const isAuthor = post.authorUsername === userData.username;
+            const likesCount = post.likes ? post.likes.length : 0;
+            const isLiked = post.likes && post.likes.includes(userData.username);
+            const commentsCount = post.comments ? post.comments.length : 0;
+
+            const card = document.createElement('div');
+            card.className = "video-post-card";
+
+            const commentsHtml = (post.comments || []).map(c => `<div class="vc-item"><strong>@${c.user}:</strong> ${c.text}</div>`).join('')
+                || `<div class="vc-item" style="opacity:0.6;">Комментариев пока нет.</div>`;
+
+            card.innerHTML = `
+                <video src="${post.videoUrl}" loop muted playsinline></video>
+                <div class="video-post-overlay-top" id="vauthor-${postId}">
+                    <img src="${post.authorAvatar}">
+                    <strong>@${post.authorUsername}</strong>
+                </div>
+                ${post.caption ? `<div class="video-post-caption">${post.caption}</div>` : ""}
+                <div class="video-side-actions">
+                    <div class="v-action" id="vlike-${postId}"><span class="icon">${isLiked ? "❤️" : "🤍"}</span><span class="count">${likesCount}</span></div>
+                    <div class="v-action" id="vcomment-toggle-${postId}"><span class="icon">💬</span><span class="count">${commentsCount}</span></div>
+                    <div class="v-action" id="vmute-${postId}"><span class="icon">🔇</span><span class="count">звук</span></div>
+                    ${isAuthor ? `<div class="v-action" id="vdelete-${postId}"><span class="icon">🗑️</span><span class="count">удалить</span></div>` : ""}
+                </div>
+                <div class="video-comments-drawer" id="vdrawer-${postId}">
+                    <div>${commentsHtml}</div>
+                    <div class="vc-input-row">
+                        <input type="text" id="vcomment-input-${postId}" placeholder="Комментарий...">
+                        <button class="btn-gold" id="vcomment-send-${postId}">➤</button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+
+            document.getElementById(`vauthor-${postId}`).onclick = () => window.inspectProfile(post.authorUsername);
+            document.getElementById(`vlike-${postId}`).onclick = () => toggleLikeVideo(postId, post.likes || []);
+            document.getElementById(`vcomment-toggle-${postId}`).onclick = () => document.getElementById(`vdrawer-${postId}`).classList.toggle('open');
+            document.getElementById(`vcomment-send-${postId}`).onclick = () => addCommentToVideo(postId);
+
+            const videoEl = card.querySelector('video');
+            document.getElementById(`vmute-${postId}`).onclick = () => {
+                videoEl.muted = !videoEl.muted;
+                document.getElementById(`vmute-${postId}`).querySelector('.icon').textContent = videoEl.muted ? "🔇" : "🔊";
+            };
+            videoEl.onclick = () => { if(videoEl.paused) videoEl.play().catch(()=>{}); else videoEl.pause(); };
+
+            if(isAuthor) {
+                const delBtn = document.getElementById(`vdelete-${postId}`);
+                if(delBtn) delBtn.onclick = () => window.deleteVideoPost(postId);
+            }
+        }
+
+        function setupVideoAutoplay(container) {
+            if(videoFeedObserver) videoFeedObserver.disconnect();
+            videoFeedObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const vid = entry.target.querySelector('video');
+                    if(!vid) return;
+                    if(entry.isIntersecting) { vid.play().catch(()=>{}); }
+                    else { vid.pause(); }
+                });
+            }, { root: container, threshold: 0.6 });
+            container.querySelectorAll('.video-post-card').forEach(card => videoFeedObserver.observe(card));
+        }
+
+        async function toggleLikeVideo(postId, currentLikes) {
+            try {
+                const alreadyLiked = currentLikes.includes(userData.username);
+                await updateDoc(doc(db, "video_posts", postId), {
+                    likes: alreadyLiked ? arrayRemove(userData.username) : arrayUnion(userData.username)
+                });
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось поставить лайк: " + friendlyFirebaseError(err));
+            }
+        }
+
+        async function addCommentToVideo(postId) {
+            const input = document.getElementById(`vcomment-input-${postId}`);
+            const text = input.value.trim();
+            if(!text) return;
+            const newComment = { user: userData.username, text: text, timestamp: new Date().getTime() };
+            try {
+                await updateDoc(doc(db, "video_posts", postId), { comments: arrayUnion(newComment) });
+                input.value = "";
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось отправить комментарий: " + friendlyFirebaseError(err));
+            }
+        }
+
+        window.deleteVideoPost = async function(postId) {
+            if(!confirm("Удалить видео?")) return;
+            try {
+                await deleteDoc(doc(db, "video_posts", postId));
+            } catch(err) {
+                console.error(err);
+                alert("Не удалось удалить видео: " + friendlyFirebaseError(err));
+            }
+        };
 
         window.updateGlobalStats = function() {
             onSnapshot(collection(db, "users"), (snap) => {
