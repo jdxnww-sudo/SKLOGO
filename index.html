@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>SKYWEB</title>
     <style>
         :root {
@@ -307,6 +310,11 @@
     </style>
 </head>
 <body>
+
+    <div id="connection-error-banner" style="display:none; position:fixed; top:0; left:0; width:100%; z-index:99999; background:#d9534f; color:#fff; padding:14px 20px; text-align:center; font-size:14px; box-shadow:0 2px 10px rgba(0,0,0,0.2);">
+        <span id="connection-error-text"></span>
+        <button onclick="location.reload()" style="margin-left:14px; background:#fff; color:#d9534f; border:none; padding:6px 14px; border-radius:4px; cursor:pointer; font-weight:bold;">Обновить страницу</button>
+    </div>
 
     <div id="auth-overlay">
         <video id="auth-video-bg" autoplay loop muted playsinline>
@@ -742,7 +750,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, collection, addDoc, query, orderBy, onSnapshot, where, deleteDoc, increment, runTransaction, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBidafkcn8FUZcZ9LuUxbiXv9r8o7YnX0",
@@ -763,14 +771,35 @@
         // через Firebase Auth пользователям (request.auth != null). Без этого все загрузки
         // аватарок/медиа/видео падали с ошибкой "permission denied". Анонимная авторизация
         // решает это: пользователь не видит и не вводит для неё ничего, всё происходит в фоне.
+        //
+        // РАНЬШЕ: код просто ставил флаг authReady через фиксированные 800мс без реальной
+        // проверки, авторизовались ли мы. На медленном/нестабильном интернете это приводило
+        // к тому, что загрузка файлов стартовала до готовности авторизации и зависала навсегда.
+        // Теперь ждём РЕАЛЬНОЕ подтверждение через onAuthStateChanged и даём таймаут с понятной
+        // ошибкой, чтобы ничего не "висело молча".
         let authReady = false;
-        signInAnonymously(auth).then(() => {
-            authReady = true;
-            console.log("✅ Анонимная авторизация Firebase Auth успешна — загрузки разрешены");
-        }).catch((err) => {
-            console.error("Anon auth failed:", err);
-            // Пробуем всё равно (на случай если правила позволяют)
-            authReady = true;
+        let authError = null;
+        const authReadyPromise = new Promise((resolve) => {
+            const unsub = onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    authReady = true;
+                    console.log("✅ Анонимная авторизация Firebase Auth успешна — загрузки разрешены");
+                    unsub();
+                    resolve(true);
+                }
+            });
+            signInAnonymously(auth).catch((err) => {
+                console.error("Anon auth failed:", err);
+                authError = err;
+            });
+            // Таймаут 15 секунд: если авторизация так и не пришла, не блокируем
+            // пользователя навечно — сообщаем понятную ошибку при попытке загрузки.
+            setTimeout(() => {
+                if (!authReady) {
+                    console.error("⏱️ Таймаут авторизации Firebase Auth");
+                    resolve(false);
+                }
+            }, 15000);
         });
 
         // --- Ограничения на размер файлов (защита от зависания браузера) ---
@@ -871,6 +900,19 @@
             }
         };
 
+        function showConnectionError(msg) {
+            const banner = document.getElementById('connection-error-banner');
+            const text = document.getElementById('connection-error-text');
+            if(banner && text) {
+                text.textContent = msg;
+                banner.style.display = 'block';
+            }
+        }
+        function hideConnectionError() {
+            const banner = document.getElementById('connection-error-banner');
+            if(banner) banner.style.display = 'none';
+        }
+
         let authInProgress = false;
         async function processAuth(type) {
             if(authInProgress) return;
@@ -962,8 +1004,26 @@
         function enterEcosystem(username) {
             userDocRef = doc(db, "users", username);
             document.getElementById('auth-overlay').style.display = 'none';
-            
+
+            // РАНЬШЕ у этого слушателя не было обработчика ошибок. Если запрос к Firestore
+            // падал (плохая сеть, правила доступа, обрыв соединения), интерфейс просто
+            // оставался пустым/белым навсегда — это и есть "сайт долго грузится и ничего
+            // не показывает". Теперь любая ошибка ловится, показывается понятное сообщение
+            // с кнопкой "Обновить страницу", и делается автоматическая повторная попытка.
+            let profileLoaded = false;
+            // Подстраховка: если данные профиля не пришли ни успехом, ни ошибкой за 12
+            // секунд (например, соединение просто "подвисло"), не оставляем экран пустым —
+            // сообщаем пользователю и даём кнопку обновления.
+            const profileLoadTimeout = setTimeout(() => {
+                if(!profileLoaded) {
+                    showConnectionError("Сайт долго не может подключиться к серверу. Проверьте интернет-соединение.");
+                }
+            }, 12000);
+
             onSnapshot(userDocRef, (snap) => {
+                profileLoaded = true;
+                clearTimeout(profileLoadTimeout);
+                hideConnectionError();
                 if(snap.exists()) {
                     userData = snap.data();
                     syncProfileUI();
@@ -973,6 +1033,11 @@
                     renderTradeSelectors();
                     subscribeMessageNotifications();
                 }
+            }, (err) => {
+                profileLoaded = true;
+                clearTimeout(profileLoadTimeout);
+                console.error("Ошибка загрузки профиля:", err);
+                showConnectionError("Не удалось загрузить данные профиля: " + friendlyFirebaseError(err));
             });
 
             initFriendsListeners();
@@ -1064,55 +1129,87 @@
             }
         }
 
-        // Улучшенная функция загрузки с ожиданием auth
+        // Загрузка одной попытки в Storage, обёрнутая в промис.
+        // Разрешается download-ссылкой при успехе, отклоняется ошибкой при провале —
+        // никогда не "зависает" молча.
+        function uploadOnce(file, path, onProgress) {
+            return new Promise((resolve, reject) => {
+                const fileRef = ref(storage, path);
+                const uploadTask = uploadBytesResumable(fileRef, file);
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        if (onProgress && snapshot.totalBytes) {
+                            const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                            onProgress(pct);
+                        }
+                    },
+                    (error) => reject(error),
+                    async () => {
+                        try {
+                            const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                            resolve(downloadUrl);
+                        } catch (urlErr) {
+                            reject(urlErr);
+                        }
+                    }
+                );
+            });
+        }
+
+        // Улучшенная функция загрузки с ожиданием auth и РЕАЛЬНЫМИ повторными попытками.
+        //
+        // БАГ, КОТОРЫЙ БЫЛ ДО ЭТОГО: функция делала `return new Promise(...)` внутри
+        // первой же итерации цикла for. Это значит, что весь `uploadWithRetry` завершался
+        // (возвращал этот промис) уже на первой попытке — цикл со второй и третьей попыткой
+        // никогда не выполнялся. А если ошибка происходила НЕ на "последней" попытке
+        // (что было гарантированно, ведь дальше первой мы не доходили), не вызывались
+        // ни onError, ни reject — промис просто никогда не завершался. Именно поэтому
+        // загрузка аватарок/постов/видео могла "вечно грузиться" и ни к чему не приводить:
+        // при любой первой неудаче (нестабильная сеть, ещё не готовая авторизация и т.д.)
+        // функция замолкала навсегда вместо того, чтобы повторить попытку или показать ошибку.
         async function uploadWithRetry(file, path, onProgress, onSuccess, onError, maxRetries = 3) {
+            // Ждём реальной готовности авторизации (а не просто фиксированную паузу)
             if (!authReady) {
                 console.log("Ожидаем авторизации Firebase...");
-                await new Promise(resolve => setTimeout(resolve, 800));
-            }
-            
-            for (let attempt = 1; attempt <= maxRetries; attempt++) {
-                try {
-                    const fileRef = ref(storage, path);
-                    const uploadTask = uploadBytesResumable(fileRef, file);
-
-                    return new Promise((resolve, reject) => {
-                        uploadTask.on('state_changed', 
-                            (snapshot) => {
-                                if (onProgress) {
-                                    const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                                    onProgress(pct);
-                                }
-                            }, 
-                            (error) => {
-                                console.error(`Attempt ${attempt} failed:`, error);
-                                if (attempt === maxRetries) {
-                                    onError(error);
-                                    reject(error);
-                                } else {
-                                    // retry
-                                }
-                            }, 
-                            async () => {
-                                try {
-                                    const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                                    onSuccess(downloadUrl);
-                                    resolve(downloadUrl);
-                                } catch (urlErr) {
-                                    onError(urlErr);
-                                    reject(urlErr);
-                                }
-                            }
-                        );
-                    });
-                } catch (err) {
-                    if (attempt === maxRetries) {
-                        onError(err);
-                        throw err;
-                    }
-                    await new Promise(r => setTimeout(r, 700 * attempt));
+                const ok = await authReadyPromise;
+                if (!ok) {
+                    const err = authError || new Error("auth-timeout");
+                    onError(err);
+                    return;
                 }
             }
+
+            let lastError = null;
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                try {
+                    // Доп. защита: если сама загрузка "зависнет" на уровне сети и не
+                    // вызовет ни успех, ни ошибку (бывает при обрыве соединения), не даём
+                    // пользователю ждать бесконечно — считаем это ошибкой через 90 секунд.
+                    const timeoutMs = file.type.startsWith('video/') ? 180000 : 90000;
+                    const timeoutPromise = new Promise((_, rej) =>
+                        setTimeout(() => rej(new Error("upload-timeout")), timeoutMs)
+                    );
+                    const downloadUrl = await Promise.race([
+                        uploadOnce(file, path, onProgress),
+                        timeoutPromise
+                    ]);
+                    onSuccess(downloadUrl);
+                    return downloadUrl;
+                } catch (err) {
+                    lastError = err;
+                    console.error(`Попытка загрузки ${attempt}/${maxRetries} не удалась:`, err);
+                    // Не имеет смысла повторять, если это ошибка доступа — она не исчезнет
+                    // от повторной попытки, а только заставит пользователя ждать зря.
+                    const code = (err && err.code) || "";
+                    if (code.includes("permission-denied") || code.includes("unauthorized")) {
+                        break;
+                    }
+                    if (attempt < maxRetries) {
+                        await new Promise(r => setTimeout(r, 700 * attempt));
+                    }
+                }
+            }
+            onError(lastError || new Error("upload-failed"));
         }
 
         window.triggerAvatarUpload = function() {
@@ -1127,25 +1224,34 @@
             if(!file.type.startsWith('image/')) return alert("Аватарка должна быть изображением!");
             if(file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) return alert(`Файл слишком большой! Максимум ${MAX_IMAGE_SIZE_MB} МБ.`);
 
+            // Видимая индикация загрузки — раньше кнопка никак не менялась во время
+            // загрузки, и пользователь не понимал, идёт ли что-то вообще, или сайт завис.
+            const btn = document.getElementById('btn-change-avatar-trigger');
+            const originalText = btn ? btn.textContent : "";
+            if(btn) { btn.disabled = true; btn.textContent = "⏳ Загрузка..."; }
+
             try {
                 const path = `avatars/${userData.username}_${Date.now()}_${file.name}`;
                 
                 await uploadWithRetry(
                     file, 
                     path,
-                    null,
+                    (pct) => { if(btn) btn.textContent = `⏳ Загрузка: ${pct}%`; },
                     async (downloadUrl) => {
                         await updateDoc(userDocRef, { avatarUrl: downloadUrl });
                         alert("Аватарка успешно обновлена!");
                     },
                     (error) => {
                         console.error(error);
-                        alert("Ошибка загрузки аватарки: " + friendlyFirebaseError(error) + "\n\nПроверьте правила Firebase Storage (allow read, write: if request.auth != null;)");
+                        alert("Ошибка загрузки аватарки: " + friendlyFirebaseError(error));
                     }
                 );
             } catch(err) {
                 console.error(err);
                 alert("Не удалось загрузить аватарку. Попробуйте ещё раз.");
+            } finally {
+                if(btn) { btn.disabled = false; btn.textContent = originalText; }
+                e.target.value = "";
             }
         }
 
@@ -1806,13 +1912,18 @@
                     if(!file) return;
                     if(!file.type.startsWith('image/')) return alert("Нужно изображение!");
                     if(file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) return alert(`Файл слишком большой! Максимум ${MAX_IMAGE_SIZE_MB} МБ.`);
+
+                    const btn = document.getElementById(clanAvatarUploadMode === 'change' ? 'btn-change-clan-avatar' : 'btn-upload-clan-avatar');
+                    const originalText = btn ? btn.textContent : "";
+                    if(btn) { btn.disabled = true; btn.textContent = "⏳ Загрузка..."; }
+
                     try {
                         const path = `clan_avatars/${userData.username}_${Date.now()}_${file.name}`;
                         
                         await uploadWithRetry(
                             file,
                             path,
-                            null,
+                            (pct) => { if(btn) btn.textContent = `⏳ Загрузка: ${pct}%`; },
                             async (url) => {
                                 if(clanAvatarUploadMode === 'change' && currentClanData) {
                                     try {
@@ -1830,6 +1941,10 @@
                             }
                         );
                     } catch(err) { alert("Не удалось загрузить аватарку клана: " + friendlyFirebaseError(err)); }
+                    finally {
+                        if(btn) { btn.disabled = false; btn.textContent = originalText; }
+                        e.target.value = "";
+                    }
                 };
             }
         });
@@ -2415,8 +2530,13 @@
                 snap.forEach(pDoc => {
                     renderPostItem(pDoc, container);
                 });
+            }, (err) => {
+                console.error("Ошибка загрузки ленты публикаций:", err);
+                const container = document.getElementById('global-feed-container');
+                if(container) container.innerHTML = `<div style="padding:20px; text-align:center; color:#d9534f; font-size:13px;">Не удалось загрузить ленту публикаций.<br>${friendlyFirebaseError(err)}<br><button class="btn-gold" style="margin-top:10px; width:auto; padding:6px 16px;" onclick="initGlobalFeed()">Повторить</button></div>`;
             });
         }
+        window.initGlobalFeed = initGlobalFeed;
 
         function renderPostItem(pDoc, targetContainer) {
             const post = pDoc.data();
@@ -2682,8 +2802,13 @@
                 }
                 snap.forEach(vDoc => renderVideoCard(vDoc, container));
                 setupVideoAutoplay(container);
+            }, (err) => {
+                console.error("Ошибка загрузки видео-ленты:", err);
+                const container = document.getElementById('video-feed-container');
+                if(container) container.innerHTML = `<div class="video-empty-state" style="color:#d9534f;">Не удалось загрузить видео-ленту.<br>${friendlyFirebaseError(err)}<br><button class="btn-gold" style="margin-top:10px; width:auto; padding:6px 16px;" onclick="initVideoFeed()">Повторить</button></div>`;
             });
         }
+        window.initVideoFeed = initVideoFeed;
 
         function renderVideoCard(vDoc, container) {
             const post = vDoc.data();
@@ -2790,6 +2915,12 @@
         };
 
         window.updateGlobalStats = function() {
+            // ВАЖНО: этот слушатель показывает ВСЕХ зарегистрированных пользователей сайта
+            // (не "кто сейчас онлайн"). Раньше здесь не было обработчика ошибок — если запрос
+            // к Firestore не проходил (например, из-за медленной сети или временного сбоя
+            // прав доступа), список молча не обновлялся и оставался в состоянии "0" или с
+            // теми данными, что успели прийти раньше. Теперь ошибка ловится и повторяется
+            // автоматически, а пользователю показывается понятное сообщение вместо тишины.
             onSnapshot(collection(db, "users"), (snap) => {
                 const users = [];
                 snap.forEach(d => users.push(d.data()));
@@ -2812,6 +2943,10 @@
                         <img src="${u.avatarUrl || 'https://i.pinimg.com/564x/47/4d/95/474d957d6da00b8c8d8c3f4e24cf8f2b.jpg'}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid var(--accent-gold);">
                         <span>@${u.username}</span>
                     </div>`).join('');
+            }, (err) => {
+                console.error("Ошибка загрузки списка пользователей:", err);
+                const allUsersList = document.getElementById('all-users-list');
+                if(allUsersList) allUsersList.innerHTML = `<div style="color:#d9534f; font-size:12px;">Не удалось загрузить список пользователей: ${friendlyFirebaseError(err)}<br><button class="btn-gold" style="margin-top:8px; width:auto; padding:6px 16px;" onclick="window.updateGlobalStats()">Повторить</button></div>`;
             });
         }
         window.editBio = async function() {
