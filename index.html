@@ -749,7 +749,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, collection, addDoc, query, orderBy, onSnapshot, where, deleteDoc, increment, runTransaction, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+        // Firebase Storage больше не используется — на бесплатном тарифе Spark он недоступен.
+        // Файлы (аватарки, посты, видео) теперь загружаются через Cloudinary, см. ниже.
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -763,7 +764,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
         const auth = getAuth(app);
 
         // ВАЖНО: сайт использует свою систему логина (через Firestore), а не Firebase Auth.
@@ -1141,30 +1141,53 @@
             }
         }
 
-        // Загрузка одной попытки в Storage, обёрнутая в промис.
-        // Разрешается download-ссылкой при успехе, отклоняется ошибкой при провале —
-        // никогда не "зависает" молча.
+        // --- CLOUDINARY (вместо Firebase Storage, который на бесплатном тарифе недоступен) ---
+        const CLOUDINARY_CLOUD_NAME = "dvdhfg8d";
+        const CLOUDINARY_UPLOAD_PRESET = "skyweb_uploads";
+
+        // Загрузка одного файла в Cloudinary (фото или видео — определяется автоматически
+        // по типу файла). Используем XMLHttpRequest, а не fetch, потому что fetch не умеет
+        // сообщать прогресс загрузки, а он нужен для индикатора "Загрузка: N%".
+        // Функция всегда либо resolve(url), либо reject(error) — никогда не "зависает".
         function uploadOnce(file, path, onProgress) {
             return new Promise((resolve, reject) => {
-                const fileRef = ref(storage, path);
-                const uploadTask = uploadBytesResumable(fileRef, file);
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        if (onProgress && snapshot.totalBytes) {
-                            const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                            onProgress(pct);
-                        }
-                    },
-                    (error) => reject(error),
-                    async () => {
-                        try {
-                            const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                            resolve(downloadUrl);
-                        } catch (urlErr) {
-                            reject(urlErr);
-                        }
+                const isVideo = file.type.startsWith('video/');
+                const resourceType = isVideo ? 'video' : 'image';
+                const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
+
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                // Используем путь как public_id, чтобы файлы были узнаваемы и не перезаписывали друг друга
+                formData.append('public_id', path);
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', url, true);
+
+                xhr.upload.onprogress = (e) => {
+                    if (onProgress && e.lengthComputable) {
+                        const pct = Math.round((e.loaded / e.total) * 100);
+                        onProgress(pct);
                     }
-                );
+                };
+
+                xhr.onload = () => {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (xhr.status >= 200 && xhr.status < 300 && response.secure_url) {
+                            resolve(response.secure_url);
+                        } else {
+                            const msg = (response && response.error && response.error.message) || `Cloudinary HTTP ${xhr.status}`;
+                            reject(new Error(msg));
+                        }
+                    } catch (e) {
+                        reject(new Error("Некорректный ответ от Cloudinary"));
+                    }
+                };
+
+                xhr.onerror = () => reject(new Error("network-request-failed"));
+
+                xhr.send(formData);
             });
         }
 
@@ -2220,10 +2243,10 @@
         function friendlyFirebaseError(err) {
             const code = err && err.code ? err.code : "";
             if(code.includes("permission-denied")) {
-                return "Firebase запретил операцию (permission-denied). Нужно открыть доступ к записи в правилах Firestore (Firebase Console → Firestore Database → Rules) для коллекций: users, posts, clans, clan_requests, trades, chats. Для Storage: allow read, write: if request.auth != null;";
+                return "Firebase запретил операцию (permission-denied). Нужно открыть доступ к записи в правилах Firestore (Firebase Console → Firestore Database → Rules) для коллекций: users, posts, clans, clan_requests, trades, chats.";
             }
             if(code.includes("unavailable") || code.includes("network") || code.includes("retry-limit-exceeded")) {
-                return "Проблема с подключением к Firebase Storage. Проверьте интернет и правила Storage. Ошибка: retry limit exceeded.";
+                return "Проблема с подключением к серверу. Проверьте интернет-соединение и попробуйте снова.";
             }
             return (err && err.message) ? err.message : "неизвестная ошибка";
         }
