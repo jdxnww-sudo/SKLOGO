@@ -927,6 +927,18 @@
             if(regBtn) regBtn.disabled = true;
 
             try {
+                // Правила Firestore теперь требуют request.auth != null, поэтому
+                // обязательно дожидаемся анонимной авторизации Firebase ПЕРЕД тем,
+                // как обращаться к базе — иначе вход/регистрация упадёт с
+                // permission-denied, если пользователь нажмёт кнопку быстрее, чем
+                // фоновая авторизация успеет завершиться.
+                if (!authReady) {
+                    const ok = await authReadyPromise;
+                    if (!ok) {
+                        throw new Error("Не удалось подключиться к серверу авторизации. Проверьте интернет-соединение и обновите страницу.");
+                    }
+                }
+
                 if (type === 'register') {
                     const username = document.getElementById('reg-user').value.trim().toLowerCase();
                     const nickname = document.getElementById('reg-name').value.trim();
