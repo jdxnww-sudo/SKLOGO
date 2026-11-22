@@ -488,6 +488,97 @@
             .nav-badge { top: 1px; right: 18px; transform: none; }
         }
 
+        /* ===== Новый год ===== */
+        #snow-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9500; }
+        #snow-drift { position: fixed; left: 0; right: 0; bottom: 0; height: 30px; pointer-events: none; z-index: 450; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'%3E%3Cpath d='M0 30Q60 6 120 28T240 26T360 30T480 20T600 30T720 24T840 30T960 18T1080 28T1200 24V60H0Z' fill='%23fff'/%3E%3C/svg%3E") center bottom / 100% 100% no-repeat; filter: drop-shadow(0 -2px 3px rgba(110,150,205,.4)); }
+        #xmas-lights { position: fixed; left: 0; right: 0; top: env(safe-area-inset-top, 0px); height: 16px; pointer-events: none; z-index: 9400; }
+        #xmas-lights::before { content: ""; position: absolute; left: 0; right: 0; top: 4px; height: 2px; background: rgba(60,50,40,.3); }
+        #xmas-lights i { position: absolute; inset: 0; background: radial-gradient(circle at 12px 6px, var(--b) 0 3.5px, transparent 4.5px) 0 0 / 48px 16px repeat-x; filter: drop-shadow(0 0 4px var(--b)); animation: bulb 2s ease-in-out infinite alternate; }
+        #xmas-lights i:nth-child(1) { --b: #e5534b; }
+        #xmas-lights i:nth-child(2) { --b: #ffc83d; background-position: 12px 0; animation-delay: -.5s; }
+        #xmas-lights i:nth-child(3) { --b: #3fb27f; background-position: 24px 0; animation-delay: -1s; }
+        #xmas-lights i:nth-child(4) { --b: #4aa3ff; background-position: 36px 0; animation-delay: -1.5s; }
+        @keyframes bulb { from { opacity: .3; } to { opacity: 1; } }
+        .info-block, .profile-card { position: relative; }
+        .info-block::before, .profile-card::before { content: ""; position: absolute; left: 24px; right: 24px; top: -6px; height: 12px; pointer-events: none; background: radial-gradient(ellipse 9px 6px at 9px 6px, #fff 98%, transparent) 0 0 / 21px 12px repeat-x, radial-gradient(ellipse 13px 5px at 13px 6px, #fff 98%, transparent) 7px 0 / 34px 12px repeat-x; filter: drop-shadow(0 -1px 1px rgba(110,150,205,.5)); }
+        .logo-area h2::after { content: " ❄"; color: #8fbfe8; }
+
+        /* ===== 3D-подарки ===== */
+        .orb { --s: 64px; --c1: #e4e8ed; --c2: #98a1ad; width: var(--s); height: var(--s); position: relative; display: inline-block; perspective: 320px; vertical-align: middle; }
+        .orb.r-uncommon { --c1: #a6efc4; --c2: #2f9e6a; }
+        .orb.r-rare { --c1: #a5d3ff; --c2: #2f78d6; }
+        .orb.r-epic { --c1: #e3b8ff; --c2: #8a3fc4; }
+        .orb.r-legendary { --c1: #fff0b0; --c2: #e0a100; }
+        .orb-in { position: absolute; inset: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; transform-style: preserve-3d; transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .12s ease-out; animation: orbfloat 3.4s ease-in-out infinite;
+            background: radial-gradient(circle at 32% 24%, #fff 0, var(--c1) 24%, var(--c2) 80%, rgba(0,0,0,.4) 100%);
+            box-shadow: 0 calc(var(--s) * .16) calc(var(--s) * .3) -5px var(--c2), inset 0 -7px 14px rgba(0,0,0,.28), inset 0 5px 10px rgba(255,255,255,.75); }
+        .orb-e { font-size: calc(var(--s) * .5); line-height: 1; filter: drop-shadow(0 4px 3px rgba(0,0,0,.4)); transform: translateZ(26px); }
+        .orb-gl { position: absolute; left: 17%; top: 9%; width: 40%; height: 22%; border-radius: 50%; background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,0)); transform: rotate(-26deg); pointer-events: none; }
+        .orb.r-epic::before, .orb.r-legendary::before { content: ""; position: absolute; inset: -7px; border-radius: 50%; filter: blur(6px); opacity: .75; animation: orbspin 3.2s linear infinite; }
+        .orb.r-epic::before { background: conic-gradient(#c58bff, #fff, #7a35c9, #c58bff); }
+        .orb.r-legendary::before { background: conic-gradient(#ffd75e, #fff, #ff9a3d, #ffd75e); }
+        .orb.r-legendary::after { content: "✦"; position: absolute; right: -6px; top: -6px; color: #ffb800; font-size: calc(var(--s) * .3); animation: twinkle 1.4s ease-in-out infinite alternate; }
+        @keyframes orbfloat { 50% { translate: 0 -4px; } }
+        @keyframes orbspin { to { transform: rotate(360deg); } }
+        @keyframes twinkle { from { opacity: .3; scale: .7; } to { opacity: 1; scale: 1.15; } }
+        .profile-gifts-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+        .profile-gifts-grid .mini-gift { background: transparent; border: 0; padding: 6px; font-size: inherit; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .gift-cap { font-size: 10px; color: var(--text-muted); max-width: 78px; text-align: center; line-height: 1.2; }
+        #case-reveal-modal .reveal-emoji { margin: 26px 0 18px; display: flex; justify-content: center; }
+        #case-reveal-modal .reveal-box { background: radial-gradient(circle at 50% 30%, rgba(255,215,94,.28), #fff 62%) !important; }
+        .case-card .case-emoji { font-size: 52px; filter: drop-shadow(0 8px 6px rgba(60,40,10,.25)); animation: orbfloat 3s ease-in-out infinite; }
+
+        /* ===== Прокрутка кейса ===== */
+        .roll-ov { position: fixed; inset: 0; z-index: 10600; background: rgba(28,20,10,.8); backdrop-filter: blur(6px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
+        .roll-title { color: #fff; font-size: 24px; font-weight: 700; }
+        .roll-hint { color: #ffe9a8; font-size: 15px; min-height: 20px; }
+        .roll-win { position: relative; width: min(94vw, 780px); overflow: hidden; border-radius: 22px; background: linear-gradient(180deg, #fffdf8, #f1e7d6); padding: 20px 0; box-shadow: 0 20px 60px rgba(0,0,0,.55); }
+        .roll-win::before, .roll-win::after { content: ""; position: absolute; top: 0; bottom: 0; width: 70px; z-index: 2; pointer-events: none; }
+        .roll-win::before { left: 0; background: linear-gradient(90deg, #f6eddc, transparent); }
+        .roll-win::after { right: 0; background: linear-gradient(270deg, #f6eddc, transparent); }
+        .roll-pointer { position: absolute; left: 50%; top: 0; bottom: 0; width: 3px; background: #e5534b; transform: translateX(-50%); z-index: 3; box-shadow: 0 0 12px #e5534b; }
+        .roll-pointer::before { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border: 8px solid transparent; border-top-color: #e5534b; }
+        .roll-track { display: flex; gap: 10px; padding: 0 10px; position: relative; will-change: transform; }
+        .roll-item { flex: none; width: 112px; height: 136px; border-radius: 16px; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border-bottom: 4px solid #b8b8b8; box-shadow: 0 2px 8px rgba(60,40,10,.1); }
+        .roll-item span { font-size: 11px; text-align: center; padding: 0 4px; line-height: 1.2; color: var(--text-main); }
+        .roll-item.r-uncommon { border-color: #4caf7d; } .roll-item.r-rare { border-color: #3b8fd9; } .roll-item.r-epic { border-color: #a557d1; } .roll-item.r-legendary { border-color: #ffb800; }
+        .roll-item.win { animation: winpop .9s ease; box-shadow: 0 0 0 3px #ffb800, 0 0 30px rgba(255,184,0,.8); }
+        @keyframes winpop { 40% { transform: scale(1.22); } }
+
+        /* ===== Общий чат: аватар + ник + сообщение ===== */
+        .g-msg { align-self: flex-start; align-items: flex-start; max-width: 94%; gap: 10px; }
+        .g-av { width: 40px; height: 40px; border: 2px solid rgba(197,168,128,.6); }
+        .g-body { min-width: 0; }
+        .g-head { display: flex; align-items: baseline; gap: 6px; margin-bottom: 3px; flex-wrap: wrap; }
+        .g-name { font-size: 14px; font-weight: 700; cursor: pointer; margin: 0; filter: brightness(.7) saturate(1.3); }
+        .g-un { font-size: 12px; color: var(--text-muted); cursor: pointer; }
+        .g-time { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+        .g-msg .chat-msg { border-radius: 4px 18px 18px 18px; display: inline-block; }
+        .g-msg .chat-msg.my-msg { border-radius: 4px 18px 18px 18px; }
+
+        /* ===== Голосовые ===== */
+        .chat-input-row .chat-send { display: none; }
+        .chat-input-row.has-text .chat-send, .chat-input-row.recording .chat-send { display: flex; align-items: center; justify-content: center; }
+        .chat-input-row.has-text .chat-mic, .chat-input-row.recording .chat-mic { display: none; }
+        .chat-mic { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--surface2); font-size: 20px; cursor: pointer; flex: none; filter: grayscale(.3); }
+        .rec-bar { display: none; flex: 1; align-items: center; gap: 10px; background: var(--surface2); border-radius: 22px; padding: 0 14px; height: 44px; }
+        .chat-input-row.recording .rec-bar { display: flex; }
+        .chat-input-row.recording input { display: none; }
+        .chat-input-row.uploading { opacity: .55; pointer-events: none; }
+        .rec-dot { width: 11px; height: 11px; border-radius: 50%; background: #e5534b; animation: recpulse 1s infinite; }
+        @keyframes recpulse { 50% { opacity: .25; transform: scale(.8); } }
+        .rec-time { font-variant-numeric: tabular-nums; font-weight: 600; }
+        .rec-cancel { margin-left: auto; border: 0; background: transparent; color: #e5534b; font-weight: 600; cursor: pointer; font-size: 14px; }
+        .vm { display: flex; align-items: center; gap: 10px; min-width: 210px; }
+        .vm-play { width: 36px; height: 36px; border-radius: 50%; border: 0; flex: none; background: var(--accent-gold); color: #fff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .my-msg .vm-play { background: #fff; color: var(--accent-gold-hover); }
+        .vm-wave { display: flex; align-items: center; gap: 2px; height: 30px; flex: 1; }
+        .vm-wave i { display: block; width: 3px; border-radius: 2px; background: rgba(43,37,31,.28); }
+        .vm-wave i.on { background: var(--accent-gold-hover); }
+        .my-msg .vm-wave i { background: rgba(255,255,255,.45); } .my-msg .vm-wave i.on { background: #fff; }
+        .vm-t { font-size: 12px; opacity: .75; font-variant-numeric: tabular-nums; }
+        @media (max-width: 768px) { .main-content { padding-top: calc(26px + env(safe-area-inset-top)); } }
+
     </style>
 </head>
 <body>
@@ -527,6 +618,9 @@
     <input type="file" id="clan-avatar-file-input" accept="image/*" style="display: none;">
     <input type="file" id="video-post-input" accept="video/*" style="display: none;">
     <div id="toast-container"></div>
+<div id="xmas-lights"><i></i><i></i><i></i><i></i></div>
+<div id="snow-drift"></div>
+<canvas id="snow-canvas"></canvas>
 
     <div class="sidebar">
         <div class="logo-area">
@@ -635,8 +729,10 @@
                             <button class="btn-gold" id="duel-action-btn"></button>
                         </div>
                         <div class="chat-messages" id="chat-messages-box"></div>
-                        <div class="chat-input-row">
+                        <div class="chat-input-row" id="row-priv">
                             <input type="text" id="chat-input" placeholder="Сообщение" autocomplete="off">
+                            <div class="rec-bar"><i class="rec-dot"></i><span class="rec-time">0:00</span><button class="rec-cancel" type="button">Отмена</button></div>
+                            <button class="chat-mic" id="btn-mic-priv" type="button">🎤</button>
                             <button id="btn-send-msg-priv" class="chat-send">↑</button>
                         </div>
                     </div>
@@ -649,8 +745,10 @@
                 <div class="chat-pane" style="display:flex">
                     <div class="chat-hd"><div class="chat-hd-av gl">🌐</div><div><div class="chat-hd-name">Общий чат</div><div class="chat-hd-sub">Открыт 24/7 · виден всем пользователям</div></div></div>
                     <div class="chat-messages" id="global-messages"></div>
-                    <div class="chat-input-row">
+                    <div class="chat-input-row" id="row-global">
                         <input type="text" id="global-input" placeholder="Написать всем..." maxlength="500" autocomplete="off">
+                        <div class="rec-bar"><i class="rec-dot"></i><span class="rec-time">0:00</span><button class="rec-cancel" type="button">Отмена</button></div>
+                        <button class="chat-mic" id="btn-mic-global" type="button">🎤</button>
                         <button id="global-send" class="chat-send">↑</button>
                     </div>
                 </div>
@@ -935,7 +1033,33 @@
         </div>
     </div>
 
-    <script type="module">
+    <script>
+(function(){
+ var c=document.getElementById('snow-canvas'); if(!c) return;
+ if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ c.remove(); return; }
+ var x=c.getContext('2d'), W=0, H=0, D=Math.min(window.devicePixelRatio||1,2);
+ function rs(){ W=innerWidth; H=innerHeight; c.width=W*D; c.height=H*D; x.setTransform(D,0,0,D,0,0); }
+ rs(); addEventListener('resize', rs);
+ function mk(init){ return { x:Math.random()*W, y:init?Math.random()*H:-12, r:1.3+Math.random()*3.3, s:.35+Math.random()*1.0, p:Math.random()*6.28, w:.3+Math.random()*.8, g:Math.random()<.2 }; }
+ var N=W<700?45:90, f=[]; for(var i=0;i<N;i++) f.push(mk(true));
+ function fr(){
+  requestAnimationFrame(fr); if(document.hidden) return;
+  x.clearRect(0,0,W,H); x.shadowColor='rgba(110,150,205,.6)'; x.shadowBlur=3;
+  for(var i=0;i<f.length;i++){ var o=f[i];
+   o.y+=o.s*(.6+o.r/4); o.p+=.012; o.x+=Math.sin(o.p)*o.w;
+   if(o.y>H+12){ f[i]=o=mk(false); o.x=Math.random()*W; } if(o.x<-10) o.x=W+10; if(o.x>W+10) o.x=-10;
+   if(o.g){ x.font=(o.r*5)+'px sans-serif'; x.fillStyle='#d4e6f8'; x.fillText('\u2744',o.x,o.y); }
+   else { x.fillStyle='rgba(255,255,255,.97)'; x.beginPath(); x.arc(o.x,o.y,o.r,0,6.283); x.fill(); }
+  }
+ }
+ fr();
+ // 3D-наклон подарков за курсором/пальцем
+ function tilt(e){ var o=e.target.closest && e.target.closest('.orb'); if(!o) return; var r=o.getBoundingClientRect(); var px=(e.clientX-r.left)/r.width-.5, py=(e.clientY-r.top)/r.height-.5; o.style.setProperty('--ry',(px*50)+'deg'); o.style.setProperty('--rx',(-py*50)+'deg'); }
+ function untilt(e){ var o=e.target.closest && e.target.closest('.orb'); if(o){ o.style.setProperty('--ry','0deg'); o.style.setProperty('--rx','0deg'); } }
+ document.addEventListener('pointermove', tilt); document.addEventListener('pointerout', untilt);
+})();
+</script>
+<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, collection, addDoc, query, orderBy, onSnapshot, where, deleteDoc, increment, runTransaction, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         // Firebase Storage больше не используется — на бесплатном тарифе Spark он недоступен.
@@ -1328,7 +1452,7 @@
                 giftsMini.innerHTML = owned.slice(0, 12).map(instId => {
                     const giftId = instId.split('__')[0];
                     const g = giftsById[giftId];
-                    return g ? `<div class="mini-gift" title="${g.name}">${g.emoji}</div>` : '';
+                    return g ? `<div class="mini-gift" title="${g.name}">${giftOrb(g, 44)}</div>` : '';
                 }).join('');
             }
         }
@@ -1343,7 +1467,7 @@
         // Функция всегда либо resolve(url), либо reject(error) — никогда не "зависает".
         function uploadOnce(file, path, onProgress) {
             return new Promise((resolve, reject) => {
-                const isVideo = file.type.startsWith('video/');
+                const isVideo = file.type.startsWith('video/') || file.type.startsWith('audio/');
                 const resourceType = isVideo ? 'video' : 'image';
                 const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
 
@@ -1602,7 +1726,7 @@
                     if(d.toDateString() !== lastDay) { lastDay = d.toDateString(); const sep = document.createElement('div'); sep.className = 'day-sep'; sep.textContent = d.toLocaleDateString('ru', { day: 'numeric', month: 'long' }); box.appendChild(sep); }
                     const div = document.createElement('div');
                     div.className = `chat-msg ${mine ? 'my-msg' : ''}`;
-                    div.innerHTML = `<span class="mt">${esc(m.msg)}</span><span class="mm">${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}${mine ? ' ✓' : ''}</span>`;
+                    div.innerHTML = `${m.voice ? voiceHtml(m.voice, m.dur) : `<span class="mt">${esc(m.msg)}</span>`}<span class="mm">${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}${mine ? ' ✓' : ''}</span>`;
                     box.appendChild(div);
                 });
                 box.scrollTop = box.scrollHeight;
@@ -1671,6 +1795,7 @@
         };
 
         window.sendPrivateMessage = async function() {
+            if(VM.rec && VM.scope === 'priv') { stopVoice(false); return; }
             if(!activeChatFriend) return;
             const input = document.getElementById('chat-input');
             const text = input.value.trim();
@@ -1682,7 +1807,7 @@
                 msg: text,
                 timestamp: new Date().getTime()
             });
-            input.value = "";
+            input.value = ""; input.dispatchEvent(new Event('input'));
         };
 
         function initFriendsListeners() {
@@ -1768,6 +1893,107 @@
         }
 
         // ---------- ОБЩИЙ ЧАТ ----------
+        // ---------- 3D-подарок ----------
+        const giftOrb = (g, s) => `<div class="orb r-${g.rarity}" style="--s:${s}px"><div class="orb-in"><span class="orb-e">${g.emoji}</span></div><i class="orb-gl"></i></div>`;
+
+        // ---------- ПРОКРУТКА КЕЙСА ----------
+        function playCaseRoll(caseConfig, won) {
+            return new Promise((resolve) => {
+                const N = 52, WIN = 42, items = [];
+                for(let i = 0; i < N; i++) items.push(i === WIN ? won : pickRandomGiftForCase(caseConfig));
+                const ov = document.createElement('div'); ov.className = 'roll-ov';
+                ov.innerHTML = `<div class="roll-title">${caseConfig.emoji} ${esc(caseConfig.name)}</div>
+                    <div class="roll-win"><div class="roll-pointer"></div><div class="roll-track">${items.map(g => `<div class="roll-item r-${g.rarity}">${giftOrb(g, 62)}<span>${esc(g.name)}</span></div>`).join('')}</div></div>
+                    <div class="roll-hint" id="roll-hint">Крутим…</div>`;
+                document.body.appendChild(ov);
+                const track = ov.querySelector('.roll-track'), win = ov.querySelector('.roll-win'), winEl = track.children[WIN];
+                const target = winEl.offsetLeft + winEl.offsetWidth / 2 - win.clientWidth / 2 + (Math.random() - .5) * 60;
+                let done = false;
+                const finish = () => {
+                    if(done) return; done = true;
+                    winEl.classList.add('win');
+                    ov.querySelector('#roll-hint').textContent = `Выпало: ${won.name} · ${rarityLabelsRu[won.rarity]}`;
+                    setTimeout(() => { ov.remove(); resolve(); }, 1500);
+                };
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    track.style.transition = 'transform 6.5s cubic-bezier(.12,.6,.06,1)';
+                    track.style.transform = `translateX(${-target}px)`;
+                }));
+                track.addEventListener('transitionend', finish, { once: true });
+                setTimeout(finish, 7600);
+            });
+        }
+
+        // ---------- ГОЛОСОВЫЕ ----------
+        const VM = { rec: null, chunks: [], t0: 0, timer: null, scope: null, stream: null, audio: null, vm: null, cancel: false };
+        const fmtDur = (s) => { s = Math.round(s || 0); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+        const voiceBars = (seed) => { let h = 7; for(const ch of String(seed)) h = (h * 33 + ch.charCodeAt(0)) >>> 0; let o = ''; for(let i = 0; i < 28; i++) { h = (h * 1664525 + 1013904223) >>> 0; o += `<i style="height:${22 + (h % 78)}%"></i>`; } return o; };
+        function voiceHtml(url, dur) { return `<div class="vm" data-src="${esc(url)}" data-dur="${dur || 0}"><button class="vm-play" type="button">▶</button><div class="vm-wave">${voiceBars(url)}</div><span class="vm-t">${fmtDur(dur)}</span></div>`; }
+        const voiceRow = (scope) => document.getElementById(scope === 'priv' ? 'row-priv' : 'row-global');
+        async function startVoice(scope) {
+            if(VM.rec) return;
+            if(scope === 'priv' && !activeChatFriend) return;
+            if(!navigator.mediaDevices || !window.MediaRecorder) return alert("Ваш браузер не поддерживает запись голоса.");
+            try { VM.stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+            catch(e) { return alert("Нет доступа к микрофону. Разрешите его в настройках браузера."); }
+            const mime = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'].find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
+            const rec = new MediaRecorder(VM.stream, mime ? { mimeType: mime } : undefined);
+            VM.rec = rec; VM.chunks = []; VM.scope = scope; VM.t0 = Date.now(); VM.cancel = false;
+            const friend = activeChatFriend;
+            rec.ondataavailable = (e) => { if(e.data && e.data.size) VM.chunks.push(e.data); };
+            rec.onstop = async () => {
+                clearInterval(VM.timer); VM.stream.getTracks().forEach(t => t.stop());
+                const sc = VM.scope, dur = (Date.now() - VM.t0) / 1000, cancelled = VM.cancel;
+                voiceRow(sc).classList.remove('recording');
+                const blob = new Blob(VM.chunks, { type: rec.mimeType || mime || 'audio/webm' });
+                VM.rec = null;
+                if(cancelled || dur < 0.8) return;
+                await sendVoiceBlob(blob, dur, sc, friend);
+            };
+            rec.start();
+            const row = voiceRow(scope); row.classList.add('recording');
+            const tEl = row.querySelector('.rec-time'); tEl.textContent = '0:00';
+            VM.timer = setInterval(() => { const s = (Date.now() - VM.t0) / 1000; tEl.textContent = fmtDur(s); if(s >= 120) stopVoice(false); }, 250);
+        }
+        function stopVoice(cancel) { if(!VM.rec) return; VM.cancel = !!cancel; try { VM.rec.stop(); } catch(e) {} }
+        async function sendVoiceBlob(blob, dur, scope, friend) {
+            const file = new File([blob], 'voice.' + (blob.type.includes('mp4') ? 'm4a' : 'webm'), { type: blob.type });
+            const row = voiceRow(scope); row.classList.add('uploading');
+            let url = null, lastErr;
+            for(let i = 0; i < 3 && !url; i++) {
+                try { url = await uploadOnce(file, `voice_${userData.username}_${Date.now()}`, null); }
+                catch(e) { lastErr = e; await new Promise(r => setTimeout(r, 700)); }
+            }
+            row.classList.remove('uploading');
+            if(!url) return alert("Не удалось отправить голосовое: " + ((lastErr && lastErr.message) || ''));
+            const base = { sender: userData.username, msg: "🎤 Голосовое сообщение", voice: url, dur: Math.round(dur), timestamp: new Date().getTime() };
+            try {
+                if(scope === 'priv') {
+                    if(!friend) return;
+                    await addDoc(collection(db, `chats/${[userData.username, friend].sort().join('_')}/messages`), base);
+                } else {
+                    await addDoc(collection(db, 'chats/global_room/messages'), { ...base, nick: userData.nickname || userData.username, ava: userData.avatarUrl || '' });
+                }
+            } catch(e) { alert("Не отправлено: " + friendlyFirebaseError(e)); }
+        }
+        function resetVm(vm) { if(!vm) return; vm.querySelector('.vm-play').textContent = '▶'; vm.querySelectorAll('.vm-wave i').forEach(x => x.classList.remove('on')); vm.querySelector('.vm-t').textContent = fmtDur(+vm.dataset.dur); }
+        function toggleVoice(vm, btn) {
+            if(VM.audio && VM.vm === vm) {
+                if(VM.audio.paused) { VM.audio.play(); btn.textContent = '❚❚'; } else { VM.audio.pause(); btn.textContent = '▶'; }
+                return;
+            }
+            if(VM.audio) { VM.audio.pause(); resetVm(VM.vm); }
+            const orig = vm.dataset.src, a = new Audio(orig.replace(/\.[a-z0-9]+$/i, '.mp3')); // mp3 — играет везде (Cloudinary конвертирует)
+            VM.audio = a; VM.vm = vm; let fb = false;
+            a.onerror = () => { if(!fb) { fb = true; a.src = orig; a.play().catch(() => {}); } };
+            a.ontimeupdate = () => {
+                const d = (isFinite(a.duration) && a.duration) || +vm.dataset.dur || 1, bars = vm.querySelectorAll('.vm-wave i'), n = Math.floor(a.currentTime / d * bars.length);
+                bars.forEach((b, i) => b.classList.toggle('on', i < n)); vm.querySelector('.vm-t').textContent = fmtDur(a.currentTime);
+            };
+            a.onended = () => resetVm(vm);
+            a.play().then(() => { btn.textContent = '❚❚'; }).catch(() => {});
+        }
+        document.addEventListener('click', (e) => { const b = e.target.closest('.vm-play'); if(b) toggleVoice(b.closest('.vm'), b); });
         function updateChatBadge() { const b = document.getElementById('nav-chat-badge'); if(!b) return; const n = unreadFriendsSet.size; b.textContent = n; b.hidden = !n; }
         let globalChatStarted = false;
         const nameColor = (s) => { let h = 0; for(const ch of String(s)) h = (h * 31 + ch.charCodeAt(0)) % 360; return `hsl(${h},70%%,72%%)`.replace(/%%/g, '%'); };
@@ -1784,16 +2010,20 @@
                     const d = new Date(m.timestamp), mine = m.sender === userData.username;
                     if(d.toDateString() !== lastDay) { lastDay = d.toDateString(); const sep = document.createElement('div'); sep.className = 'day-sep'; sep.textContent = d.toLocaleDateString('ru', { day: 'numeric', month: 'long' }); box.appendChild(sep); }
                     const w = document.createElement('div'); w.className = 'g-msg' + (mine ? ' mine' : '');
-                    w.innerHTML = (mine ? '' : `<img class="g-av" data-u="${esc(m.sender)}" src="${esc(av(m.ava))}">`) +
-                        `<div class="chat-msg ${mine ? 'my-msg' : ''}">${mine ? '' : `<div class="g-name" data-u="${esc(m.sender)}" style="color:${nameColor(m.sender)}">${esc(m.nick || m.sender)}</div>`}<span class="mt">${esc(m.msg)}</span><span class="mm">${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></div>`;
+                    w.innerHTML = `<img class="g-av" data-u="${esc(m.sender)}" src="${esc(av(m.ava))}">
+                        <div class="g-body">
+                            <div class="g-head"><span class="g-name" data-u="${esc(m.sender)}" style="color:${nameColor(m.sender)}">${esc(m.nick || m.sender)}</span><span class="g-un" data-u="${esc(m.sender)}">@${esc(m.sender)}</span><span class="g-time">${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></div>
+                            <div class="chat-msg ${mine ? 'my-msg' : ''}">${m.voice ? voiceHtml(m.voice, m.dur) : `<span class="mt">${esc(m.msg)}</span>`}</div>
+                        </div>`;
                     box.appendChild(w);
                 });
                 box.dataset.init = '1'; if(stick) box.scrollTop = box.scrollHeight;
             }, (err) => { box.innerHTML = `<div class="empty-hint">Не удалось загрузить общий чат: ${esc(friendlyFirebaseError(err))}</div>`; });
         }
         async function sendGlobalMessage() {
+            if(VM.rec && VM.scope === 'global') { stopVoice(false); return; }
             const inp = document.getElementById('global-input'); const t = inp.value.trim(); if(!t) return;
-            inp.value = '';
+            inp.value = ''; inp.dispatchEvent(new Event('input'));
             try {
                 await addDoc(collection(db, 'chats/global_room/messages'), { sender: userData.username, nick: userData.nickname || userData.username, ava: userData.avatarUrl || '', msg: t.slice(0, 500), timestamp: new Date().getTime() });
             } catch(e) { inp.value = t; alert("Сообщение не отправлено: " + friendlyFirebaseError(e)); }
@@ -1977,6 +2207,10 @@
         }
 
         async function openCase(caseConfig) {
+            if(window.__rolling) return; window.__rolling = true;
+            try { await openCaseInner(caseConfig); } finally { window.__rolling = false; }
+        }
+        async function openCaseInner(caseConfig) {
             if((userData.stars || 0) < caseConfig.cost) return alert("Недостаточно звёзд для этого кейса!");
 
             const wonGift = pickRandomGiftForCase(caseConfig);
@@ -1986,6 +2220,7 @@
             // Так исключается ситуация "звёзды списаны, а подарок не выдан".
             const ok = await safeUpdateUserDoc({ stars: increment(-caseConfig.cost), gifts: arrayUnion(instanceId) });
             if(!ok) return;
+            await playCaseRoll(caseConfig, wonGift);
             showCaseReveal(wonGift);
         }
 
@@ -2006,7 +2241,7 @@
                 document.body.appendChild(modal);
                 document.getElementById('btn-close-case-reveal').onclick = () => modal.style.display = 'none';
             }
-            document.getElementById('reveal-gift-emoji').textContent = gift.emoji;
+            document.getElementById('reveal-gift-emoji').innerHTML = giftOrb(gift, 160);
             document.getElementById('reveal-gift-name').textContent = gift.name;
             document.getElementById('reveal-gift-rarity').textContent = `Редкость: ${rarityLabelsRu[gift.rarity] || gift.rarity}`;
             modal.style.display = 'flex';
@@ -2021,7 +2256,7 @@
                 const giftId = instId.split('__')[0];
                 const g = giftsById[giftId];
                 if(!g) return '';
-                return `<div class="mini-gift" title="${g.name} (${rarityLabelsRu[g.rarity]})">${g.emoji}</div>`;
+                return `<div class="mini-gift" title="${g.name} (${rarityLabelsRu[g.rarity]})">${giftOrb(g, 60)}<span class="gift-cap">${g.name}</span></div>`;
             }).join('');
         }
 
@@ -2994,6 +3229,10 @@
             document.getElementById('link-to-login').onclick = () => window.toggleAuthForm(true);
             document.getElementById('tab-nav-hub').onclick = () => window.switchTab('hub');
             document.getElementById('tab-nav-global').onclick = () => window.switchTab('global');
+            document.getElementById('btn-mic-priv').onclick = () => startVoice('priv');
+            document.getElementById('btn-mic-global').onclick = () => startVoice('global');
+            document.querySelectorAll('.rec-cancel').forEach(b => b.onclick = () => stopVoice(true));
+            [['chat-input', 'row-priv'], ['global-input', 'row-global']].forEach(([i, r]) => document.getElementById(i).addEventListener('input', (e) => document.getElementById(r).classList.toggle('has-text', !!e.target.value.trim())));
             document.getElementById('btn-toggle-find').onclick = () => document.getElementById('cl-find').classList.toggle('open');
             document.getElementById('btn-chat-back').onclick = () => { document.getElementById('section-friends').classList.remove('chat-open'); activeChatFriend = null; paintChatList(); };
             document.getElementById('chat-hd-who').onclick = () => { if(activeChatFriend) window.inspectProfile(activeChatFriend); };
